@@ -1,0 +1,12 @@
+type Mutation {
+  createHospital(
+    name: String! # 병원 이름 50자
+    useStartDate: String # 계약 시작일
+    useEndDate: String # 계약 종료일
+    chief: String! # 병원 대표자 명 10자
+    email: String! # 대표 이메일
+    country: String! # 국가명
+    businessNumber: String # 사업자번호 20자
+    hospitalNumber: String # 요양기관번호  20자?
+  ): Boolean
+}
