@@ -1,0 +1,994 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 플랫폼 관리자 
+model admin {
+  admin_id           Int                 @id @default(autoincrement())
+  admin_createdAt    DateTime            @default(now())
+  admin_master       Boolean             @default(false) // 마스터 여부
+  userType           userType            @default(admin) // 사용자, 관리자 구분
+  admin_name         String              @default("") @db.VarChar(20) // 이름 10자
+  admin_rank         String              @default("") @db.VarChar(20) // 직책(직급)
+  admin_email        String              @default("") @db.VarChar(50) // 관리자 이메일
+  admin_cellphone    String              @default("") @db.VarChar(20) // 관리자 휴드폰번호
+  admin_accountId    String              @unique @default("") @db.VarChar(30) // 계정 아이디 20자
+  admin_salt         String              @default("") @db.VarChar(50) // 암호화 salt
+  admin_password     String              @default("") @db.VarChar(250) // 계정 비밀번호 20자
+  admin_pwUpdateDate DateTime            @default(now()) // 비밀번호 업데이트 날짜
+  admin_loginToken   String              @default("") @db.VarChar(250) // 이중 로그인 여부 판단용 토큰저장
+  admin_permission   adminPermission?
+  adminLoginHistory  adminLoginHistory[]
+}
+
+// 관리자 탭별 접근권한 
+model adminPermission {
+  ap_id       Int     @id @default(autoincrement())
+  ap_dash     Boolean @default(true) // 대시보드
+  ap_homepage Boolean @default(false) // 홈페이지
+  ap_CS       Boolean @default(false) // 고객센터(문의사항)
+  ap_system   Boolean @default(false) // 시스템관리
+  admin       admin   @relation(fields: [admin_id], references: [admin_id])
+  admin_id    Int     @unique
+}
+
+// 관리자 로그인 기록 
+model adminLoginHistory {
+  alh_id        Int      @id @default(autoincrement())
+  alh_createdAt DateTime @default(now())
+  alh_ip        String   @default("") @db.VarChar(20) // 접속 ip
+  alh_os        String   @default("") @db.VarChar(20) // 접속 os
+  alh_browser   String   @default("") @db.VarChar(20) // 접속 브라우저
+  alh_status    Boolean  @default(false) // 로그인상태. 로그인 : true, 로그아웃 : false
+  admin         admin    @relation(fields: [admin_id], references: [admin_id])
+  admin_id      Int
+}
+
+// 홈페이지 - 메인이미지 
+model homepageMain {
+  hm_id        Int      @id @default(autoincrement())
+  hm_createdAt DateTime @default(now()) // 등록일(혹은 수정일)
+  hm_url       String   @default("") @db.VarChar(250) // 메인 이미지 url
+  hm_adminName String   @default("") @db.VarChar(25) // 메인 이미지 담당자 이름
+  hm_adminRank String   @default("") @db.VarChar(25) // 메인 이미지 담당자 직책
+  hm_adminId   Int      @default(0) // 담당자 id
+}
+
+// 홈페이지 - 회사소개 이미지 
+model homepageIntroduce {
+  hi_id        Int      @id @default(autoincrement())
+  hi_createdAt DateTime @default(now()) // 등록일(혹은 수정일)
+  hi_url       String   @default("") @db.VarChar(250) // 회사소개 이미지 url
+  hi_adminName String   @default("") @db.VarChar(25) // 회사소개 이미지 담당자 이름
+  hi_adminRank String   @default("") @db.VarChar(25) // 회사소개 이미지 담당자 직책
+  hi_adminId   Int      @default(0) // 담당자 id
+}
+
+// 홈페이지 서비스 메인 이미지 
+model homepageServiceMain {
+  hsm_id        Int      @id @default(autoincrement())
+  hsm_createdAt DateTime @default(now()) // 등록일(혹은 수정일)
+  hsm_url       String   @default("") @db.VarChar(250) // 홈페이지 서비스 메인 이미지 url
+  hsm_adminName String   @default("") @db.VarChar(25) // 홈페이지 서비스 메인 이미지 담당자 이름
+  hsm_adminRank String   @default("") @db.VarChar(25) // 홈페이지 서비스 메인 이미지 담당자 직책
+  hsm_adminId   Int      @default(0) // 담당자 id
+}
+
+// 홈페이지 서비스 상세 이미지 
+model homepageServiceDetail {
+  hsd_id        Int      @id @default(autoincrement())
+  hsd_createdAt DateTime @default(now()) // 등록일(혹은 수정일)
+  hsd_url       String   @default("") @db.VarChar(250) // 홈페이지 서비스 상세 이미지 url
+  hsd_adminName String   @default("") @db.VarChar(25) // 홈페이지 서비스 상세 이미지 담당자 이름
+  hsd_adminRank String   @default("") @db.VarChar(25) // 홈페이지 서비스 상세 이미지 담당자 직책
+  hsd_adminId   Int      @default(0) // 담당자 id
+}
+
+// 홈페이지 고객지원 이미지 
+model homepageCS {
+  hcs_id        Int      @id @default(autoincrement())
+  hcs_createdAt DateTime @default(now()) // 등록일(혹은 수정일)
+  hcs_url       String   @default("") @db.VarChar(250) // 홈페이지 고객지원 이미지 url
+  hcs_adminName String   @default("") @db.VarChar(25) // 홈페이지 고객지원 이미지 담당자 이름
+  hcs_adminRank String   @default("") @db.VarChar(25) // 홈페이지 고객지원 이미지 담당자 직책
+  hcs_adminId   Int      @default(0) // 담당자 id
+}
+
+// 홈페이지 서비스 내용(상위 탭) 
+model homepageServiceContent {
+  hsc_id                       Int                            @id @default(autoincrement())
+  hsc_createdAt                DateTime // 등록일
+  hsc_serviceType              String                         @default("") @db.VarChar(25) // 서비스 구분 - EMR 차트, CLOUD 플랫폼
+  hsc_detailTabName            String                         @default("") @db.VarChar(25) // 세부 탭 내용 - EMR 차트: EMR/CHECK/IMAGE/LAB/E-SIGN/DESK/CLOUD/DID/CHECK-UP/CHART/CRM/ETC, CLOUD플랫폼: CLOUD 플랫폼
+  hsc_title                    String                         @default("") @db.VarChar(25) // 타이틀 20자
+  hsc_adminName                String                         @default("") @db.VarChar(25) // 담당자 이름
+  hsc_adminRank                String                         @default("") @db.VarChar(25) // 담당자 직책
+  hsc_adminId                  Int                            @default(0) // 담당자 id
+  homepageServiceContentDetail homepageServiceContentDetail[]
+  homepageServiceImg           homepageServiceImg[]
+}
+
+// 홈페이지 서비스의 상세내용 
+model homepageServiceContentDetail {
+  hsd_id                 Int                    @id @default(autoincrement())
+  hsd_text               String                 @default("") @db.VarChar(250) // 세부항목 내용 200자
+  homepageServiceContent homepageServiceContent @relation(fields: [hsc_id], references: [hsc_id])
+  hsc_id                 Int
+}
+
+// 홈페이지 서비스의 이미지 
+model homepageServiceImg {
+  hsi_id                 Int                    @id @default(autoincrement())
+  hsi_createdAt          DateTime               @default(now()) // 동록일
+  hsi_img                String                 @default("") @db.VarChar(250) // 홈페이지 서비스 이미지 url
+  hsi_adminName          String                 @default("") @db.VarChar(25) // 담당자 이름
+  hsi_adminRank          String                 @default("") @db.VarChar(25) // 담당자 직책
+  hsi_adminId            Int                    @default(0) // 담당자 id
+  homepageServiceContent homepageServiceContent @relation(fields: [hsc_id], references: [hsc_id])
+  hsc_id                 Int
+}
+
+// 일반 문의 
+model generalInquiry {
+  gi_id           Int      @id @default(autoincrement())
+  gi_createdAt    DateTime @default(now()) //등록일(문의일)
+  gi_answerStatus Boolean  @default(false) // 확인 상태 - 확인: true, 확인대기: false
+  gi_title        String   @default("") @db.VarChar(250) // 문의하기 제목 200자
+  gi_text         String   @default("") @db.VarChar(600) // 내용 500자
+  gi_name         String   @default("") @db.VarChar(25) // 문의자 이름
+  gi_hospitalName String   @default("") @db.VarChar(60) // 병/의원 이름
+  gi_workArea     String   @default("") @db.VarChar(25) // 근무지역
+  gi_cellphone    String   @default("") @db.VarChar(25) // 작성자 연락처
+  gi_email        String   @default("") @db.VarChar(60) // 작성자 이메일
+}
+
+// 견적 문의 
+model estimateInquiry {
+  ei_id                 Int      @id @default(autoincrement())
+  ei_createdAt          DateTime @default(now()) //등록일(문의일)
+  ei_answerStatus       Boolean  @default(false) // 확인 상태 - 확인: true, 확인대기: false
+  ei_medicalSub         String   @default("") @db.VarChar(125) // 진료과목 100자
+  ei_pcCount            String   @default("") @db.VarChar(250) // pc사용 대수
+  // 의료영상장비
+  ei_RDR                Boolean  @default(false) // R-DR(Digital Radiography)
+  ei_CR                 Boolean  @default(false) // CR(Computed Radiography)
+  ei_XRAY               Boolean  @default(false) // X-ray
+  ei_CArm               Boolean  @default(false) // C-Arm
+  ei_Mammography        Boolean  @default(false) // Mammography
+  ei_ultrasonicWave     Boolean  @default(false) // 초음파
+  ei_endoscope          Boolean  @default(false) // 내시경
+  ei_CT                 Boolean  @default(false) // CT
+  ei_MRI                Boolean  @default(false) // MRI
+  // 일반 검사장비
+  ei_arteriosclerosis   Boolean  @default(false) // 동맥경화
+  ei_spirometer         Boolean  @default(false) // 폐기능 검사기
+  ei_ECG                Boolean  @default(false) // ECG
+  ei_PACS               Boolean  @default(false) // PACS
+  ei_remoteImageReading Boolean  @default(false) // 원격 영상판독
+
+  ei_name         String @default("") @db.VarChar(25) // 문의자(요청자) 이름
+  ei_hospitalName String @default("") @db.VarChar(60) // 병/의원 이름
+  ei_workArea     String @default("") @db.VarChar(25) // 근무지역
+  ei_cellphone    String @default("") @db.VarChar(25) // 작성자 연락처
+  ei_email        String @default("") @db.VarChar(60) // 작성자 이메일
+  ei_etc          String @default("") @db.VarChar(250) // 기타사항 200자
+}
+
+// 가입 병원 정보
+model hospital {
+  hsp_id                Int                @id @default(autoincrement())
+  hsp_email             String             @unique @default("") @db.VarChar(55) // 대표 이메일
+  hsp_createdAt         DateTime           @default(now()) // 등록일(가입일)
+  hsp_updatedAt         DateTime           @updatedAt
+  hsp_adminCreatorName  String             @default("") @db.VarChar(25) // 등록자 이름(플랫폼 관리자)
+  hsp_adminCreatorRank  String             @default("") @db.VarChar(25) // 등록자 직책(플랫폼 관리자)
+  hsp_adminCreatorId    Int                @default(0) // 등록자 id(플랫폼 관리자)
+  hsp_editorName        String             @default("") @db.VarChar(25) // 수정자 이름
+  hsp_editorRank        String             @default("") @db.VarChar(25) // 수정자 직책
+  hsp_editorId          Int                @default(0) // 수정자 id
+  hsp_isDelete          Boolean            @default(false) // 삭제여부
+  hsp_deleteDate        DateTime // 삭제일
+  hsp_name              String             @default("") @db.VarChar(65) // 병원 이름 50자
+  hsp_chief             String             @default("") @db.VarChar(20) // 병원 대표자 명 10자
+  hsp_hospitalNumber    String             @default("") @db.VarChar(25) // 요양기관번호  20자?
+  hsp_businessNumber    String             @default("") @db.VarChar(25) // 사업자번호 20자
+  hsp_phone             String             @default("") @db.VarChar(20) // 병원 전화번호 "-"없이 10자
+  hsp_country           String             @default("") @db.VarChar(50) // 국가명 
+  hsp_address           String             @default("") @db.VarChar(55) // 주소 검색 값 50자
+  hsp_detailAddress     String             @default("") @db.VarChar(55) // 주소 검색 후 상세주소 50자
+  hsp_medicalDepartment String             @default("") @db.VarChar(25) // 진료과목 20자
+  hsp_kakaoChannelId    String             @default("") @db.VarChar(55) // 카카오 채널 Id 50자
+  hsp_kakaoChannelUrl   String             @default("") @db.VarChar(55) // 카카오 채널 url 50자
+  hsp_useStartDate      DateTime // 계약 시작일 
+  hsp_useEndDate        DateTime // 계약 종료일 
+  hsp_useEnded          Boolean            @default(false) // 이용 완료 여부(만료여부) 
+  user                  user[]
+  patient               patient[]
+  reservation           reservation[]
+  resAlimTemplate       resAlimTemplate[]
+  defaultSchedule       defaultSchedule[]
+  specialSchedule       specialSchedule[]
+  insuranceHistory      insuranceHistory[]
+  hospitalNotice        hospitalNotice[]
+  oneOnOne              oneOnOne[]
+  userUpdateLog         userUpdateLog[]
+  did                   did[]
+  hospitalPayment       hospitalPayment[]
+}
+
+// 병원 결제정보 ====
+model hospitalPayment {
+  hp_id            Int         @id @default(autoincrement())
+  hp_paymentDate   DateTime // 결제일시
+  hp_paymentAmount Int         @default(0) // 결재금액
+  hp_paymentType   paymentType @default(did) // did 결제 혹은 플랫폼 이용 결제
+  hospital         hospital    @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id           Int
+}
+
+// 사용자 - 병원의 사용자
+model user {
+  user_id             Int                   @id @default(autoincrement())
+  user_createdAt      DateTime              @default(now()) // 등록일(가입일)
+  user_updatedAt      DateTime              @updatedAt
+  user_creatorName    String                @default("") @db.VarChar(25) // 등록자 이름
+  user_creatorRank    String                @default("") @db.VarChar(25) // 등록자 직책
+  user_creatorId      Int                   @default(0) // 등록자 id
+  user_editorName     String                @default("") @db.VarChar(25) // 수정자 이름
+  user_editorRank     String                @default("") @db.VarChar(25) // 수정자 직책
+  user_editorId       Int                   @default(0) // 수정자 id
+  user_isDelete       Boolean               @default(false) // 삭제여부
+  user_deleteDate     DateTime // 삭제일
+  user_master         Boolean               @default(false) // 마스터 여부
+  userType            userType              @default(user) // 사용자, 관리자 구분
+  user_accountId      String                @unique @default("") @db.VarChar(30) // 사용자 계정 아이디 20자
+  user_salt           String                @default("") @db.VarChar(50) // 암호화 salt
+  user_password       String                @default("") @db.VarChar(250) // 계정 비밀번호 20자
+  user_pwUpdateDate   DateTime              @default(now()) // 비밀번호 업데이트 날짜
+  user_name           String                @default("") @db.VarChar(15) // 사용자 이름 10자
+  user_rank           String                @default("") @db.VarChar(15) // 사용자 직책 10자
+  user_email          String                @unique @default("") @db.VarChar(125) // 사용자 email
+  user_img            String                @default("") @db.VarChar(250) // 사용자 프로필 이미지 url
+  user_hnAlim         Boolean               @default(true) // 사내 공지 알림
+  user_pnAlim         Boolean               @default(true) // 플랫폼 공지 알림
+  user_resAlim        Boolean               @default(true) // 예약대기 알림
+  user_specialAlim    Boolean               @default(true) // 특별일정 알림
+  user_withdrwal      Boolean               @default(false) // 퇴사 여부. false : 퇴사 안함, true: 퇴사
+  // user_withdrwalDate DateTime? // 퇴사일
+  userPermission      userPermission[]
+  searchHistory       searchHistory[]
+  userPatientAlimSet  userPatientAlimSet?
+  faqLike             faqLike[]
+  platformNoticeCheck platformNoticeCheck[]
+  hospital            hospital              @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id              Int
+}
+
+// 사용자 탭별 접근권한
+model userPermission {
+  up_id          Int     @id @default(autoincrement())
+  up_home        Boolean @default(false) // 홈
+  up_reservation Boolean @default(false) // 예약
+  up_schedule    Boolean @default(false) // 일정
+  up_patient     Boolean @default(false) // 환자
+  up_did         Boolean @default(false) // did
+  up_insurance   Boolean @default(false) // 보험
+  up_cs          Boolean @default(false) // 고객센터
+  up_setting     Boolean @default(false) // 환경설정
+  user           user    @relation(fields: [user_id], references: [user_id])
+  user_id        Int
+}
+
+// 검색 기록
+model searchHistory {
+  sh_id        Int      @id @default(autoincrement())
+  sh_createdAt DateTime @default(now()) // 검색일
+  sh_text      String   @default("") @db.VarChar(65) // 검색어 
+  user         user     @relation(fields: [user_id], references: [user_id])
+  user_id      Int
+}
+
+// 사용자의 환자 알림 저장 내역(가장 최신으로 항상 업데이트)
+model userPatientAlimSet {
+  upas_id         Int         @id @default(autoincrement())
+  upas_updatedAt  DateTime    @updatedAt
+  upas_type       resAlimType @default(sms) // 문자 / 카카오
+  upas_time1      Boolean     @default(false) // 발송시간 - 즉시
+  upas_time2      Boolean     @default(false) // 발송시간 - 1일전
+  upas_time3      Boolean     @default(false) // 발송시간 - 2일전
+  upas_time4      Boolean     @default(false) // 발송시간 - 당일오전9시
+  upas_templateId Int         @default(0) // 문자발송 템픞릿
+  user            user        @relation(fields: [user_id], references: [user_id])
+  user_id         Int         @unique
+}
+
+// 환자
+model patient {
+  pati_id          Int           @id @default(autoincrement())
+  pati_createdAt   DateTime      @default(now()) // 등록일(가입일)
+  pati_updatedAt   DateTime      @updatedAt
+  pati_creatorName String        @default("") @db.VarChar(25) // 등록자 이름
+  pati_creatorRank String        @default("") @db.VarChar(25) // 등록자 직책
+  pati_creatorId   Int           @default(0) // 등록자 id
+  pati_editorName  String        @default("") @db.VarChar(25) // 수정자 이름
+  pati_editorRank  String        @default("") @db.VarChar(25) // 수정자 직책
+  pati_editorId    Int           @default(0) // 수정자 id
+  pati_isDelete    Boolean       @default(false) // 삭제여부
+  pati_deleteDate  DateTime // 삭제일
+  pati_name        String        @default("") @db.VarChar(20) // 환자 이름
+  pati_rrn         String        @default("") @db.VarChar(25) // 환자 주민번호. (resident registration number)
+  pati_cellphone   String        @default("") @db.VarChar(25) // 환자 휴대폰번호
+  pati_chartNumber String        @default("") @db.VarChar(25) // 환자 차트번호 20자
+  pati_gender      Boolean       @default(false) // false : 남자, true: 여자
+  patientMemo      patientMemo[]
+  reservation      reservation[]
+  hospital         hospital      @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id           Int
+}
+
+// 환자 메모
+model patientMemo {
+  prm_id          Int      @id @default(autoincrement())
+  prm_text        String   @default("") @db.VarChar(250) // 예약(환자) 메모 200자 
+  prm_createdAt   DateTime @default(now()) // 등록일
+  prm_updatedAt   DateTime @updatedAt
+  prm_creatorName String   @default("") @db.VarChar(25) // 등록자 이름
+  prm_creatorRank String   @default("") @db.VarChar(25) // 등록자 직책
+  prm_creatorId   Int      @default(0) // 등록자 id
+  prm_editorName  String   @default("") @db.VarChar(25) // 수정자 이름
+  prm_editorRank  String   @default("") @db.VarChar(25) // 수정자 직책
+  prm_editorId    Int      @default(0) // 수정자 id
+  prm_isDelete    Boolean  @default(false) // 삭제여부
+  prm_deleteDate  DateTime // 삭제일
+  patient         patient  @relation(fields: [pati_id], references: [pati_id])
+  pati_id         Int
+}
+
+// 예약 => 6개월 or 1년 예약 데이터 수집.
+model reservation {
+  re_id               Int        @id @default(autoincrement())
+  re_createdAt        DateTime   @default(now()) // 등록일(예약일시)
+  re_updatedAt        DateTime   @updatedAt
+  re_creatorName      String     @default("") @db.VarChar(25) // 등록자 이름
+  re_creatorRank      String     @default("") @db.VarChar(25) // 등록자 직책
+  re_creatorId        Int        @default(0) // 등록자 id
+  re_editorName       String     @default("") @db.VarChar(25) // 수정자 이름
+  re_editorRank       String     @default("") @db.VarChar(25) // 수정자 직책
+  re_editorId         Int        @default(0) // 수정자 id
+  re_isDelete         Boolean    @default(false) // 삭제여부
+  re_deleteDate       DateTime // 삭제일
+  re_year             Int        @default(0) // 예약 - 연도
+  re_month            Int        @default(0) // 예약 - 월
+  re_date             Int        @default(0) // 예약 - 일
+  re_time             String     @default("") @db.VarChar(10) // 예약 시간(09:30)
+  re_status           reStatus   @default(waiting) // 예약 상태 
+  re_platform         rePlatform @default(platform) // 예약 매체
+  re_patientName      String     @default("") @db.VarChar(20) // 예약자(환자) 이름
+  re_patientRrn       String     @default("") @db.VarChar(25) // 예약자(환자) 주민번호 871012-1
+  re_patientCellphone String     @default("") @db.VarChar(25) // 예약자(환자) 휴대폰번호
+  re_oneLineMem       String     @default("") @db.VarChar(65) // 한줄 메모 50자
+  re_confirmUserName  String     @default("") @db.VarChar(20) // 승인자 이름
+  re_confirmUserRank  String     @default("") @db.VarChar(20) // 승인자 직급
+  re_confirmDate      DateTime   @default(now()) // 승인일시 : 상태가 업데이트되는 날짜
+  re_LCategory        String     @default("") @db.VarChar(65) // 예약구분 - 대분류 50자
+  re_SCategory        String     @default("") @db.VarChar(65) // 예약구분 - 소분류 50자
+  re_medicalRoom      String     @default("") @db.VarChar(25) // 진료실 정보
+  resAlim             resAlim?
+  patient             patient    @relation(fields: [pati_id], references: [pati_id])
+  pati_id             Int
+  hospital            hospital   @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id              Int
+
+  @@index([hsp_id, re_year, re_month, re_date])
+}
+
+// 예약 알림
+model resAlim {
+  ra_id         Int         @id @default(autoincrement())
+  ra_type       resAlimType @default(sms) // 예약 문자 / 카카오톡
+  ra_time1      Boolean     @default(false) // 발송시간 - 즉시
+  ra_time2      Boolean     @default(false) // 발송시간 - 1일전
+  ra_time3      Boolean     @default(false) // 발송시간 - 2일전
+  ra_time4      Boolean     @default(false) // 발송시간 - 당일오전9시
+  ra_templateId Int         @default(0) // 문자발송 템픞릿
+  reservation   reservation @relation(fields: [re_id], references: [re_id])
+  re_id         Int         @unique
+}
+
+// 예약 알림 발송 문자 템플릿
+model resAlimTemplate {
+  rat_id          Int      @id @default(autoincrement())
+  rat_title       String   @default("") @db.VarChar(125) // 제목
+  rat_text        String   @default("") @db.VarChar(375) // 내용
+  rat_createdAt   DateTime @default(now()) // 등록일(가입일)
+  rat_updatedAt   DateTime @updatedAt
+  rat_creatorName String   @default("") @db.VarChar(25) // 등록자 이름
+  rat_creatorRank String   @default("") @db.VarChar(25) // 등록자 직책
+  rat_creatorId   Int      @default(0) // 등록자 id
+  rat_editorName  String   @default("") @db.VarChar(25) // 수정자 이름
+  rat_editorRank  String   @default("") @db.VarChar(25) // 수정자 직책
+  rat_editorId    Int      @default(0) // 수정자 id
+  rat_isDelete    Boolean  @default(false) // 삭제여부
+  rat_deleteDate  DateTime // 삭제일
+  hospital        hospital @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id          Int
+}
+
+// 월 ~ 일 병원 운영 기본 일정
+model defaultSchedule {
+  ds_id          Int      @id @default(autoincrement())
+  ds_createdAt   DateTime @default(now()) // 등록일(가입일)
+  ds_updatedAt   DateTime @updatedAt
+  ds_creatorName String   @default("") @db.VarChar(25) // 등록자 이름
+  ds_creatorRank String   @default("") @db.VarChar(25) // 등록자 직책
+  ds_creatorId   Int      @default(0) // 등록자 id
+  ds_editorName  String   @default("") @db.VarChar(25) // 수정자 이름
+  ds_editorRank  String   @default("") @db.VarChar(25) // 수정자 직책
+  ds_editorId    Int      @default(0) // 수정자 id
+  ds_isDelete    Boolean  @default(false) // 삭제여부
+  ds_deleteDate  DateTime // 삭제일
+  ds_day         day // 요일
+  ds_startHour   Int      @default(0) // 시작 시간
+  ds_startMin    Int      @default(0) // 시작 분
+  ds_endHour     Int      @default(0) // 종료 시간
+  ds_endMin      Int      @default(0) // 종료 분
+  ds_lunchBreak  Boolean  @default(false) // 점심시간 휴진 사용 여부. false 미사용, true 사용
+  ds_lbStartHour Int      @default(0) // 점심시간 시작 시간
+  ds_lbStartMin  Int      @default(0) // 점심시간 시작 분
+  ds_lbEndHour   Int      @default(0) // 점심시간 종료 시간
+  ds_lbEndMin    Int      @default(0) // 점심시간 종료 분
+  // ds_nightStartHour Int      @default(0) // 야간진료 시작 시간
+  // ds_nightStartMin  Int      @default(0) // 야간진료 시작 분
+  // ds_nightEndHour   Int      @default(0) // 야간진료 종료 시간
+  // ds_nightEndMin    Int      @default(0) // 야간진료 종료 분
+  hospital       hospital @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id         Int
+}
+
+// 병원 특별 일정(휴무 등)
+model specialSchedule {
+  ss_id                     Int                        @id @default(autoincrement())
+  ss_createdAt              DateTime                   @default(now()) // 등록일(가입일)
+  ss_updatedAt              DateTime                   @updatedAt
+  ss_creatorName            String                     @default("") @db.VarChar(25) // 등록자 이름
+  ss_creatorRank            String                     @default("") @db.VarChar(25) // 등록자 직책
+  ss_creatorId              Int                        @default(0) // 등록자 id
+  ss_editorName             String                     @default("") @db.VarChar(25) // 수정자 이름
+  ss_editorRank             String                     @default("") @db.VarChar(25) // 수정자 직책
+  ss_editorId               Int                        @default(0) // 수정자 id
+  ss_isDelete               Boolean                    @default(false) // 삭제여부
+  ss_deleteDate             DateTime // 삭제일
+  ss_roomType               String                     @default("") @db.VarChar(35) // 진료실 30자 (진료실 이름)
+  ss_doctorName             String                     @default("") @db.VarChar(20) // 진료실일 경우 의사 이름
+  ss_startYear              Int                        @default(0) // 일정 시작 - 연
+  ss_startMonth             Int                        @default(0) // 일정 시작 - 월
+  ss_startDate              Int                        @default(0) // 일정 시작 - 일
+  ss_endYear                Int                        @default(0) // 일정 종료 - 연
+  ss_endMonth               Int                        @default(0) // 일정 종료 - 월
+  ss_endDate                Int                        @default(0) // 일정 종료 - 일
+  ss_subUsed                Boolean                    @default(false) // 조정구분. false면 휴무, ture면 대체의사
+  ss_startTime              Int                        @default(0) // 조정 시작 시간
+  ss_endTime                Int                        @default(0) // 조정 종료 시간
+  ss_dayoff                 Boolean                    @default(false) // 휴무(휴진)여부. false면 근무(진료), true 휴무(휴진)
+  ss_memo                   String                     @default("") @db.VarChar(250) // 메모 - 일정 추가 사유
+  ss_status                 scheduleConfirm            @default(notSign) // 결재상태 - 승인 전, 승인완료, 반려
+  specialScheduleAttactheds specialScheduleAttacthed[]
+  specialScheduleHistory    specialScheduleHistory[] // 댓글(기록)
+  hospital                  hospital                   @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id                    Int
+  didDoctorRoom             didDoctorRoom?             @relation(fields: [ddr_id], references: [ddr_id])
+  ddr_id                    Int?
+  doctorRoom                doctorRoom?                @relation(fields: [dr_id], references: [dr_id])
+  dr_id                     Int?
+}
+
+// 특별일정 첨부파일
+model specialScheduleAttacthed {
+  sa_id           Int             @id @default(autoincrement())
+  sa_url          String          @default("") @db.VarChar(300) // 첨부파일 url
+  specialSchedule specialSchedule @relation(fields: [ss_id], references: [ss_id])
+  ss_id           Int
+}
+
+// 특별일정 댓글, 기록
+model specialScheduleHistory {
+  ssh_id          Int             @id @default(autoincrement())
+  ssh_createdAt   DateTime        @default(now()) // 등록일(가입일)
+  ssh_updatedAt   DateTime        @updatedAt
+  ssh_creatorName String          @default("") @db.VarChar(25) // 등록자 이름
+  ssh_creatorRank String          @default("") @db.VarChar(25) // 등록자 직책
+  ssh_creatorId   Int             @default(0) // 등록자 id
+  ssh_editorName  String          @default("") @db.VarChar(25) // 수정자 이름
+  ssh_editorRank  String          @default("") @db.VarChar(25) // 수정자 직책
+  ssh_editorId    Int             @default(0) // 수정자 id
+  ssh_isDelete    Boolean         @default(false) // 삭제여부
+  ssh_deleteDate  DateTime // 삭제일
+  ssh_text        String          @default("") @db.VarChar(250) // 댓글 및 기록 내용
+  specialSchedule specialSchedule @relation(fields: [ss_id], references: [ss_id])
+  ss_id           Int
+}
+
+// 진료실 => 진료실 코드를 기준으로 업데이트
+model doctorRoom {
+  dr_id             Int               @id @default(autoincrement())
+  dr_createdAt      DateTime          @default(now()) // 등록일
+  dr_updatedAt      DateTime          @updatedAt // 수정일
+  dr_creatorName    String            @default("") @db.VarChar(25) // 등록자 이름
+  dr_creatorRank    String            @default("") @db.VarChar(25) // 등록자 직책
+  dr_creatorId      Int               @default(0) // 등록자 id
+  dr_editorName     Int               @default(0) // 수정자이름
+  dr_editorRank     Int               @default(0) // 수정자직책
+  dr_editorId       Int               @default(0) // 수정자 id
+  dr_isDelete       Boolean           @default(false) // 삭제여부
+  dr_deleteDate     DateTime // 삭제일
+  dr_doctorRoomCode String            @default("") @db.VarChar(50) // 진료실 코드
+  dr_roomName       String            @default("") @db.VarChar(60) // 진료실 이름 50자
+  dr_doctorName     String            @default("") @db.VarChar(25) // 진료실 의사 이름 20자
+  dr_doctorRank     String            @default("") @db.VarChar(25) // 의사 직책
+  specialSchedule   specialSchedule[]
+}
+
+// did
+model did {
+  did_id                      Int             @id @default(autoincrement())
+  did_title                   String          @default("") @db.VarChar(150) // 모니터 이름(제목)
+  did_doctorRoomExpression    String          @default("") @db.VarChar(50) // 진료실명 표기방법
+  did_standbyPersonExpression String          @default("") @db.VarChar(50) // 대기자수 표시방법
+  did_erColorUsed             Boolean         @default(false) // 응급환자 색상 구분 사용여부
+  did_erColor                 String          @default("") @db.VarChar(20) // 응급환자 색상 종류
+  did_holdingColorUsed        Boolean         @default(false) // 보류자 색상 구분 사용여부
+  did_holdingColor            String          @default("") @db.VarChar(20) // 보류자 색상 종류
+  did_standbyPersonFontsize   String          @default("") @db.VarChar(20) // 대기자 글자 크기
+  did_calledPersonFontsize    String          @default("") @db.VarChar(20) // 호출자 글자 크기
+  did_calledTextUsed          Boolean         @default(false) // 호출 문구 노출 사용
+  did_calledVoiceUsed         Boolean         @default(false) // 호출시 음성 호출 사용
+  did_createdAt               DateTime        @default(now()) // 등록일
+  did_updatedAt               DateTime        @updatedAt // 수정일
+  did_creatorName             String          @default("") @db.VarChar(25) // 등록자 이름
+  did_creatorRank             String          @default("") @db.VarChar(25) // 등록자 직책
+  did_creatorId               Int             @default(0) // 등록자 id
+  did_editorName              Int             @default(0) // 수정자이름
+  did_editorRank              Int             @default(0) // 수정자직책
+  did_editorId                Int             @default(0) // 수정자 id
+  did_isDelete                Boolean         @default(false) // 삭제여부
+  did_deleteDate              DateTime // 삭제일
+  did_monitorType             monitorType     @default(horizontal) // 모니터 타입 - 가로, 세로
+  did_mediaType               mediaType       @default(image) // 정보분류(이미지, 영상)
+  did_resUsed                 Boolean         @default(false) // 예약정보 사용여부
+  did_transmitType            transmitType    @default(empty) // 예약정보 송출방식
+  did_resInfoLocation         resLocation     @default(left) // 예약정보 위치
+  did_monitorRatio            String          @default("") @db.VarChar(10) // 화면분할 (위/아래, 좌/우 = 1:1, 1:2등)
+  did_patExpress1             patExpression   @default(empty) // 환자정보표시순서1번
+  did_patExpRatio1            Int             @default(0) // 환자정보 1번 비율
+  did_patExpress2             patExpression   @default(empty) // 환자정보표시순서2번
+  did_patExpRatio2            Int             @default(0) // 환자정보 2번 비율
+  did_patExpress3             patExpression   @default(empty) // 환자정보표시순서3번
+  did_patExpRatio3            Int             @default(0) // 환자정보 3번 비율
+  did_patExpress4             patExpression   @default(empty) // 환자정보표시순서4번
+  did_patExpRatio4            Int             @default(0) // 환자정보 4번 비율
+  did_lowMsgUsed              Boolean         @default(false) // 하단메세지 사용여부
+  did_resInfoTime             Int             @default(0) // 예약정보 노출 시간
+  did_resInfoCycle            Int             @default(0) // 예약정보 노출 주기
+  did_doctorRoomMerge         Boolean         @default(false) // 진료실 통합보기
+  did_uniqueId                String          @default("") @db.VarChar(125) // 진료실 고유 id hsp_id(병원구분자 1,2,3,4..) + UUID(16자리 - 랜덤 영어(소,대)+숫자 ) 
+  hospital                    hospital        @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id                      Int
+  didAttached                 didAttached[]
+  didLowMsg                   didLowMsg[]
+  didDoctorRoom               didDoctorRoom[]
+}
+
+// did 첨부파일
+model didAttached {
+  da_id          Int      @id @default(autoincrement())
+  da_url         String   @default("") @db.VarChar(250) // 첨부파일 url
+  da_createdAt   DateTime @default(now()) // 생성일 
+  da_updatedAt   DateTime @updatedAt // 수정
+  da_creatorName String   @default("") @db.VarChar(25) // 등록자 이름
+  da_creatorRank String   @default("") @db.VarChar(25) // 등록자 직책
+  da_creatorId   Int      @default(0) // 등록자 id
+  da_editorName  String   @default("") @db.VarChar(25) // 수정자 이름
+  da_editorRank  String   @default("") @db.VarChar(25) // 수정자 직책
+  da_editorId    Int      @default(0) // 수정자 id
+  da_isDelete    Boolean  @default(false) // 삭제 여부
+  da_deleteDate  DateTime // 삭제일 
+  da_number      Int      @default(0) // 순서
+  did            did      @relation(fields: [did_id], references: [did_id])
+  did_id         Int
+}
+
+// did 하단 메세지
+model didLowMsg {
+  dlm_id          Int      @id @default(autoincrement())
+  dlm_createdAt   DateTime @default(now())
+  dlm_updatedAt   DateTime @updatedAt // 수정일
+  dlm_number      Int      @default(0) // 순서
+  dlm_text        String   @default("") @db.VarChar(250) // 메세지 내용
+  dlm_creatorName String   @default("") @db.VarChar(25) // 등록자 이름
+  dlm_creatorRank String   @default("") @db.VarChar(25) // 등록자 직책
+  dlm_creatorId   Int      @default(0) // 등록자 id
+  dlm_editorName  String   @default("") @db.VarChar(25) // 수정자 이름
+  dlm_editorRank  String   @default("") @db.VarChar(25) // 수정자 직책
+  dlm_editorId    Int      @default(0) // 수정자 id
+  dlm_isDelete    Boolean  @default(false) // 삭제 여부
+  dlm_deleteDate  DateTime // 삭제일
+  did             did      @relation(fields: [did_id], references: [did_id])
+  did_id          Int
+}
+
+// did 진료실 정보 - 설정에서 진료실 생성하면 생성, 삭제하면 삭제
+model didDoctorRoom {
+  ddr_id          Int               @id @default(autoincrement())
+  ddr_info        String            @default("") @db.VarChar(25) // 진료실 정보
+  ddr_number      Int               @default(0) // 표기 순위
+  ddr_dayOff      Boolean           @default(false) // 휴진 여부
+  ddr_updatedAt   DateTime          @updatedAt // 수정일
+  ddr_editorName  String            @default("") @db.VarChar(25) // 수정자 이름
+  ddr_editorRank  String            @default("") @db.VarChar(25) // 수정자 직책
+  ddr_editorId    Int               @default(0) // 수정자 id
+  ddr_isDelete    Boolean           @default(false) // 삭제 여부
+  ddr_deleteDate  DateTime // 삭제일
+  specialSchedule specialSchedule[]
+  did             did               @relation(fields: [did_id], references: [did_id])
+  did_id          Int
+}
+
+// 보험 청구 요청 기록
+model insuranceHistory {
+  ih_id                 Int             @id @default(autoincrement())
+  ih_createdAt          DateTime        @default(now())
+  ih_companyName        String          @default("") @db.VarChar(25) // 요청 업체 명 20자
+  ih_reqNumber          String          @default("") @db.VarChar(65) //  요청번호 50자
+  ih_patientChartNumber String          @default("") @db.VarChar(25) // 요청환자 차트번호
+  ih_patientName        String          @default("") @db.VarChar(20) // 환자 이름 
+  ih_status             insuranceStatus @default(processing) // 진행상태, 진행중 / 실패 / 완료
+  ih_editorName         String          @default("") @db.VarChar(25) // 수정자(삭제자) 이름
+  ih_editorRank         String          @default("") @db.VarChar(25) // 수정자(삭제자) 직책
+  ih_editorId           Int             @default(0) // 수정자(삭제자) id
+  ih_isDelete           Boolean         @default(false) // 삭제 여부
+  ih_deleteDate         DateTime // 삭제일
+  ihText                ihText[]
+  hospital              hospital        @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id                Int
+}
+
+// 청구 요청 기록 내용
+model ihText {
+  iht_id           Int              @id @default(autoincrement())
+  iht_createdAt    DateTime         @default(now())
+  iht_text         String           @default("") @db.VarChar(250) // 기록 및 프로세스 내용
+  insuranceHistory insuranceHistory @relation(fields: [ih_id], references: [ih_id])
+  ih_id            Int
+}
+
+// 병원 사내 공지
+model hospitalNotice {
+  hn_id          Int          @id @default(autoincrement())
+  hn_title       String       @default("") @db.VarChar(125) // 사내 공지사항 100자
+  hn_text        String       @default("") @db.VarChar(600) // 사내 공지사항 내용 500자
+  hn_createdAt   DateTime     @default(now())
+  hn_updatedAt   DateTime     @updatedAt // 수정일
+  hn_creatorName String       @default("") @db.VarChar(20) // 작성자 이름
+  hn_creatorRank String       @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
+  hn_creatorId   Int          @default(0) // 작성자(사용자) id
+  hn_editorName  String       @default("") @db.VarChar(25) // 수정자 이름
+  hn_editorRank  String       @default("") @db.VarChar(25) // 수정자 직책
+  hn_editorId    Int          @default(0) // 수정자 id
+  hn_isDelete    Boolean      @default(false) // 삭제 여부
+  hn_deleteDate  DateTime // 삭제일
+  hnAttached     hnAttached[]
+  hnComment      hnComment[]
+  hospital       hospital     @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id         Int
+}
+
+// 사내공지 첨부파일
+model hnAttached {
+  hna_id         Int            @id @default(autoincrement())
+  hna_url        String         @default("") @db.VarChar(300) // 사내 공지사항 첨부파일 url
+  hospitalNotice hospitalNotice @relation(fields: [hn_id], references: [hn_id])
+  hn_id          Int
+}
+
+// 사내공지 댓글
+model hnComment {
+  hnc_id          Int            @id @default(autoincrement())
+  hnc_text        String         @default("") @db.VarChar(125) // 공지사항 댓글 내용 100자
+  hnc_createdAt   DateTime       @default(now())
+  hnc_updatedAt   DateTime       @updatedAt // 수정일
+  hnc_creatorName String         @default("") @db.VarChar(20) // 작성자 이름
+  hnc_creatorRank String         @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
+  hnc_creatorId   Int            @default(0) // 작성자(사용자) id
+  hnc_editorName  String         @default("") @db.VarChar(25) // 수정자 이름
+  hnc_editorRank  String         @default("") @db.VarChar(25) // 수정자 직책
+  hnc_editorId    Int            @default(0) // 수정자 id
+  hnc_isDelete    Boolean        @default(false) // 삭제 여부
+  hnc_deleteDate  DateTime // 삭제일
+  hospitalNotice  hospitalNotice @relation(fields: [hn_id], references: [hn_id])
+  hn_id           Int
+}
+
+// 플랫폼 공지
+model platformNotice {
+  pn_id               Int                   @id @default(autoincrement())
+  pn_createdAt        DateTime              @default(now())
+  pn_updatedAt        DateTime              @updatedAt // 수정일
+  pn_type             platformNoticeType    @default(normal) // 플랫폼 공지 구분 - 플랫폼, 긴급, 업데이트
+  pn_title            String                @default("") @db.VarChar(125) // 플랫폼 공지사항 100자
+  pn_text             String                @default("") @db.VarChar(600) // 플랫폼 공지사항 내용 500자
+  pn_adminCreatorName String                @default("") @db.VarChar(20) // 작성자 이름
+  pn_adminCreatorRank String                @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
+  pn_adminCreatorId   Int                   @default(0) // 작성자(사용자) id
+  pn_adminEditorName  String                @default("") @db.VarChar(25) // 수정자 이름
+  pn_adminEditorRank  String                @default("") @db.VarChar(25) // 수정자 직책
+  pn_adminEditorId    Int                   @default(0) // 수정자 id
+  pn_isDelete         Boolean               @default(false) // 삭제 여부
+  pn_deleteDate       DateTime // 삭제일
+  pnAttached          pnAttached[]
+  pnComment           pnComment[]
+  platformNoticeCheck platformNoticeCheck[]
+}
+
+// 플랫폼 공지 확인
+model platformNoticeCheck {
+  pnc_id         Int            @id @default(autoincrement())
+  pnc_check      Boolean        @default(true) // 공지사항 확인율
+  platformNotice platformNotice @relation(fields: [pn_id], references: [pn_id])
+  pn_id          Int
+  user           user           @relation(fields: [user_id], references: [user_id])
+  user_id        Int
+}
+
+// 플랫폼 공지 첨부파일
+model pnAttached {
+  pna_id         Int            @id @default(autoincrement())
+  pna_url        String         @default("") @db.VarChar(300) // 플랫폼 공지사항 첨부파일 url
+  platformNotice platformNotice @relation(fields: [pn_id], references: [pn_id])
+  pn_id          Int
+}
+
+// 플랫폼공지 댓글
+model pnComment {
+  pnc_id              Int            @id @default(autoincrement())
+  pnc_text            String         @default("") @db.VarChar(125) // 공지사항 댓글 내용 100자
+  pnc_createdAt       DateTime       @default(now())
+  pnc_updatedAt       DateTime       @updatedAt // 수정일
+  pnc_creatorName     String         @default("") @db.VarChar(20) // 작성자 이름
+  pnc_creatorRank     String         @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
+  pnc_creatorId       Int            @default(0) // 작성자(사용자) id
+  pnc_adminEditorName String         @default("") @db.VarChar(25) // 수정자 이름
+  pnc_adminEditorRank String         @default("") @db.VarChar(25) // 수정자 직책
+  pnc_adminEditorId   Int            @default(0) // 수정자 id
+  pnc_isDelete        Boolean        @default(false) // 삭제 여부
+  pnc_deleteDate      DateTime // 삭제일
+  platformNotice      platformNotice @relation(fields: [pn_id], references: [pn_id])
+  pn_id               Int
+}
+
+// 자주묻는질문
+model faq {
+  faq_id              Int       @id @default(autoincrement())
+  faq_createdAt       DateTime  @default(now())
+  faq_updatedAt       DateTime  @updatedAt // 수정일
+  faq_question        String    @default("") @db.VarChar(250) // 질문
+  faq_answer          String    @default("") @db.VarChar(250) // 답변
+  faq_viewCount       Int       @default(0) // 조회수
+  faq_creatorName     String    @default("") @db.VarChar(20) // 작성자 이름
+  faq_creatorRank     String    @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
+  faq_creatorId       Int       @default(0) // 작성자(사용자) id
+  faq_adminEditorName String    @default("") @db.VarChar(25) // 수정자 이름
+  faq_adminEditorRank String    @default("") @db.VarChar(25) // 수정자 직책
+  faq_adminEditorId   Int       @default(0) // 수정자 id
+  faq_isDelete        Boolean   @default(false) // 삭제 여부
+  faq_deleteDate      DateTime // 삭제일
+  faqLike             faqLike[]
+}
+
+// 자주묻는질문 좋아요
+model faqLike {
+  fl_id        Int      @id @default(autoincrement())
+  fl_like      Boolean  @default(false) // true: 좋아요 , false: 취소
+  fl_createdAt DateTime @default(now())
+  fl_updatedAt DateTime @updatedAt // 수정일
+  faq          faq      @relation(fields: [faq_id], references: [faq_id])
+  faq_id       Int
+  user         user     @relation(fields: [user_id], references: [user_id])
+  user_id      Int
+}
+
+// 일대일 문의
+model oneOnOne {
+  oneq_id            Int                @id @default(autoincrement())
+  oneq_createdAt     DateTime           @default(now())
+  oneq_title         String             @default("") @db.VarChar(125) // 일대일 문의 질문 제목
+  oneq_text          String             @default("") @db.VarChar(125) // 일대일 문의 질문 내용
+  oneq_creatorName   String             @default("") @db.VarChar(20) // 작성자 이름
+  oneq_creatorRank   String             @default("") @db.VarChar(20) // 작성자 직책
+  oneq_creatorId     Int                @default(0) // 작성자(사용자) id
+  oneq_status        Boolean            @default(false) // 답변 상태. false: 답변대기, true: 답변완료
+  oneq_publicPrivate Boolean            @default(false) // 공개 비공개 여부. false: 비공개, true: 공개
+  oneq_isDelete      Boolean            @default(false) // 삭제 여부
+  oneq_deleteDate    DateTime // 삭제일
+  oneOnOneAttached   oneOnOneAttached[]
+  oneOnOneAnswer     oneOnOneAnswer[]
+  hospital           hospital           @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id             Int
+}
+
+// 일대일 문의 첨부파일
+model oneOnOneAttached {
+  oneAt_id  Int      @id @default(autoincrement())
+  oneAt_url String   @default("") @db.VarChar(250) // 일대일 문의 첨부파일 url
+  oneOnOne  oneOnOne @relation(fields: [oneq_id], references: [oneq_id])
+  oneq_id   Int
+}
+
+// 일대일 문의 답변
+model oneOnOneAnswer {
+  oneAn_id               Int      @id @default(autoincrement())
+  oneAn_createdAt        DateTime @default(now())
+  oneAn_answer           String   @default("") @db.VarChar(250) // 일대일 문의 답변
+  oneAn_adminCreatorName String   @default("") @db.VarChar(20) // 작성자 이름
+  oneAn_adminCreatorRank String   @default("") @db.VarChar(20) // 작성자 직책
+  oneAn_adminCreatorId   Int      @default(0) // 작성자(사용자) id
+  oneAn_isDelete         Boolean  @default(false) // 삭제 여부
+  oneAn_deleteDate       DateTime // 삭제일
+  oneOnOne               oneOnOne @relation(fields: [oneq_id], references: [oneq_id])
+  oneq_id                Int
+}
+
+// 사용자 정보 변경 로그
+model userUpdateLog {
+  ul_id             Int      @id @default(autoincrement())
+  ul_createdAt      DateTime @default(now())
+  ul_employeeNumber String   @default("") @db.VarChar(25) // 사용자 사번
+  ul_adminTeam      String   @default("") @db.VarChar(20) // 사용자 팀
+  ul_adminName      String   @default("") @db.VarChar(20) // 사용자 이름
+  ul_content        String   @default("") @db.VarChar(250) // 내용 200자
+  ul_editorName     String   @default("") @db.VarChar(25) // 수정자 이름
+  ul_editorRank     String   @default("") @db.VarChar(25) // 수정자 직책
+  ul_editorId       Int      @default(0) // 수정자 id
+  hospital          hospital @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id            Int
+}
+
+// // 의료법 내용
+// model medicalLaw {
+//   ml_id          Int         @id @default(autoincrement())
+//   ml_proposeDate DateTime // 제안 날짜
+//   ml_title       String      @default("") @db.VarChar(150) // 제목
+//   ml_text        String      @default("") @db.VarChar(250) // 내용
+//   ml_proposer    String      @default("") @db.VarChar(250) // 제안자
+//   mlKeyword      mlKeyword[]
+// }
+
+// // 의료법 내용 키워드
+// model mlKeyword {
+//   mlk_id     Int        @id @default(autoincrement())
+//   mlk_word   String     @default("") @db.VarChar(60) // 키워드 50자
+//   medicalLaw medicalLaw @relation(fields: [ml_id], references: [ml_id])
+//   ml_id      Int
+// }
+
+// 사용자 구분 - 사용자, 관리자
+enum userType {
+  user
+  admin
+}
+
+// 예약 매체(플랫폼 - 네이버, 카카오, 똑딱 등)
+enum rePlatform {
+  naver // 네이버
+  kakao // 카카오
+  platform // 플랫폼 자체
+  emr // emr 예약
+}
+
+// 예약 상태
+enum reStatus {
+  waiting // 대기
+  complet // 완료
+  confirm // 확정
+  cancel // 취소
+}
+
+// 예약 알림
+enum resAlimType {
+  sms // 문자
+  kakao // 카카오톡
+}
+
+// 요일 
+enum day {
+  mon
+  tue
+  wed
+  thu
+  fri
+  sat
+  sun
+}
+
+// 특별일정 승인 상태
+enum scheduleConfirm {
+  notSign // 승인전
+  sign // 승인
+  reject // 반려
+}
+
+// 모니터 종류
+enum monitorType {
+  vertical // 세로
+  horizontal // 가로
+}
+
+// 광고 위치
+enum adLocation {
+  empty //없음
+  up // 위
+  down // 아래
+  left // 왼쪽
+  right // 오른쪽
+}
+
+// did 정보 분류
+enum mediaType {
+  image // 이미지
+  video // 영상
+  patient // 환자정보
+}
+
+// did 예약정보 송출 방식
+enum transmitType {
+  empty // 사용하지 않음
+  always // 상시 노출
+  sometimes // 일시 노출
+}
+
+// 예약정보 위치
+enum resLocation {
+  up // 위
+  down // 아래
+  left // 왼쪽
+  right // 오른쪽
+}
+
+// 환자정보 표시
+enum patExpression {
+  empty // 사용 안함
+  patName //수진자명
+  doctorRoom //진료실
+  gender //성별
+  time //접수시간
+  doctor //담당의
+  status //대기상태
+  chartNumber //차트번호
+  birthday //생년월일
+  age //나이
+  memo //접수메모
+}
+
+// 플랫폼 공지 구분
+enum platformNoticeType {
+  normal // 플랫폼 일반공지
+  emergency // 긴급
+  update // 업데이트
+}
+
+// 플랫폼 결제 타입
+enum paymentType {
+  did // did 결제
+  platform // 플랫폼 이용료 결제
+}
+
+// 보험청구 상태
+enum insuranceStatus {
+  complete // 완료
+  fail // 실패
+  processing // 진행중
+}
