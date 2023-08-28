@@ -1,0 +1,25 @@
+type Mutation {
+  """
+  did 모니터 로그인
+  """
+  didLogin(
+    """
+    로그인할 userid(email)
+    """
+    accountId: String!
+    """
+    비밀번호
+    """
+    password: String!
+    """
+    모니터에 표시할 did 고유 키값 - url에서 파싱
+    """
+    did_uniqueId: String!
+  ): didLoginInfo
+}
+
+type didLoginInfo {
+  did_id: Int
+  email: String
+  token: String
+}

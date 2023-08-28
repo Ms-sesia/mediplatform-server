@@ -1,0 +1,48 @@
+#------------------------ 대기환자
+type Mutation {
+  """
+  대기 환자 정보 수신
+  """
+  testWaitingPatient: Boolean
+}
+
+# type testWaitingPatientInfo {
+#   SendStatus: String # 전송구분.
+#   ExistsWaiting: Boolean # 대기환자 존재 여부
+#   WaitingDate: String # 대기화면 일자
+#   Email: String # 병원 이메일
+#   WaitingList: [waitingList] # 대기환자 목록
+# }
+
+# # 대기환자 목록
+# type waitingList {
+#   DeptCode: String # 부서코드
+#   WaitingSeq: String #대기순번
+#   DeptName: String #부서명
+#   WaitingStatus: String #대기상태
+#   DoctorName: String #의사명
+#   ReceptionTime: String #접수시간
+#   ChartNo: String #차트번호
+#   PatientName: String #환자명
+#   Gender: String #성별
+#   Bitrh: String #생일
+#   Age: String #나이
+#   Memo: String #접수메모
+# }
+
+#------------------------ 호출환자
+type Mutation {
+  """
+  호출환자 수신
+  """
+  testCallPatient: Boolean
+}
+
+# # 호출환자 목록
+# type testCallPatientInfo {
+#   SendStatus: String #전송 구분, call
+#   WaitingDate: String #대기화면 일자
+#   Email: String #병원 이메일
+#   DeptName: String #부서명
+#   PatientName: String #환자명
+# }

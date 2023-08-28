@@ -27,8 +27,9 @@ export default {
           select: {
             user_id: true,
             userType: true,
-            userPermission: true,
+            user_permission: true,
             user_passwordInit: true,
+            hospital: { select: { hsp_id: true } },
           },
         });
 

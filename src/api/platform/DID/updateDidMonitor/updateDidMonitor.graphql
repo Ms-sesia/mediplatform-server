@@ -1,0 +1,157 @@
+type Mutation {
+  """
+  did 모니터 설정
+  """
+  updateDidMonitor(
+    """
+    설정할 did id
+    """
+    did_id: Int!
+    """
+    모니터 이름(제목)
+    """
+    did_title: String!
+    """
+    진료실명 표기방법
+    """
+    did_doctorRoomExpression: String
+    """
+    대기자수 표시방법
+    """
+    did_standbyPersonExpression: String
+    """
+    응급환자 색상 구분 사용여부
+    """
+    did_erColorUsed: Boolean
+    """
+    응급환자 색상 종류
+    """
+    did_erColor: String
+    """
+    보류자 색상 구분 사용여부
+    """
+    did_holdingColorUsed: Boolean
+    """
+    보류자 색상 종류
+    """
+    did_holdingColor: String
+    """
+    대기자 글자 크기
+    """
+    did_standbyPersonFontsize: String
+    """
+    호출자 글자 크기
+    """
+    did_calledPersonFontsize: String
+    """
+    호출 문구 노출 사용
+    """
+    did_calledTextUsed: Boolean
+    """
+    호출시 음성 호출 사용
+    """
+    did_calledVoiceUsed: Boolean
+    """
+    모니터 타입 - 가로, 세로
+    """
+    did_monitorType: monitorType
+    """
+    진료실 정보 가로-true / 세로-false 보기
+    """
+    did_doctorRoomIsHorizontal: Boolean
+    """
+    정보분류(이미지, 영상)
+    """
+    did_mediaType: mediaType
+    """
+    예약정보 사용여부
+    """
+    did_resUsed: Boolean
+    """
+    예약정보 송출방식
+    """
+    did_transmitType: transmitType
+    """
+    예약정보 위치
+    """
+    did_resInfoLocation: resLocation
+    """
+    화면분할 (위/아래, 좌/우 = 1:1, 1:2등)
+    """
+    did_monitorRatio: String
+    """
+    환자정보표시순서1번
+    """
+    did_patExpress1: patExpression
+    """
+    환자정보 1번 비율
+    """
+    did_patExpRatio1: Int
+    """
+    환자정보표시순서2번
+    """
+    did_patExpress2: patExpression
+    """
+    환자정보 2번 비율
+    """
+    did_patExpRatio2: Int
+    """
+    환자정보표시순서3번
+    """
+    did_patExpress3: patExpression
+    """
+    환자정보 3번 비율
+    """
+    did_patExpRatio3: Int
+    """
+    환자정보표시순서4번
+    """
+    did_patExpress4: patExpression
+    """
+    환자정보 4번 비율
+    """
+    did_patExpRatio4: Int
+    """
+    하단메세지 사용여부
+    """
+    did_lowMsgUsed: Boolean
+    """
+    예약정보 노출 시간
+    """
+    did_resInfoTime: Int
+    """
+    예약정보 노출 주기
+    """
+    did_resInfoCycle: Int
+    """
+    진료실 통합보기
+    """
+    did_doctorRoomMerge: Boolean
+    """
+    진료실 변경 정보
+    """
+    did_doctorRoomInfoUpdate: [doctorRoomInfo]
+    """
+    did 첨부파일
+    """
+    did_attached: [updateAttachedInfo]
+    did_deleteAttachedId: [Int]
+  ): Boolean
+}
+
+"""
+진료실정보
+"""
+input doctorRoomInfo {
+  ddr_id: Int # did 진료실 id
+  ddr_number: Int # 표기 순위
+  ddr_dayOff: Boolean # 휴진 여부
+}
+
+"""
+수정할 첨부파일 정보
+"""
+input updateAttachedInfo {
+  da_id: Int
+  da_file: Upload
+}

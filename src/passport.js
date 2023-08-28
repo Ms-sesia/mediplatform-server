@@ -9,7 +9,6 @@ const jwtOptions = {
 const verifyUser = async (payload, done) => {
   try {
     let user = payload;
-    user.expired = payload.expired;
     if (user !== null) return done(null, user);
     else done(null, false);
   } catch (e) {

@@ -1,0 +1,19 @@
+type Query {
+  """
+  did 하단 메세지 목록 조회
+  """
+  seeDidLowMsg(
+    """
+    조회할 did id
+    """
+    did_id: Int!
+  ): seeDidLowMsgInfo
+}
+
+type seeDidLowMsgInfo {
+  totalLength: Int
+  """
+  did 하단 메세지 목록
+  """
+  didLowMsgList: [didLowMsg]
+}

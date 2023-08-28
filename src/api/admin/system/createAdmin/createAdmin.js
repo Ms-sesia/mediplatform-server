@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { genRandomCode } from "../../../../libs/genRandomCode";
+import { genRandomCode } from "../../../../generate";
 import { hashPassword } from "../../../../libs/passwordHashing";
 import sendEmail from "../../../../libs/sendEmail";
 

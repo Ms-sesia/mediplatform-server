@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  하단 메세지 삭제
+  """
+  deleteDidLowMsg(
+    """
+    삭제할 하단메시지 id
+    """
+    dlm_id: Int!
+  ): Boolean
+}

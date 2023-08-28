@@ -1,0 +1,44 @@
+type Mutation {
+  """
+  Did Monitor 등록(추가)
+  - 필수값 제외 없을경우 빈값
+  """
+  createDidMonitor(
+    """
+    모니터 이름(제목) 100자
+    """
+    did_title: String!
+    """
+    모니터 타입 - 가로, 세로
+    """
+    did_monitorType: monitorType
+    """
+    정보분류(이미지, 영상)
+    """
+    did_mediaType: mediaType
+    """
+    예약정보 사용여부. true: 사용, false: 미사용
+    """
+    did_resUsed: Boolean
+    """
+    예약정보 송출방식
+    empty - 사용하지 않음
+    always - 상시 노출
+    sometimes - 일시 노출
+    """
+    did_transmitType: transmitType
+    """
+    예약정보 위치
+    """
+    did_resInfoLocation: resLocation
+    """
+    화면분할 (위/아래, 좌/우 = 1:1, 1:2등)
+    """
+    did_monitorRatio: String
+    """
+    did첨부파일 업로드
+    """
+    # did_attached:    [didAttachedInfo]
+    did_attached: [Upload!]
+  ): Boolean
+}

@@ -1,0 +1,22 @@
+type Query {
+  """
+  did 목록 조회(검색 - 모니터이름)
+  """
+  seeDidMonitors(
+    """
+    검색어 - 모니터이름, 없으면 빈값
+    """
+    searchTerm: String
+    """
+    이미지/영상 필터, total은 조회에서 사용
+    """
+    filter: mediaType
+    take: Int
+    cursor: Int
+  ): seeDidMonitorsInfo
+}
+
+type seeDidMonitorsInfo {
+  totalLength: Int
+  didList: [did]
+}

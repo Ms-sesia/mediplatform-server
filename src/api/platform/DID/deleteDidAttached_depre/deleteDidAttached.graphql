@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  did 첨부파일 삭제(취소).
+  """
+  deleteDidAttached(
+    """
+    파일명
+    """
+    fileName: String!
+  ): Boolean
+}

@@ -1,0 +1,13 @@
+type Mutation {
+  """
+  하단 메세지 등록
+  """
+  createDidLowMsg(
+    """
+    메세지 등록할 did id
+    """
+    did_id: Int!
+    dlm_number: Int
+    dlm_text: String
+  ): Boolean
+}
