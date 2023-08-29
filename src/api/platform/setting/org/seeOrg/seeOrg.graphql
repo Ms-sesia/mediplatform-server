@@ -1,0 +1,11 @@
+type Query {
+  """
+  직책 조회
+  """
+  seeOrg: seeOrgInfo
+}
+
+type seeOrgInfo {
+  totalLength: Int
+  orgList: [org]
+}

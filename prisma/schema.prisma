@@ -555,8 +555,8 @@ model doctorRoom {
   dr_creatorName  String            @default("") @db.VarChar(25) // 등록자 이름
   dr_creatorRank  String            @default("") @db.VarChar(25) // 등록자 직책
   dr_creatorId    Int               @default(0) // 등록자 id
-  dr_editorName   Int               @default(0) // 수정자이름
-  dr_editorRank   Int               @default(0) // 수정자직책
+  dr_editorName   String            @default("") @db.VarChar(25) // 수정자이름
+  dr_editorRank   String            @default("") @db.VarChar(25) // 수정자직책
   dr_editorId     Int               @default(0) // 수정자 id
   dr_isDelete     Boolean           @default(false) // 삭제여부
   dr_deleteDate   DateTime? // 삭제일

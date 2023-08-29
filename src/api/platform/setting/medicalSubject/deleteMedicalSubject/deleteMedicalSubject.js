@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { today9 } from "../../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 
@@ -10,8 +11,6 @@ export default {
       const { ms_id } = args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
-
-        const today9 = new Date(new Date().setHours(new Date().getHours() + 9));
 
         await prisma.medicalSubject.update({
           where: { ms_id },

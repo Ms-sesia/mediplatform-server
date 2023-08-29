@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  사용자 삭제
+  """
+  deleteUser(
+    """
+    삭제할 user id
+    """
+    user_id: Int!
+  ): Boolean
+}

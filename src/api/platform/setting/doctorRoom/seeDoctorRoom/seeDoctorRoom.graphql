@@ -1,0 +1,11 @@
+type Query {
+  """
+  진료실 목록 조회
+  """
+  seeDoctorRoom: seeDoctorRoomInfo
+}
+
+type seeDoctorRoomInfo {
+  totalLength: Int
+  doctorRoomList: [doctorRoom]
+}

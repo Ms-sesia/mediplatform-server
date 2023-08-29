@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  조직 추가
+  """
+  createOrg(
+    """
+    조직명
+    """
+    org_name: String!
+  ): Boolean
+}

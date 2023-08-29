@@ -1,0 +1,27 @@
+type Mutation {
+  """
+  진료실 목록 수정
+  """
+  updateDoctorRoom(
+    """
+    진료실 id
+    """
+    dr_id: Int!
+    """
+    진료실 코드(부서코드?)
+    """
+    dr_deptCode: String
+    """
+    진료실 이름 50자
+    """
+    dr_roomName: String
+    """
+    진료실 의사 이름 20자
+    """
+    dr_doctorName: String
+    """
+    의사 직책
+    """
+    dr_doctorRank: String
+  ): Boolean
+}

@@ -11,6 +11,134 @@ type Query {
 }
 
 """
+사용자 - 병원의 사용자
+"""
+type user {
+  user_id: Int
+  """
+  등록일(가입일)
+  """
+  user_createdAt: String
+  user_updatedAt: String
+  """
+  등록자 이름
+  """
+  user_creatorName: String
+  """
+  등록자 직책
+  """
+  user_creatorRank: String
+  """
+  등록자 id
+  """
+  user_creatorId: Int
+  """
+  수정자 이름
+  """
+  user_editorName: String
+  """
+  수정자 직책
+  """
+  user_editorRank: String
+  """
+  수정자 id
+  """
+  user_editorId: Int
+  """
+  삭제여부
+  """
+  user_isDelete: Boolean
+  """
+  삭제일
+  """
+  user_deleteDate: String
+  """
+  사용자, 관리자 구분
+  """
+  userType: userType
+  """
+  이름
+  """
+  user_name: String
+  """
+  생년월일
+  """
+  user_birthday: String
+  """
+  휴대폰번호
+  """
+  user_cellphone: String
+  """
+  사용자 email - id가 됨
+  """
+  user_email: String
+  """
+  사용자 권한
+  """
+  user_permission: String
+  """
+  조직
+  """
+  user_org: String
+  """
+  직책
+  """
+  user_rank: String
+  """
+  직무
+  """
+  user_job: String
+  """
+  암호화 salt
+  """
+  user_salt: String
+  """
+  계정 비밀번호 20자
+  """
+  user_password: String
+  """
+  비밀번호 초기화 상태 - 첫 생성시 초기화 상태. 로그인하면서 비번 설정
+  """
+  user_passwordInit: Boolean
+  """
+  비밀번호 업데이트 날짜
+  """
+  user_pwUpdateDate: String
+  """
+  사용자 주소
+  """
+  user_address: String
+  """
+  사용자 상세 주소
+  """
+  user_detailAddress: String
+  """
+  사용자 프로필 이미지 url
+  """
+  user_img: String
+  """
+  사내 공지 알림
+  """
+  user_hnAlim: Boolean
+  """
+  플랫폼 공지 알림
+  """
+  user_pnAlim: Boolean
+  """
+  예약대기 알림
+  """
+  user_resAlim: Boolean
+  """
+  특별일정 알림
+  """
+  user_specialAlim: Boolean
+  """
+  퇴사 여부. false : 퇴사 안함, true: 퇴사
+  """
+  user_withdrwal: Boolean
+}
+
+"""
 did
 """
 type did {
@@ -348,44 +476,37 @@ type didDoctorRoom {
 }
 
 """
+진료실 (did 진료실과 다름)
+"""
+type doctorRoom {
+  dr_id: Int
+  """
+  진료실 코드(부서코드?)
+  """
+  dr_deptCode: String
+  """
+  진료실 이름 50자
+  """
+  dr_roomName: String
+  """
+  진료실 의사 이름 20자
+  """
+  dr_doctorName: String
+  """
+  의사 직책
+  """
+  dr_doctorRank: String
+  """
+  did 휴진 표시. true: 휴진, false: 진료
+  """
+  dr_didOffDay: Boolean
+}
+
+"""
 조직
 """
 type org {
   org_id: Int
-  org_createdAt: String
-  org_updatedAt: String
-  """
-  작성자 이름
-  """
-  org_creatorName: String
-  """
-  작성자 직책(원장, 간호사, 의사)
-  """
-  org_creatorRank: String
-  """
-  작성자(사용자) id
-  """
-  org_creatorId: Int
-  """
-  수정자 이름
-  """
-  org_editorName: String
-  """
-  수정자 직책
-  """
-  org_editorRank: String
-  """
-  수정자 id
-  """
-  org_editorId: Int
-  """
-  삭제 여부
-  """
-  org_isDelete: Boolean
-  """
-  삭제일
-  """
-  org_deleteDate: String
   """
   조직명
   """
@@ -397,40 +518,6 @@ type org {
 """
 type rank {
   rank_id: Int
-  rank_createdAt: String
-  rank_updatedAt: String
-  """
-  작성자 이름
-  """
-  rank_creatorName: String
-  """
-  작성자 직책(원장, 간호사, 의사)
-  """
-  rank_creatorRank: String
-  """
-  작성자(사용자) id
-  """
-  rank_creatorId: Int
-  """
-  수정자 이름
-  """
-  rank_editorName: String
-  """
-  수정자 직책
-  """
-  rank_editorRank: String
-  """
-  수정자 id
-  """
-  rank_editorId: Int
-  """
-  삭제 여부
-  """
-  rank_isDelete: Boolean
-  """
-  삭제일
-  """
-  rank_deleteDate: String
   """
   직책명
   """
@@ -442,45 +529,10 @@ type rank {
 """
 type medicalSubject {
   ms_id: Int
-  # ms_createdAt: String
-  # ms_updatedAt: String
-  # """
-  # 작성자 이름
-  # """
-  # ms_creatorName: String
-  # """
-  # 작성자 직책(원장, 간호사, 의사)
-  # """
-  # ms_creatorRank: String
-  # """
-  # 작성자(사용자) id
-  # """
-  # ms_creatorId: Int
-  # """
-  # 수정자 이름
-  # """
-  # ms_editorName: String
-  # """
-  # 수정자 직책
-  # """
-  # ms_editorRank: String
-  # """
-  # 수정자 id
-  # """
-  # ms_editorId: Int
-  # """
-  # 삭제 여부
-  # """
-  # ms_isDelete: Boolean
-  # """
-  # 삭제일
-  # """
-  # ms_deleteDate: String
   """
   대분류명
   """
   ms_name: String
-  # medicalSubjectDetail: [medicalSubjectDetail]
 }
 
 """
@@ -488,44 +540,18 @@ type medicalSubject {
 """
 type medicalSubjectDetail {
   msd_id: Int
-  # msd_createdAt: String
-  # msd_updatedAt: String
-  # """
-  # 작성자 이름
-  # """
-  # msd_creatorName: String
-  # """
-  # 작성자 직책(원장, 간호사, 의사)
-  # """
-  # msd_creatorRank: String
-  # """
-  # 작성자(사용자) id
-  # """
-  # msd_creatorId: Int
-  # """
-  # 수정자 이름
-  # """
-  # msd_editorName: String
-  # """
-  # 수정자 직책
-  # """
-  # msd_editorRank: String
-  # """
-  # 수정자 id
-  # """
-  # msd_editorId: Int
-  # """
-  # 삭제 여부
-  # """
-  # msd_isDelete: Boolean
-  # """
-  # 삭제일
-  # """
-  # msd_deleteDate: String
   """
   소분류명
   """
   msd_name: String
+}
+
+"""
+사용자 구분 - 사용자, 관리자
+"""
+enum userType {
+  user
+  admin
 }
 
 """

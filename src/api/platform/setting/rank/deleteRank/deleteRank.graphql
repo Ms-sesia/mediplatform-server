@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  직책 삭제
+  """
+  deleteRank(
+    """
+    삭제할 직책 id
+    """
+    rank_id: Int!
+  ): Boolean
+}

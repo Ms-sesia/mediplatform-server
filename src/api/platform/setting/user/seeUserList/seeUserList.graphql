@@ -1,0 +1,22 @@
+type Query {
+  """
+  사용자 목록 조회
+  """
+  seeUserList(
+    """
+    검색어 - 모니터이름, 없으면 빈값
+    """
+    searchTerm: String
+    """
+    조직 필터 - 문자열. 전체면 빈값
+    """
+    filter: String
+    take: Int
+    cursor: Int
+  ): seeUserListInfo
+}
+
+type seeUserListInfo {
+  totalLength: Int
+  userList: [user]
+}

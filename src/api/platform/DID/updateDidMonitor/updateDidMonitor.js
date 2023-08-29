@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
 import { stringify } from "querystring";
+import { today9 } from "../../../../libs/todayCal";
 import clients from "../../../../libs/webSocket/clients";
 import webSocket from "../../../../libs/webSocket/webSocket";
 
@@ -55,8 +56,6 @@ export default {
         const storagePath = path.join(__dirname, "../../../../../", "didMedia");
 
         const did = await prisma.did.findUnique({ where: { did_id } });
-
-        const today9 = new Date(new Date().setHours(new Date().getHours() + 9));
 
         if (did_deleteAttachedId.length) {
           for (let i = 0; i < did_deleteAttachedId.length; i++) {

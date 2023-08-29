@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  조직 삭제
+  """
+  deleteOrg(
+    """
+    삭제할 조직 id
+    """
+    org_id: Int!
+  ): Boolean
+}

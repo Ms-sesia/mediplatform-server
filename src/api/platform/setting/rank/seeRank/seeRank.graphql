@@ -1,0 +1,11 @@
+type Query {
+  """
+  직책 조회
+  """
+  seeRank: seeRankInfo
+}
+
+type seeRankInfo {
+  totalLength: Int
+  rankList: [rank]
+}

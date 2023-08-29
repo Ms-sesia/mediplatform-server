@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { genRandomCode } from "../../../../generate";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +7,7 @@ export default {
     createDoctorRoom: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { dr_doctorRoomCode, dr_roomName, dr_doctorName, dr_doctorRank } = args;
+      const { dr_deptCode, dr_roomName, dr_doctorName, dr_doctorRank } = args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
@@ -17,7 +16,7 @@ export default {
             dr_creatorName: loginUser.user_name,
             dr_creatorRank: loginUser.user_rank,
             dr_creatorId: loginUser.user_id,
-            dr_doctorRoomCode,
+            dr_deptCode,
             dr_roomName,
             dr_doctorName,
             dr_doctorRank,

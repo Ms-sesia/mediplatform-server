@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  진료실 삭제
+  """
+  deleteDoctorRoom(
+    """
+    진료실 id
+    """
+    dr_id: Int!
+  ): Boolean
+}
