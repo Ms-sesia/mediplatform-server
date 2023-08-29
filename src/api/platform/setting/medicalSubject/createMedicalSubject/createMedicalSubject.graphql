@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  대분류 진료항목 추가
+  """
+  createMedicalSubject(
+    """
+    대분류명
+    """
+    ms_name: String
+  ): Boolean
+}

@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  대분류 진료항목 삭제
+  """
+  deleteMedicalSubject(
+    """
+    대분류 id
+    """
+    ms_id: Int!
+  ): Boolean
+}

@@ -223,6 +223,9 @@ model hospital {
   did                   did[]
   hospitalPayment       hospitalPayment[]
   doctorRoom            doctorRoom[]
+  org                   org[]
+  rank                  rank[]
+  medicalSubject        medicalSubject[]
 }
 
 // 병원 결제정보 ====
@@ -660,19 +663,21 @@ model didLowMsg {
 
 // did 진료실 정보 - 설정에서 진료실 생성할 때 did가 있으면 생성, 삭제하면 삭제 // did만들 때도 진료실 있으면 생성
 model didDoctorRoom {
-  ddr_id         Int       @id @default(autoincrement())
-  ddr_info       String    @default("") @db.VarChar(25) // 진료실 정보
-  ddr_number     Int       @default(0) // 표기 순위
-  ddr_dayOff     Boolean   @default(false) // 휴진 여부
-  ddr_deptCode   String    @default("") @db.VarChar(50) // 진료실 코드(부서코드)
-  ddr_updatedAt  DateTime  @updatedAt // 수정일
-  ddr_editorName String    @default("") @db.VarChar(25) // 수정자 이름
-  ddr_editorRank String    @default("") @db.VarChar(25) // 수정자 직책
-  ddr_editorId   Int       @default(0) // 수정자 id
-  ddr_isDelete   Boolean   @default(false) // 삭제 여부
-  ddr_deleteDate DateTime? // 삭제일
-  did            did       @relation(fields: [did_id], references: [did_id])
-  did_id         Int
+  ddr_id             Int       @id @default(autoincrement())
+  ddr_info           String    @default("") @db.VarChar(25) // 진료실 정보
+  ddr_number         Int       @default(0) // 표기 순위
+  ddr_dayOff         Boolean   @default(false) // 휴진 여부
+  ddr_deptCode       String    @default("") @db.VarChar(50) // 진료실 코드(부서코드)
+  ddr_doctorRoomName String    @default("") @db.VarChar(50) // 진료실 이름
+  ddr_doctorName     String    @default("") @db.VarChar(25) // 진료의사명
+  ddr_updatedAt      DateTime  @updatedAt // 수정일
+  ddr_editorName     String    @default("") @db.VarChar(25) // 수정자 이름
+  ddr_editorRank     String    @default("") @db.VarChar(25) // 수정자 직책
+  ddr_editorId       Int       @default(0) // 수정자 id
+  ddr_isDelete       Boolean   @default(false) // 삭제 여부
+  ddr_deleteDate     DateTime? // 삭제일
+  did                did       @relation(fields: [did_id], references: [did_id])
+  did_id             Int
 }
 
 // 보험 청구 요청 기록
@@ -900,34 +905,38 @@ model userUpdateLog {
 
 // 조직
 model org {
-  org_id              Int       @id @default(autoincrement())
-  org_createdAt       DateTime  @default(now())
-  org_updatedAt       DateTime  @updatedAt // 수정일
-  org_creatorName     String    @default("") @db.VarChar(20) // 작성자 이름
-  org_creatorRank     String    @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
-  org_creatorId       Int       @default(0) // 작성자(사용자) id
-  org_adminEditorName String    @default("") @db.VarChar(25) // 수정자 이름
-  org_adminEditorRank String    @default("") @db.VarChar(25) // 수정자 직책
-  org_adminEditorId   Int       @default(0) // 수정자 id
-  org_isDelete        Boolean   @default(false) // 삭제 여부
-  org_deleteDate      DateTime? // 삭제일
-  org_name            String    @default("") @db.VarChar(25) // 조직명
+  org_id          Int       @id @default(autoincrement())
+  org_createdAt   DateTime  @default(now())
+  org_updatedAt   DateTime  @updatedAt // 수정일
+  org_creatorName String    @default("") @db.VarChar(20) // 작성자 이름
+  org_creatorRank String    @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
+  org_creatorId   Int       @default(0) // 작성자(사용자) id
+  org_editorName  String    @default("") @db.VarChar(25) // 수정자 이름
+  org_editorRank  String    @default("") @db.VarChar(25) // 수정자 직책
+  org_editorId    Int       @default(0) // 수정자 id
+  org_isDelete    Boolean   @default(false) // 삭제 여부
+  org_deleteDate  DateTime? // 삭제일
+  org_name        String    @default("") @db.VarChar(25) // 조직명
+  hospital        hospital  @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id          Int
 }
 
 // 직책
 model rank {
-  rank_id              Int       @id @default(autoincrement())
-  rank_createdAt       DateTime  @default(now())
-  rank_updatedAt       DateTime  @updatedAt // 수정일
-  rank_creatorName     String    @default("") @db.VarChar(20) // 작성자 이름
-  rank_creatorRank     String    @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
-  rank_creatorId       Int       @default(0) // 작성자(사용자) id
-  rank_adminEditorName String    @default("") @db.VarChar(25) // 수정자 이름
-  rank_adminEditorRank String    @default("") @db.VarChar(25) // 수정자 직책
-  rank_adminEditorId   Int       @default(0) // 수정자 id
-  rank_isDelete        Boolean   @default(false) // 삭제 여부
-  rank_deleteDate      DateTime? // 삭제일
-  rank_name            String    @default("") @db.VarChar(25) // 직책명
+  rank_id          Int       @id @default(autoincrement())
+  rank_createdAt   DateTime  @default(now())
+  rank_updatedAt   DateTime  @updatedAt // 수정일
+  rank_creatorName String    @default("") @db.VarChar(20) // 작성자 이름
+  rank_creatorRank String    @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
+  rank_creatorId   Int       @default(0) // 작성자(사용자) id
+  rank_editorName  String    @default("") @db.VarChar(25) // 수정자 이름
+  rank_editorRank  String    @default("") @db.VarChar(25) // 수정자 직책
+  rank_editorId    Int       @default(0) // 수정자 id
+  rank_isDelete    Boolean   @default(false) // 삭제 여부
+  rank_deleteDate  DateTime? // 삭제일
+  rank_name        String    @default("") @db.VarChar(25) // 직책명
+  hospital         hospital  @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id           Int
 }
 
 // 진료항목 대분류
@@ -938,31 +947,33 @@ model medicalSubject {
   ms_creatorName       String                 @default("") @db.VarChar(20) // 작성자 이름
   ms_creatorRank       String                 @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
   ms_creatorId         Int                    @default(0) // 작성자(사용자) id
-  ms_adminEditorName   String                 @default("") @db.VarChar(25) // 수정자 이름
-  ms_adminEditorRank   String                 @default("") @db.VarChar(25) // 수정자 직책
-  ms_adminEditorId     Int                    @default(0) // 수정자 id
+  ms_editorName        String                 @default("") @db.VarChar(25) // 수정자 이름
+  ms_editorRank        String                 @default("") @db.VarChar(25) // 수정자 직책
+  ms_editorId          Int                    @default(0) // 수정자 id
   ms_isDelete          Boolean                @default(false) // 삭제 여부
   ms_deleteDate        DateTime? // 삭제일
-  ms_name              String                 @default("") @db.VarChar(25) // 직책명
+  ms_name              String                 @default("") @db.VarChar(25) // 대분류명
   medicalSubjectDetail medicalSubjectDetail[]
+  hospital             hospital               @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id               Int
 }
 
 // 진료항목 소분류
 model medicalSubjectDetail {
-  msd_id              Int            @id @default(autoincrement())
-  msd_createdAt       DateTime       @default(now())
-  msd_updatedAt       DateTime       @updatedAt // 수정일
-  msd_creatorName     String         @default("") @db.VarChar(20) // 작성자 이름
-  msd_creatorRank     String         @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
-  msd_creatorId       Int            @default(0) // 작성자(사용자) id
-  msd_adminEditorName String         @default("") @db.VarChar(25) // 수정자 이름
-  msd_adminEditorRank String         @default("") @db.VarChar(25) // 수정자 직책
-  msd_adminEditorId   Int            @default(0) // 수정자 id
-  msd_isDelete        Boolean        @default(false) // 삭제 여부
-  msd_deleteDate      DateTime? // 삭제일
-  msd_name            String         @default("") @db.VarChar(25) // 직책명
-  medicalSubject      medicalSubject @relation(fields: [ms_id], references: [ms_id])
-  ms_id               Int
+  msd_id          Int            @id @default(autoincrement())
+  msd_createdAt   DateTime       @default(now())
+  msd_updatedAt   DateTime       @updatedAt // 수정일
+  msd_creatorName String         @default("") @db.VarChar(20) // 작성자 이름
+  msd_creatorRank String         @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
+  msd_creatorId   Int            @default(0) // 작성자(사용자) id
+  msd_editorName  String         @default("") @db.VarChar(25) // 수정자 이름
+  msd_editorRank  String         @default("") @db.VarChar(25) // 수정자 직책
+  msd_editorId    Int            @default(0) // 수정자 id
+  msd_isDelete    Boolean        @default(false) // 삭제 여부
+  msd_deleteDate  DateTime? // 삭제일
+  msd_name        String         @default("") @db.VarChar(25) // 소분류명
+  medicalSubject  medicalSubject @relation(fields: [ms_id], references: [ms_id])
+  ms_id           Int
 }
 
 // // 의료법 내용

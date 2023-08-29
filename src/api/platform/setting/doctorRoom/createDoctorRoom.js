@@ -32,7 +32,9 @@ export default {
           dids.map(async (did, idx) => {
             await prisma.didDoctorRoom.create({
               data: {
-                ddr_info: `${doctorRoom.dr_doctorName} ${doctorRoom.dr_doctorRank}`,
+                ddr_info: `${doctorRoom.dr_roomName} ${doctorRoom.dr_doctorName}`,
+                ddr_doctorRoomName: doctorRoom.dr_roomName,
+                ddr_doctorName: doctorRoom.dr_doctorName,
                 ddr_number: idx + 1,
                 did: { connect: { did_id: did.did_id } },
               },

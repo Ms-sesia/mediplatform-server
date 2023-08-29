@@ -103,9 +103,7 @@ export default {
             did_calledTextUsed: did_calledTextUsed ? did_calledTextUsed : did.did_calledTextUsed,
             did_calledVoiceUsed: did_calledVoiceUsed ? did_calledVoiceUsed : did.did_calledVoiceUsed,
             did_monitorType: did_monitorType ? did_monitorType : did.did_monitorType,
-            did_doctorRoomIsHorizontal: did_doctorRoomIsHorizontal
-              ? did_doctorRoomIsHorizontal
-              : did.did_doctorRoomIsHorizontal,
+            did_doctorRoomIsHorizontal: did_doctorRoomIsHorizontal,
             did_mediaType: did_mediaType ? did_mediaType : did.did_mediaType,
             did_resUsed: did_resUsed ? did_resUsed : did.did_resUsed,
             did_transmitType: did_transmitType ? did_transmitType : did.did_transmitType,
@@ -199,6 +197,9 @@ export default {
                 ddr_id: true,
                 ddr_info: true,
                 ddr_number: true,
+                ddr_deptCode: true,
+                ddr_doctorName: true,
+                ddr_doctorRoomName: true,
               },
               orderBy: { ddr_number: "asc" },
             },
@@ -210,6 +211,14 @@ export default {
                 da_number: true,
               },
               orderBy: { da_number: "asc" },
+            },
+            didLowMsg: {
+              where: { did_id },
+              select: {
+                dlm_id: true,
+                dlm_text: true,
+                dlm_number: true,
+              },
             },
           },
         });

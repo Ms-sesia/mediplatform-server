@@ -1,0 +1,11 @@
+type Query {
+  """
+  대분류 진료항목 보기
+  """
+  seeMedicalSubject: seeMedicalSubjectInfo
+}
+
+type seeMedicalSubjectInfo {
+  totalLength: Int
+  medicalSubjectList: [medicalSubject]
+}

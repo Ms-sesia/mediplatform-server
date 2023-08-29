@@ -101,6 +101,10 @@ type did {
   """
   did_monitorType: monitorType
   """
+  진료실 정보 가로(true)/세로(false) 보기.
+  """
+  did_doctorRoomIsHorizontal: Boolean
+  """
   정보분류(이미지, 영상)
   """
   did_mediaType: mediaType
@@ -309,6 +313,14 @@ type didDoctorRoom {
   """
   ddr_number: Int
   """
+  진료실 이름
+  """
+  ddr_doctorRoomName: String
+  """
+  진료의사명
+  """
+  ddr_doctorName: String
+  """
   휴진 여부
   """
   ddr_dayOff: Boolean
@@ -333,6 +345,187 @@ type didDoctorRoom {
   삭제일
   """
   ddr_deleteDate: String
+}
+
+"""
+조직
+"""
+type org {
+  org_id: Int
+  org_createdAt: String
+  org_updatedAt: String
+  """
+  작성자 이름
+  """
+  org_creatorName: String
+  """
+  작성자 직책(원장, 간호사, 의사)
+  """
+  org_creatorRank: String
+  """
+  작성자(사용자) id
+  """
+  org_creatorId: Int
+  """
+  수정자 이름
+  """
+  org_editorName: String
+  """
+  수정자 직책
+  """
+  org_editorRank: String
+  """
+  수정자 id
+  """
+  org_editorId: Int
+  """
+  삭제 여부
+  """
+  org_isDelete: Boolean
+  """
+  삭제일
+  """
+  org_deleteDate: String
+  """
+  조직명
+  """
+  org_name: String
+}
+
+"""
+직책
+"""
+type rank {
+  rank_id: Int
+  rank_createdAt: String
+  rank_updatedAt: String
+  """
+  작성자 이름
+  """
+  rank_creatorName: String
+  """
+  작성자 직책(원장, 간호사, 의사)
+  """
+  rank_creatorRank: String
+  """
+  작성자(사용자) id
+  """
+  rank_creatorId: Int
+  """
+  수정자 이름
+  """
+  rank_editorName: String
+  """
+  수정자 직책
+  """
+  rank_editorRank: String
+  """
+  수정자 id
+  """
+  rank_editorId: Int
+  """
+  삭제 여부
+  """
+  rank_isDelete: Boolean
+  """
+  삭제일
+  """
+  rank_deleteDate: String
+  """
+  직책명
+  """
+  rank_name: String
+}
+
+"""
+진료항목 대분류
+"""
+type medicalSubject {
+  ms_id: Int
+  # ms_createdAt: String
+  # ms_updatedAt: String
+  # """
+  # 작성자 이름
+  # """
+  # ms_creatorName: String
+  # """
+  # 작성자 직책(원장, 간호사, 의사)
+  # """
+  # ms_creatorRank: String
+  # """
+  # 작성자(사용자) id
+  # """
+  # ms_creatorId: Int
+  # """
+  # 수정자 이름
+  # """
+  # ms_editorName: String
+  # """
+  # 수정자 직책
+  # """
+  # ms_editorRank: String
+  # """
+  # 수정자 id
+  # """
+  # ms_editorId: Int
+  # """
+  # 삭제 여부
+  # """
+  # ms_isDelete: Boolean
+  # """
+  # 삭제일
+  # """
+  # ms_deleteDate: String
+  """
+  대분류명
+  """
+  ms_name: String
+  # medicalSubjectDetail: [medicalSubjectDetail]
+}
+
+"""
+진료항목 소분류
+"""
+type medicalSubjectDetail {
+  msd_id: Int
+  # msd_createdAt: String
+  # msd_updatedAt: String
+  # """
+  # 작성자 이름
+  # """
+  # msd_creatorName: String
+  # """
+  # 작성자 직책(원장, 간호사, 의사)
+  # """
+  # msd_creatorRank: String
+  # """
+  # 작성자(사용자) id
+  # """
+  # msd_creatorId: Int
+  # """
+  # 수정자 이름
+  # """
+  # msd_editorName: String
+  # """
+  # 수정자 직책
+  # """
+  # msd_editorRank: String
+  # """
+  # 수정자 id
+  # """
+  # msd_editorId: Int
+  # """
+  # 삭제 여부
+  # """
+  # msd_isDelete: Boolean
+  # """
+  # 삭제일
+  # """
+  # msd_deleteDate: String
+  """
+  소분류명
+  """
+  msd_name: String
 }
 
 """
@@ -407,17 +600,52 @@ enum resLocation {
   right
 }
 
-# 환자정보 표시
+"""
+환자정보 표시
+"""
 enum patExpression {
-  empty # 사용 안함
-  patName #수진자명
-  doctorRoom #진료실
-  gender #성별
-  time #접수시간
-  doctor #담당의
-  status #대기상태
-  chartNumber #차트번호
-  birthday #생년월일
-  age #나이
-  memo #접수메모
+  """
+  사용 안함
+  """
+  empty
+  """
+  수진자명
+  """
+  patName
+  """
+  진료실
+  """
+  doctorRoom
+  """
+  성별
+  """
+  gender
+  """
+  접수시간
+  """
+  time
+  """
+  담당의
+  """
+  doctor
+  """
+  대기상태
+  """
+  status
+  """
+  차트번호
+  """
+  chartNumber
+  """
+  생년월일
+  """
+  birthday
+  """
+  나이
+  """
+  age
+  """
+  접수메모
+  """
+  memo
 }

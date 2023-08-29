@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  소분류 진료항목 추가
+  """
+  createMedicalSubjectDetail(
+    """
+    대분류 id
+    """
+    ms_id: Int!
+    """
+    소분류
+    """
+    msd_name: String
+  ): Boolean
+}
