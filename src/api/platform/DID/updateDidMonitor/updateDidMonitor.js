@@ -191,7 +191,7 @@ export default {
           where: { did_id },
           include: {
             didDoctorRoom: {
-              where: { did_id },
+              where: { ddr_isDelete: false },
               select: {
                 ddr_id: true,
                 ddr_info: true,
@@ -203,7 +203,7 @@ export default {
               orderBy: { ddr_number: "asc" },
             },
             didAttached: {
-              where: { did_id },
+              where: { da_isDelete: false },
               select: {
                 da_id: true,
                 da_url: true,
@@ -212,7 +212,7 @@ export default {
               orderBy: { da_number: "asc" },
             },
             didLowMsg: {
-              where: { did_id },
+              where: { dlm_isDelete: false },
               select: {
                 dlm_id: true,
                 dlm_text: true,

@@ -87,7 +87,7 @@ const webSocket = async (httpServer) => {
         where: { did_id },
         include: {
           didDoctorRoom: {
-            where: { did_id },
+            where: { AND: [{ did_id }, { ddr_isDelete: false }] },
             select: {
               ddr_id: true,
               ddr_info: true,
@@ -99,7 +99,7 @@ const webSocket = async (httpServer) => {
             orderBy: { ddr_number: "asc" },
           },
           didAttached: {
-            where: { did_id },
+            where: { AND: [{ did_id }, { da_isDelete: false }] },
             select: {
               da_id: true,
               da_url: true,
@@ -108,7 +108,7 @@ const webSocket = async (httpServer) => {
             orderBy: { da_number: "asc" },
           },
           didLowMsg: {
-            where: { did_id },
+            where: { AND: [{ did_id }, { dlm_isDelete: false }] },
             select: {
               dlm_id: true,
               dlm_text: true,
