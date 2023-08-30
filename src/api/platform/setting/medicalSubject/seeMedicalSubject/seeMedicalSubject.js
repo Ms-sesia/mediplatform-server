@@ -7,9 +7,10 @@ export default {
     seeMedicalSubject: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
+      const { hsp_id } = args;
       try {
         const medicalSubjectInfo = await prisma.medicalSubject.findMany({
-          where: { ms_isDelete: false },
+          where: { AND: [{ ms_isDelete: false }, { hsp_id }] },
           orderBy: { ms_name: "asc" },
         });
 

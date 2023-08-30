@@ -40,20 +40,6 @@ export default {
               { user_cellphone: { contains: searchTerm } },
             ],
           },
-          // include: {
-          //   didAttached: {
-          //     where: { da_isDelete: false },
-          //     orderBy: { da_number: "asc" },
-          //   },
-          //   didLowMsg: {
-          //     where: { dlm_isDelete: false },
-          //     orderBy: { dlm_number: "asc" },
-          //   },
-          //   didDoctorRoom: {
-          //     where: { ddr_isDelete: false },
-          //     orderBy: { ddr_number: "asc" },
-          //   },
-          // },
           ...cursorOpt,
           orderBy: { user_name: "asc" },
         });

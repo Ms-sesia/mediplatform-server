@@ -1,0 +1,21 @@
+type Mutation {
+  """
+  병원 정보 수정
+  """
+  updateHospital(
+    """
+    수정할 병원 id
+    """
+    hsp_id: Int!
+    hsp_img: Upload # 병원 이미지
+    hsp_name: String # 병원 이름 50자
+    hsp_chief: String # 병원 대표자 명 10자
+    hsp_hospitalNumber: String # 요양기관번호  20자?
+    hsp_businessNumber: String # 사업자번호 20자
+    hsp_address: String # 주소 검색 값 50자
+    hsp_detailAddress: String # 주소 검색 후 상세주소 50자
+    hsp_medicalDepartment: String # 진료과목 20자
+    hsp_kakaoChannelId: String # 카카오 채널 Id 50자
+    hsp_kakaoChannelUrl: String # 카카오 채널 url 50자
+  ): Boolean
+}

@@ -56,7 +56,7 @@ export default {
             data: { admin_doLoginCount: admin.admin_doLoginCount + 1 },
           });
 
-          throw 1;
+          throw 3;
         }
 
         const adminUser = await prisma.admin.findUnique({
@@ -87,14 +87,24 @@ export default {
         // 토큰 업데이트 및 시도횟수 초기화
         admin = await prisma.admin.update({
           where: { admin_id: adminUser.admin_id },
-          data: { admin_loginToken: loginToken, admin_doLoginCount: 0 },
+          data: {
+            // admin_loginToken: loginToken,
+            admin_doLoginCount: 0,
+          },
         });
 
         return loginToken;
       } catch (e) {
         console.log("관리자 로그인 실패. adminLogin", e);
-        if (e === 1) throw new Error("로그인에 실패하였습니다.");
+        if (e === 1) {
+          console.log("사용자 없음.");
+          throw new Error("로그인에 실패하였습니다.");
+        }
         if (e === 2) throw new Error("로그인 시도회수가 10번이 넘었습니다. 10분 후 다시 시도해주세요.");
+        if (e === 3) {
+          console.log("관리자 비밀번호 틀림.");
+          throw new Error("로그인에 실패하였습니다.");
+        }
         throw new Error("관리자 로그인에 실패하였습니다.");
       }
     },

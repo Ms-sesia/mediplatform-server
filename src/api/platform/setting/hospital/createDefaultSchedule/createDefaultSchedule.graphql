@@ -1,0 +1,51 @@
+type Mutation {
+  """
+  병원 기본 스케쥴 추가
+  """
+  createDefaultSchedule(
+    """
+    스케쥴 추가할 병원 id
+    """
+    hsp_id: Int!
+    """
+    요일
+    """
+    ds_day: day
+    """
+    시작 시간
+    """
+    ds_startHour: Int
+    """
+    시작 분
+    """
+    ds_startMin: Int
+    """
+    종료 시간
+    """
+    ds_endHour: Int
+    """
+    종료 분
+    """
+    ds_endMin: Int
+    """
+    점심시간 휴진 사용 여부. false 미사용, true 사용
+    """
+    ds_lunchBreak: Boolean
+    """
+    점심시간 시작 시간
+    """
+    ds_lbStartHour: Int
+    """
+    점심시간 시작 분
+    """
+    ds_lbStartMin: Int
+    """
+    점심시간 종료 시간
+    """
+    ds_lbEndHour: Int
+    """
+    점심시간 종료 분
+    """
+    ds_lbEndMin: Int
+  ): Boolean
+}

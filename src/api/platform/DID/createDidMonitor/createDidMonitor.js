@@ -77,7 +77,6 @@ export default {
         if (did_attached.length) {
           for (let i = 0; i < did_attached.length; i++) {
             const { createReadStream, filename, encoding, mimetype } = await did_attached[i];
-            console.log(did_attached[i]);
             const stream = createReadStream();
 
             const fileRename = `${Date.now()}-${filename}`;

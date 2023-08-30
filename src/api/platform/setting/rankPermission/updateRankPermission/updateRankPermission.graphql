@@ -1,0 +1,39 @@
+type Mutation {
+  """
+  직책 권한 설정
+  """
+  updateRankPermission(
+    """
+    직책 id
+    """
+    rank_id: Int!
+    """
+    예약
+    """
+    rp_reservation: Boolean
+    """
+    일정
+    """
+    rp_schedule: Boolean
+    """
+    환자
+    """
+    rp_patient: Boolean
+    """
+    did
+    """
+    rp_did: Boolean
+    """
+    보험
+    """
+    rp_insurance: Boolean
+    """
+    고객센터
+    """
+    rp_cs: Boolean
+    """
+    환경설정
+    """
+    rp_setting: Boolean
+  ): Boolean
+}

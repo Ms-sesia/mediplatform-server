@@ -21,17 +21,13 @@ type Mutation {
     """
     email: String!
     """
-    사용자 권한
-    """
-    permission: String!
-    """
     조직
     """
     org: String
     """
     직책
     """
-    rank: String
+    rank: String!
     """
     직무
     """

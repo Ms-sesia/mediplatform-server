@@ -33,12 +33,6 @@ export default {
 
         const loginToken = didLoginToken(user);
 
-        console.log({
-          did_id: did.did_id,
-          email: user.user_email,
-          token: loginToken,
-        });
-
         return {
           did_id: did.did_id,
           email: user.user_email,

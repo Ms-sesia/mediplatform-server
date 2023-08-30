@@ -73,10 +73,6 @@ type user {
   """
   user_email: String
   """
-  사용자 권한
-  """
-  user_permission: String
-  """
   조직
   """
   user_org: String
@@ -136,6 +132,53 @@ type user {
   퇴사 여부. false : 퇴사 안함, true: 퇴사
   """
   user_withdrwal: Boolean
+}
+
+"""
+월 ~ 일 병원 운영 기본 일정
+"""
+type defaultSchedule {
+  ds_id: Int
+  """
+  요일
+  """
+  ds_day: day
+  """
+  시작 시간
+  """
+  ds_startHour: Int
+  """
+  시작 분
+  """
+  ds_startMin: Int
+  """
+  종료 시간
+  """
+  ds_endHour: Int
+  """
+  종료 분
+  """
+  ds_endMin: Int
+  """
+  점심시간 휴진 사용 여부. false 미사용, true 사용
+  """
+  ds_lunchBreak: Boolean
+  """
+  점심시간 시작 시간
+  """
+  ds_lbStartHour: Int
+  """
+  점심시간 시작 분
+  """
+  ds_lbStartMin: Int
+  """
+  점심시간 종료 시간
+  """
+  ds_lbEndHour: Int
+  """
+  점심시간 종료 분
+  """
+  ds_lbEndMin: Int
 }
 
 """
@@ -674,4 +717,49 @@ enum patExpression {
   접수메모
   """
   memo
+}
+
+"""
+요일
+"""
+enum day {
+  mon
+  tue
+  wed
+  thu
+  fri
+  sat
+  sun
+}
+
+"""
+병원 휴일 구분
+"""
+enum hospitalOffdayType {
+  """
+  임시
+  """
+  temp
+  """
+  고정
+  """
+  fix
+}
+
+"""
+휴일 반복여부
+"""
+enum offdayRepeat {
+  """
+  반복 없음
+  """
+  none
+  """
+  주 반복
+  """
+  week
+  """
+  웗 반복
+  """
+  month
 }

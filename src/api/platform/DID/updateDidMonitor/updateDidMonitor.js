@@ -89,9 +89,9 @@ export default {
             did_standbyPersonExpression: did_standbyPersonExpression
               ? did_standbyPersonExpression
               : did.did_standbyPersonExpression,
-            did_erColorUsed: did_erColorUsed ? did_erColorUsed : did.did_erColorUsed,
+            did_erColorUsed: did_erColorUsed,
             did_erColor: did_erColor ? did_erColor : did.did_erColor,
-            did_holdingColorUsed: did_holdingColorUsed ? did_holdingColorUsed : did.did_holdingColorUsed,
+            did_holdingColorUsed: did_holdingColorUsed,
             did_holdingColor: did_holdingColor ? did_holdingColor : did.did_holdingColor,
             did_standbyPersonFontsize: did_standbyPersonFontsize
               ? did_standbyPersonFontsize
@@ -99,12 +99,12 @@ export default {
             did_calledPersonFontsize: did_calledPersonFontsize
               ? did_calledPersonFontsize
               : did.did_calledPersonFontsize,
-            did_calledTextUsed: did_calledTextUsed ? did_calledTextUsed : did.did_calledTextUsed,
-            did_calledVoiceUsed: did_calledVoiceUsed ? did_calledVoiceUsed : did.did_calledVoiceUsed,
+            did_calledTextUsed: did_calledTextUsed,
+            did_calledVoiceUsed: did_calledVoiceUsed,
             did_monitorType: did_monitorType ? did_monitorType : did.did_monitorType,
             did_doctorRoomIsHorizontal: did_doctorRoomIsHorizontal,
             did_mediaType: did_mediaType ? did_mediaType : did.did_mediaType,
-            did_resUsed: did_resUsed ? did_resUsed : did.did_resUsed,
+            did_resUsed: did_resUsed,
             did_transmitType: did_transmitType ? did_transmitType : did.did_transmitType,
             did_resInfoLocation: did_resInfoLocation ? did_resInfoLocation : did.did_resInfoLocation,
             did_monitorRatio: did_monitorRatio ? did_monitorRatio : did.did_monitorRatio,
@@ -116,10 +116,10 @@ export default {
             did_patExpRatio3: did_patExpRatio3 ? did_patExpRatio3 : did.did_patExpRatio3,
             did_patExpress4: did_patExpress4 ? did_patExpress4 : did.did_patExpress4,
             did_patExpRatio4: did_patExpRatio4 ? did_patExpRatio4 : did.did_patExpRatio4,
-            did_lowMsgUsed: did_lowMsgUsed ? did_lowMsgUsed : did.did_lowMsgUsed,
+            did_lowMsgUsed: did_lowMsgUsed,
             did_resInfoTime: did_resInfoTime ? did_resInfoTime : did.did_resInfoTime,
             did_resInfoCycle: did_resInfoCycle ? did_resInfoCycle : did.did_resInfoCycle,
-            did_doctorRoomMerge: did_doctorRoomMerge ? did_doctorRoomMerge : did.did_doctorRoomMerge,
+            did_doctorRoomMerge: did_doctorRoomMerge,
           },
         });
 

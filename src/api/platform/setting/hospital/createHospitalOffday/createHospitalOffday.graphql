@@ -1,0 +1,18 @@
+type Mutation {
+  """
+  병원 쉬는날 등로
+  """
+  createHospitalOffday(
+    """
+    스케쥴 추가할 병원 id
+    """
+    hsp_id: Int!
+    ho_type: hospitalOffdayType # 병원 휴일 구분. 임시:temp, 고정:fix
+    ho_offStartDate: String # 시작일
+    ho_offEndDate: String # 종료일
+    ho_offStartTime: String # 시작 시간
+    ho_offEndTime: String # 종료 시간
+    ho_offdayRepeat: offdayRepeat # 반복여부. 반복없음: none, 매주반복: week, 매월반복: month
+    ho_memo: String # 메모 200자
+  ): Boolean
+}

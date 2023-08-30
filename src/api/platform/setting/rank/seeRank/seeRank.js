@@ -7,9 +7,10 @@ export default {
     seeRank: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
+      const { hsp_id } = args;
       try {
         const rankList = await prisma.rank.findMany({
-          where: { rank_isDelete: false },
+          where: { AND: [{ rank_isDelete: false }, { hsp_id }, { NOT: { rank_name: "대표원장" } }] },
           orderBy: { rank_name: "asc" },
         });
 

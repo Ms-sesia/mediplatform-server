@@ -7,9 +7,10 @@ export default {
     seeDoctorRoom: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
+      const { hsp_id } = args;
       try {
         const doctorRoomList = await prisma.doctorRoom.findMany({
-          where: { dr_isDelete: false },
+          where: { AND: [{ dr_isDelete: false }, { hsp_id }] },
           orderBy: { dr_roomName: "asc" },
         });
 

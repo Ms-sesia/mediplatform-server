@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  병원 기본 스케쥴 삭제
+  """
+  deleteDefaultSchedule(
+    """
+    삭제할 id
+    """
+    ds_id: Int!
+  ): Boolean
+}

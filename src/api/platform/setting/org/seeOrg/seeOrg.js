@@ -7,9 +7,10 @@ export default {
     seeOrg: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
+      const { hsp_id } = args;
       try {
         const orgList = await prisma.org.findMany({
-          where: { org_isDelete: false },
+          where: { AND: [{ org_isDelete: false }, { hsp_id }] },
           orderBy: { org_name: "asc" },
         });
 

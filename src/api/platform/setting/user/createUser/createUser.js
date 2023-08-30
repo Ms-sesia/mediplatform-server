@@ -10,7 +10,7 @@ export default {
     createUser: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { name, birthday, cellphone, email, permission, org, rank, job } = args;
+      const { name, birthday, cellphone, email, org, rank, job } = args;
       try {
         // 이메일 중복 체크
         const emailDuplicateCheck = await prisma.user.findUnique({ where: { user_email: email } });
@@ -18,7 +18,6 @@ export default {
 
         // 10자리 랜덤 문자열(임시 비밀번호)
         const tempPw = genRandomCode(8);
-        console.log(tempPw);
 
         const title = "메디플랫폼 가입 안내 메일";
         const text = `안녕하세요. 메디플랫폼 계정생성 안내 메일입니다.<br>생성된 계정의 정보는 아래와 같습니다.<br><br>ID(email) : ${email}<br>password : ${tempPw}<br><br>로그인 후 비밀번호를 변경하고 사용해주세요.<br>감사합니다.`;
@@ -32,7 +31,6 @@ export default {
             user_birthday: birthday,
             user_cellphone: cellphone,
             user_email: email,
-            user_permission: permission,
             user_org: org,
             user_rank: rank,
             user_job: job,

@@ -11,13 +11,23 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
-        await prisma.rank.create({
+        const rank = await prisma.rank.create({
           data: {
             rank_creatorId: loginUser.user_id,
             rank_creatorName: loginUser.user_name,
             rank_creatorRank: loginUser.user_rank,
             rank_name,
             hospital: { connect: { hsp_id: loginUser.hsp_id } },
+          },
+        });
+
+        // 권한 자동생성
+        await prisma.rankPermission.create({
+          data: {
+            rp_creatorId: loginUser.user_id,
+            rp_creatorName: loginUser.user_name,
+            rp_creatorRank: loginUser.user_rank,
+            rank: { connect: { rank_id: rank.rank_id } },
           },
         });
 

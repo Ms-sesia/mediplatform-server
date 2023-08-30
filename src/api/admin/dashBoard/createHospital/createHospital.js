@@ -68,14 +68,42 @@ export default {
           },
         });
 
+        const isRank = await prisma.rank.findMany({
+          where: { AND: [{ hsp_id: hospital.hsp_id }, { rank_name: "대표원장" }] },
+        });
+
+        if (!isRank.length) {
+          const rank = await prisma.rank.create({
+            data: {
+              rank_name: "대표원장",
+              hospital: { connect: { hsp_id: hospital.hsp_id } },
+            },
+          });
+
+          await prisma.rankPermission.create({
+            data: {
+              rp_reservation: true,
+              rp_schedule: true,
+              rp_patient: true,
+              rp_did: true,
+              rp_insurance: true,
+              rp_cs: true,
+              rp_setting: true,
+              rank: { connect: { rank_id: rank.rank_id } },
+            },
+          });
+        }
+
         const hashedInfo = await hashPassword(tempPw);
+
+        console.log(tempPw);
 
         await prisma.user.create({
           data: {
             user_name: name,
             user_email: email,
-            user_permission: "master",
             user_salt: hashedInfo.salt,
+            user_rank: "대표원장",
             user_password: hashedInfo.password,
             hospital: { connect: { hsp_id: hospital.hsp_id } },
           },

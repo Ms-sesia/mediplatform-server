@@ -7,7 +7,7 @@ export default {
     updateUser: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { user_id, name, birthday, cellphone, email, permission, org, rank, job } = args;
+      const { user_id, name, birthday, cellphone, email, org, rank, job } = args;
       try {
         const updateUser = await prisma.user.findUnique({ where: { user_id: user_id } });
 
@@ -18,7 +18,6 @@ export default {
             user_birthday: birthday ? birthday : updateUser.user_birthday,
             user_cellphone: cellphone ? cellphone : updateUser.user_cellphone,
             user_email: email ? email : updateUser.user_email,
-            user_permission: permission ? permission : updateUser.user_permission,
             user_org: org ? org : updateUser.user_org,
             user_rank: rank ? rank : updateUser.user_rank,
             user_job: job ? job : updateUser.user_job,

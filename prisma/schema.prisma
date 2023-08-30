@@ -256,7 +256,7 @@ model user {
   user_birthday       String                @default("") @db.VarChar(25) // 생년월일
   user_cellphone      String                @default("") @db.VarChar(25) // 휴대폰번호
   user_email          String                @unique @default("") @db.VarChar(125) // 사용자 email - id가 됨
-  user_permission     String                @default("") @db.VarChar(25) // 사용자 권한
+  // user_permission     String                @default("") @db.VarChar(25) // 사용자 권한
   user_org            String                @default("") @db.VarChar(25) // 조직
   user_rank           String                @default("") @db.VarChar(25) // 직책
   user_job            String                @default("") @db.VarChar(25) // 직무
@@ -272,28 +272,12 @@ model user {
   user_resAlim        Boolean               @default(true) // 예약대기 알림
   user_specialAlim    Boolean               @default(true) // 특별일정 알림
   user_withdrwal      Boolean               @default(false) // 퇴사 여부. false : 퇴사 안함, true: 퇴사
-  userPermission      userPermission[]
   searchHistory       searchHistory[]
   userPatientAlimSet  userPatientAlimSet?
   faqLike             faqLike[]
   platformNoticeCheck platformNoticeCheck[]
   hospital            hospital              @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id              Int
-}
-
-// 사용자 탭별 접근권한
-model userPermission {
-  up_id          Int     @id @default(autoincrement())
-  up_home        Boolean @default(false) // 홈
-  up_reservation Boolean @default(false) // 예약
-  up_schedule    Boolean @default(false) // 일정
-  up_patient     Boolean @default(false) // 환자
-  up_did         Boolean @default(false) // did
-  up_insurance   Boolean @default(false) // 보험
-  up_cs          Boolean @default(false) // 고객센터
-  up_setting     Boolean @default(false) // 환경설정
-  user           user    @relation(fields: [user_id], references: [user_id])
-  user_id        Int
 }
 
 // 검색 기록
@@ -923,20 +907,46 @@ model org {
 
 // 직책
 model rank {
-  rank_id          Int       @id @default(autoincrement())
-  rank_createdAt   DateTime  @default(now())
-  rank_updatedAt   DateTime  @updatedAt // 수정일
-  rank_creatorName String    @default("") @db.VarChar(20) // 작성자 이름
-  rank_creatorRank String    @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
-  rank_creatorId   Int       @default(0) // 작성자(사용자) id
-  rank_editorName  String    @default("") @db.VarChar(25) // 수정자 이름
-  rank_editorRank  String    @default("") @db.VarChar(25) // 수정자 직책
-  rank_editorId    Int       @default(0) // 수정자 id
-  rank_isDelete    Boolean   @default(false) // 삭제 여부
+  rank_id          Int             @id @default(autoincrement())
+  rank_createdAt   DateTime        @default(now())
+  rank_updatedAt   DateTime        @updatedAt // 수정일
+  rank_creatorName String          @default("") @db.VarChar(20) // 작성자 이름
+  rank_creatorRank String          @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
+  rank_creatorId   Int             @default(0) // 작성자(사용자) id
+  rank_editorName  String          @default("") @db.VarChar(25) // 수정자 이름
+  rank_editorRank  String          @default("") @db.VarChar(25) // 수정자 직책
+  rank_editorId    Int             @default(0) // 수정자 id
+  rank_isDelete    Boolean         @default(false) // 삭제 여부
   rank_deleteDate  DateTime? // 삭제일
-  rank_name        String    @default("") @db.VarChar(25) // 직책명
-  hospital         hospital  @relation(fields: [hsp_id], references: [hsp_id])
+  rank_name        String          @default("") @db.VarChar(25) // 직책명
+  rankPermission   rankPermission?
+  hospital         hospital        @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id           Int
+}
+
+// 직책 권한
+model rankPermission {
+  rp_id          Int       @id @default(autoincrement())
+  rp_createdAt   DateTime  @default(now())
+  rp_updatedAt   DateTime  @updatedAt // 수정일
+  rp_creatorName String    @default("") @db.VarChar(20) // 작성자 이름
+  rp_creatorRank String    @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
+  rp_creatorId   Int       @default(0) // 작성자(사용자) id
+  rp_editorName  String    @default("") @db.VarChar(25) // 수정자 이름
+  rp_editorRank  String    @default("") @db.VarChar(25) // 수정자 직책
+  rp_editorId    Int       @default(0) // 수정자 id
+  rp_isDelete    Boolean   @default(false) // 삭제 여부
+  rp_deleteDate  DateTime? // 삭제일
+  rp_home        Boolean   @default(true) // 홈
+  rp_reservation Boolean   @default(false) // 예약
+  rp_schedule    Boolean   @default(false) // 일정
+  rp_patient     Boolean   @default(false) // 환자
+  rp_did         Boolean   @default(false) // did
+  rp_insurance   Boolean   @default(false) // 보험
+  rp_cs          Boolean   @default(false) // 고객센터
+  rp_setting     Boolean   @default(false) // 환경설정
+  rank           rank      @relation(fields: [rank_id], references: [rank_id])
+  rank_id        Int       @unique
 }
 
 // 진료항목 대분류
