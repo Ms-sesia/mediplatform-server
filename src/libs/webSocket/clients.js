@@ -1,3 +1,2 @@
-const clients = {};
-
-export default clients;
+export const clients = {};
+export const didClients = {};

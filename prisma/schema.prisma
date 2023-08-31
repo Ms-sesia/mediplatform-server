@@ -468,6 +468,8 @@ model hospitalOffday {
   ho_memo         String             @default("") @db.VarChar(250) // 메모 200자
   hospital        hospital           @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id          Int
+
+  @@index([hsp_id, ho_offStartDate, ho_offEndDate])
 }
 
 // 병원(진료실) 특별 일정(휴무 등)

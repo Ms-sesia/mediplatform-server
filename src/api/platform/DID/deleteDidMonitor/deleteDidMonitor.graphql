@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  did 삭제
+  """
+  deleteDidMonitor(
+    """
+    삭제할 did id
+    """
+    did_id: Int!
+  ): Boolean
+}

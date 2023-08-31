@@ -182,6 +182,72 @@ type defaultSchedule {
 }
 
 """
+병원 휴뮤일
+"""
+type hospitalOffday {
+  ho_id: Int
+  ho_createdAt: String
+  ho_updatedAt: String
+  ho_creatorName: String
+  """
+  등록자 직책
+  """
+  ho_creatorRank: String
+  """
+  등록자 id
+  """
+  ho_creatorId: Int
+  """
+  수정자 이름
+  """
+  ho_editorName: String
+  """
+  수정자 직책
+  """
+  ho_editorRank: String
+  """
+  수정자 id
+  """
+  ho_editorId: Int
+  """
+  삭제여부
+  """
+  ho_isDelete: Boolean
+  """
+  삭제일
+  """
+  ho_deleteDate: String
+  """
+  병원 휴일 구분. 임시:temp, 고정:fix
+  """
+  ho_type: hospitalOffdayType
+  """
+  시작일
+  """
+  ho_offStartDate: String
+  """
+  종료일
+  """
+  ho_offEndDate: String
+  """
+  시작 시간
+  """
+  ho_offStartTime: String
+  """
+  종료 시간
+  """
+  ho_offEndTime: String
+  """
+  반복여부. 반복없음: none, 매주반복: week, 매월반복: month
+  """
+  ho_offdayRepeat: offdayRepeat
+  """
+  메모 200자
+  """
+  ho_memo: String
+}
+
+"""
 did
 """
 type did {
@@ -762,4 +828,22 @@ enum offdayRepeat {
   웗 반복
   """
   month
+}
+
+"""
+병원 휴일 구분
+"""
+enum hospitalOffdayType {
+  """
+  전체
+  """
+  total
+  """
+  임시
+  """
+  temp
+  """
+  고정
+  """
+  fix
 }

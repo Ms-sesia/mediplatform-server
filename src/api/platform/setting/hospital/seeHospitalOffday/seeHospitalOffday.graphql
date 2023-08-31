@@ -1,0 +1,24 @@
+type Query {
+  """
+  월별 휴무일정 조회
+  """
+  seeHospitalOffday(
+    """
+    검색어 - 메모 검색
+    """
+    searchTerm: String
+    year: Int
+    month: Int
+    """
+    병원 휴일 구분 - 전체(조회만) : total / 임시 : temp / 고정 : fix
+    """
+    ho_type: hospitalOffdayType
+    take: Int
+    cursor: Int
+  ): seeHospitalOffdayInfo
+}
+
+type seeHospitalOffdayInfo {
+  totalLength: Int
+  hospitalOffdayList: [hospitalOffday]
+}

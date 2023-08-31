@@ -1,0 +1,13 @@
+type Mutation {
+  """
+  소켓 전송 테스트
+  """
+  didUpdateTest(
+    """
+    did_id값
+    """
+    did_id: Int
+    uniqueId: String
+    email: Boolean
+  ): Boolean
+}

@@ -231,9 +231,11 @@ export default {
         const socketIo = await webSocket();
         const pub = socketIo.pub;
 
-        const channelName = `h-${hospital.hsp_email}`;
+        // const channelName = `h-${hospital.hsp_email}`;
+        // const didChannel = "31693396924740kWnm#keV";
 
-        await pub.publish(channelName, JSON.stringify(updateDidInfo));
+        // await pub.publish(channelName, JSON.stringify(updateDidInfo));
+        await pub.publish(did.did_uniqueId, JSON.stringify(updateDidInfo));
 
         return true;
       } catch (e) {

@@ -12,6 +12,7 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
+        const did = await prisma.did.findUnique({ where: { did_id } });
         const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
 
         const today = new Date();
@@ -71,9 +72,9 @@ export default {
         const socketIo = await webSocket();
         const pub = socketIo.pub;
 
-        const channelName = `h-${hospital.hsp_email}`;
+        // const channelName = `h-${hospital.hsp_email}`;
 
-        await pub.publish(channelName, JSON.stringify(updateDidInfo));
+        await pub.publish(did.did_uniqueId, JSON.stringify(updateDidInfo));
 
         return true;
       } catch (e) {

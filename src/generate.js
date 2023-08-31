@@ -16,7 +16,8 @@ export const generateToken = (user) => {
 };
 
 export const genRandomCode = (stringLength) => {
-  const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXTZ!@#$%^&";
+  // const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXTZ!@#$%^&";
+  const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXTZ";
   // const stringLength = 6;
   let randomstring = "";
   for (let i = 0; i < stringLength; i++) {
