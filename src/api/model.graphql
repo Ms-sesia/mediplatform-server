@@ -85,14 +85,6 @@ type user {
   """
   user_job: String
   """
-  암호화 salt
-  """
-  user_salt: String
-  """
-  계정 비밀번호 20자
-  """
-  user_password: String
-  """
   비밀번호 초기화 상태 - 첫 생성시 초기화 상태. 로그인하면서 비번 설정
   """
   user_passwordInit: Boolean
@@ -129,9 +121,48 @@ type user {
   """
   user_specialAlim: Boolean
   """
-  퇴사 여부. false : 퇴사 안함, true: 퇴사
+  사용자 권한
   """
-  user_withdrwal: Boolean
+  user_permission: userPermission
+}
+
+"""
+사용자 권한
+"""
+type userPermission {
+  up_id: Int
+  """
+  홈
+  """
+  up_home: Boolean
+  """
+  예약
+  """
+  up_reservation: Boolean
+  """
+  일정
+  """
+  up_schedule: Boolean
+  """
+  환자
+  """
+  up_patient: Boolean
+  """
+  did
+  """
+  up_did: Boolean
+  """
+  보험
+  """
+  up_insurance: Boolean
+  """
+  고객센터
+  """
+  up_cs: Boolean
+  """
+  환경설정
+  """
+  up_setting: Boolean
 }
 
 """

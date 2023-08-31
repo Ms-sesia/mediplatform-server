@@ -119,6 +119,7 @@ export default {
             await prisma.didDoctorRoom.create({
               data: {
                 ddr_info: `${drRoom.dr_roomName} ${drRoom.dr_doctorName}`,
+                ddr_deptCode: drRoom.dr_deptCode,
                 ddr_doctorRoomName: drRoom.dr_roomName,
                 ddr_doctorName: drRoom.dr_doctorName,
                 ddr_number: idx + 1,

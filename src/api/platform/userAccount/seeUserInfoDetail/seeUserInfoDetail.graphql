@@ -1,0 +1,6 @@
+type Query {
+  """
+  사용자 기본 정보 조회
+  """
+  seeUserInfoDetail: user
+}

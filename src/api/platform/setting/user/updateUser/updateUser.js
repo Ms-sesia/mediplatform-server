@@ -24,6 +24,29 @@ export default {
           },
         });
 
+        if (rank !== updateUser.user_rank) {
+          const findRank = await prisma.rank.findMany({
+            where: { AND: [{ hsp_id }, { rank_name: rank }] },
+          });
+
+          const rankPermission = await prisma.rankPermission.findUnique({
+            where: { rank_id: findRank[0].rank_id },
+          });
+
+          await prisma.userPermission.update({
+            where: { user_id },
+            data: {
+              up_reservation: rankPermission.rp_reservation,
+              up_schedule: rankPermission.rp_schedule,
+              up_patient: rankPermission.rp_patient,
+              up_did: rankPermission.rp_did,
+              up_insurance: rankPermission.rp_insurance,
+              up_cs: rankPermission.rp_cs,
+              up_setting: rankPermission.rp_setting,
+            },
+          });
+        }
+
         return true;
       } catch (e) {
         console.log("사용자 정보 수정 실패. updateUser", e);

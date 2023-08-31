@@ -1,0 +1,23 @@
+type Mutation {
+  """
+  사용자 알림설정 변경
+  """
+  updateUserAlim(
+    """
+    사내 공지 알림
+    """
+    user_hnAlim: Boolean
+    """
+    플랫폼 공지 알림
+    """
+    user_pnAlim: Boolean
+    """
+    예약대기 알림
+    """
+    user_resAlim: Boolean
+    """
+    특별일정 알림
+    """
+    user_specialAlim: Boolean
+  ): Boolean
+}

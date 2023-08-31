@@ -11,7 +11,7 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
-        await prisma.rankPermission.update({
+        const rankP = await prisma.rankPermission.update({
           where: { rank_id },
           data: {
             rp_editorId: loginUser.user_id,
@@ -25,6 +25,40 @@ export default {
             rp_cs,
             rp_setting,
           },
+        });
+
+        const rank = await prisma.rank.findUnique({ where: { rank_id } });
+
+        await prisma.userPermission.updateMany({
+          where: {
+            AND: [{ user: { hsp_id: rank.hsp_id } }, { user: { user_rank: { contains: rank.rank_name } } }],
+          },
+          data: {
+            up_reservation: rp_reservation,
+            up_schedule: rp_schedule,
+            up_patient: rp_patient,
+            up_did: rp_did,
+            up_insurance: rp_insurance,
+            up_cs: rp_cs,
+            up_setting: rp_setting,
+          },
+        });
+
+        const updateUsers = await prisma.user.findMany({
+          where: { AND: [{ hsp_id: rank.hsp_id }, { user_rank: { contains: rank.rank_name } }] },
+        });
+
+        updateUsers.map(async (user) => {
+          await prisma.userUpdateLog.create({
+            data: {
+              ul_name: user.user_name,
+              ul_content: "직책 권한설정 변경에 따른 사용자 권한변경",
+              ul_editorName: loginUser.user_name,
+              ul_editorId: loginUser.user_id,
+              ul_editorRank: loginUser.user_rank,
+              hospital: { connect: { hsp_id: rank.hsp_id } },
+            },
+          });
         });
 
         return true;

@@ -256,7 +256,6 @@ model user {
   user_birthday       String                @default("") @db.VarChar(25) // 생년월일
   user_cellphone      String                @default("") @db.VarChar(25) // 휴대폰번호
   user_email          String                @unique @default("") @db.VarChar(125) // 사용자 email - id가 됨
-  // user_permission     String                @default("") @db.VarChar(25) // 사용자 권한
   user_org            String                @default("") @db.VarChar(25) // 조직
   user_rank           String                @default("") @db.VarChar(25) // 직책
   user_job            String                @default("") @db.VarChar(25) // 직무
@@ -271,13 +270,40 @@ model user {
   user_pnAlim         Boolean               @default(true) // 플랫폼 공지 알림
   user_resAlim        Boolean               @default(true) // 예약대기 알림
   user_specialAlim    Boolean               @default(true) // 특별일정 알림
-  user_withdrwal      Boolean               @default(false) // 퇴사 여부. false : 퇴사 안함, true: 퇴사
+  userEmailAuthCode   userEmailAuthCode[]
   searchHistory       searchHistory[]
   userPatientAlimSet  userPatientAlimSet?
   faqLike             faqLike[]
   platformNoticeCheck platformNoticeCheck[]
+  userPermission      userPermission?
   hospital            hospital              @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id              Int
+
+  @@index([user_name, user_cellphone])
+}
+
+model userPermission {
+  up_id          Int     @id @default(autoincrement())
+  up_home        Boolean @default(true) // 홈
+  up_reservation Boolean @default(false) // 예약
+  up_schedule    Boolean @default(false) // 일정
+  up_patient     Boolean @default(false) // 환자
+  up_did         Boolean @default(false) // did
+  up_insurance   Boolean @default(false) // 보험
+  up_cs          Boolean @default(false) // 고객센터
+  up_setting     Boolean @default(false) // 환경설정
+  user           user    @relation(fields: [user_id], references: [user_id])
+  user_id        Int     @unique
+}
+
+// 이메일 인증코드
+model userEmailAuthCode {
+  ueac_id        Int      @id @default(autoincrement())
+  ueac_createdAt DateTime
+  ueac_code      String   @default("") @db.VarChar(10) // 인증코드 8자리
+  ueac_email     String   @default("") @db.VarChar(125) // 변경할 이메일 
+  user           user     @relation(fields: [user_id], references: [user_id])
+  user_id        Int
 }
 
 // 검색 기록
@@ -599,6 +625,7 @@ model did {
   did_resInfoTime             Int             @default(0) // 예약정보 노출 시간
   did_resInfoCycle            Int             @default(0) // 예약정보 노출 주기
   did_doctorRoomMerge         Boolean         @default(false) // 진료실 통합보기
+  did_saveMode                Boolean         @default(false) // 모니터 절전모드
   did_uniqueId                String          @unique @default("") @db.VarChar(125) // did 고유 id : hsp_id(병원구분자 1,2,3,4..) + 시간 + UUID(16자리 - 랜덤 영어(소,대)+숫자 ) 
   hospital                    hospital        @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id                      Int

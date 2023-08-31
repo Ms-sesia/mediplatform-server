@@ -18,6 +18,7 @@ export default {
 
         // 10자리 랜덤 문자열(임시 비밀번호)
         const tempPw = genRandomCode(8);
+        console.log(tempPw);
 
         const title = "메디플랫폼 가입 안내 메일";
         const text = `안녕하세요. 메디플랫폼 계정생성 안내 메일입니다.<br>생성된 계정의 정보는 아래와 같습니다.<br><br>ID(email) : ${email}<br>password : ${tempPw}<br><br>로그인 후 비밀번호를 변경하고 사용해주세요.<br>감사합니다.`;
@@ -25,7 +26,7 @@ export default {
 
         const hashedInfo = await hashPassword(tempPw);
 
-        await prisma.user.create({
+        const createUser = await prisma.user.create({
           data: {
             user_name: name,
             user_birthday: birthday,
@@ -37,6 +38,27 @@ export default {
             user_salt: hashedInfo.salt,
             user_password: hashedInfo.password,
             hospital: { connect: { hsp_id: user.hospital.hsp_id } },
+          },
+        });
+
+        const findRank = await prisma.rank.findMany({
+          where: { AND: [{ hsp_id: user.hospital.hsp_id }, { rank_name: rank }] },
+        });
+
+        const rankPermission = await prisma.rankPermission.findUnique({
+          where: { rank_id: findRank[0].rank_id },
+        });
+
+        await prisma.userPermission.update({
+          where: { user_id: createUser.user_id },
+          data: {
+            up_reservation: rankPermission.rp_reservation,
+            up_schedule: rankPermission.rp_schedule,
+            up_patient: rankPermission.rp_patient,
+            up_did: rankPermission.rp_did,
+            up_insurance: rankPermission.rp_insurance,
+            up_cs: rankPermission.rp_cs,
+            up_setting: rankPermission.rp_setting,
           },
         });
 

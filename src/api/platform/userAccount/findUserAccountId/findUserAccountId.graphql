@@ -1,0 +1,20 @@
+type Mutation {
+  """
+  아이디 찾기
+  """
+  findUserAccountId(
+    """
+    이름
+    """
+    name: String!
+    cellphone: String!
+  ): findUserAccountIdInfo
+}
+
+type findUserAccountIdInfo {
+  result: Boolean
+  """
+  사용자 로그인 id(email)
+  """
+  user_email: String
+}

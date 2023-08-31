@@ -27,6 +27,17 @@ export default {
           },
         });
 
+        await prisma.userUpdateLog.create({
+          data: {
+            ul_name: loginUser.user_name,
+            ul_content: "비밀번호 변경",
+            ul_editorId: loginUser.user_id,
+            ul_editorName: loginUser.user_name,
+            ul_editorRank: loginUser.user_rank,
+            hospital: { connect: { hsp_id: user.hospital.hsp_id } },
+          },
+        });
+
         return true;
       } catch (e) {
         console.log("사용자 비밀번호 변경 실패. updateUserPassword", e);

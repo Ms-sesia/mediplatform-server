@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  이메일 변경 - 컨펌 같이 진행
+  """
+  updateUserEmail(
+    """
+    인증 코드
+    """
+    authCode: String!
+    """
+    변경할 이메일
+    """
+    email: String!
+  ): Boolean
+}

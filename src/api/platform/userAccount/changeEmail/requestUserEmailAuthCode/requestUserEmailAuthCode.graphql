@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  이메일 변경 인증코드 발송
+  """
+  requestUserEmailAuthCode(
+    """
+    변경할 이메일
+    """
+    email: String!
+  ): Boolean
+}

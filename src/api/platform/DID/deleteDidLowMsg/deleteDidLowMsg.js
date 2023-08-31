@@ -12,7 +12,6 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
-        const did = await prisma.did.findUnique({ where: { did_id } });
         const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
 
         const today = new Date();
@@ -27,6 +26,8 @@ export default {
             dlm_deleteDate: today,
           },
         });
+
+        const did = await prisma.did.findUnique({ where: { did_id: dlm.did_id } });
 
         const didForSend = await prisma.did.findUnique({
           where: { did_id: dlm.did_id },
