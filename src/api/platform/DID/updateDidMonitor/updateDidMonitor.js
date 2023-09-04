@@ -197,6 +197,7 @@ export default {
                 ddr_info: true,
                 ddr_dayOff: true,
                 ddr_number: true,
+                ddr_viewSelect: true,
                 ddr_deptCode: true,
                 ddr_doctorName: true,
                 ddr_doctorRoomName: true,

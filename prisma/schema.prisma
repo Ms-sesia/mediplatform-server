@@ -814,20 +814,20 @@ model pnAttached {
 
 // 플랫폼공지 댓글
 model pnComment {
-  pnc_id              Int            @id @default(autoincrement())
-  pnc_text            String         @default("") @db.VarChar(125) // 공지사항 댓글 내용 100자
-  pnc_createdAt       DateTime       @default(now())
-  pnc_updatedAt       DateTime       @updatedAt // 수정일
-  pnc_creatorName     String         @default("") @db.VarChar(20) // 작성자 이름
-  pnc_creatorRank     String         @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
-  pnc_creatorId       Int            @default(0) // 작성자(사용자) id
-  pnc_adminEditorName String         @default("") @db.VarChar(25) // 수정자 이름
-  pnc_adminEditorRank String         @default("") @db.VarChar(25) // 수정자 직책
-  pnc_adminEditorId   Int            @default(0) // 수정자 id
-  pnc_isDelete        Boolean        @default(false) // 삭제 여부
-  pnc_deleteDate      DateTime? // 삭제일
-  platformNotice      platformNotice @relation(fields: [pn_id], references: [pn_id])
-  pn_id               Int
+  pnc_id          Int            @id @default(autoincrement())
+  pnc_text        String         @default("") @db.VarChar(125) // 공지사항 댓글 내용 100자
+  pnc_createdAt   DateTime       @default(now())
+  pnc_updatedAt   DateTime       @updatedAt // 수정일
+  pnc_creatorName String         @default("") @db.VarChar(20) // 작성자 이름
+  pnc_creatorRank String         @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
+  pnc_creatorId   Int            @default(0) // 작성자(사용자) id
+  pnc_editorName  String         @default("") @db.VarChar(25) // 수정자 이름
+  pnc_editorRank  String         @default("") @db.VarChar(25) // 수정자 직책
+  pnc_editorId    Int            @default(0) // 수정자 id
+  pnc_isDelete    Boolean        @default(false) // 삭제 여부
+  pnc_deleteDate  DateTime? // 삭제일
+  platformNotice  platformNotice @relation(fields: [pn_id], references: [pn_id])
+  pn_id           Int
 }
 
 // 자주묻는질문

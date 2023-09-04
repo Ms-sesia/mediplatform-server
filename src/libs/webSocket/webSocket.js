@@ -97,23 +97,21 @@ const webSocket = async (httpServer) => {
       });
 
     // 조회 데이터 요청 및 응답
-    // socket.on("reqSeeDid", async (did_id) => {
-    socket.on("reqSeeDid", async (did_id) => {
-      // console.log("reqSedDid data:", did_id);
-      // const findDid = await prisma.did.findUnique({
-      //   where: {did_uniqueId}
-      // })
+    socket.on("reqSeeDid", async (did_uniqueId) => {
+      const findDid = await prisma.did.findUnique({
+        where: { did_uniqueId },
+      });
       const did = await prisma.did.findUnique({
-        where: { did_id },
+        where: { did_id: findDid.did_id },
         include: {
           didDoctorRoom: {
-            // where: { AND: [{ did_id }, { ddr_isDelete: false }] },
-            where: { AND: [{ did_id }, { ddr_isDelete: false }] },
+            where: { AND: [{ did_id: findDid.did_id }, { ddr_isDelete: false }] },
             select: {
               ddr_id: true,
               ddr_info: true,
               ddr_dayOff: true,
               ddr_number: true,
+              ddr_viewSelect: true,
               ddr_deptCode: true,
               ddr_doctorRoomName: true,
               ddr_doctorName: true,
@@ -121,7 +119,7 @@ const webSocket = async (httpServer) => {
             orderBy: { ddr_number: "asc" },
           },
           didAttached: {
-            where: { AND: [{ did_id }, { da_isDelete: false }] },
+            where: { AND: [{ did_id: findDid.did_id }, { da_isDelete: false }] },
             select: {
               da_id: true,
               da_url: true,
@@ -130,7 +128,7 @@ const webSocket = async (httpServer) => {
             orderBy: { da_number: "asc" },
           },
           didLowMsg: {
-            where: { AND: [{ did_id }, { dlm_isDelete: false }] },
+            where: { AND: [{ did_id: findDid.did_id }, { dlm_isDelete: false }] },
             select: {
               dlm_id: true,
               dlm_text: true,
@@ -140,7 +138,6 @@ const webSocket = async (httpServer) => {
           hospital: { select: { hsp_name: true } },
         },
       });
-      console.log(did);
       socket.emit("resSeeDid", JSON.stringify(did));
     });
 

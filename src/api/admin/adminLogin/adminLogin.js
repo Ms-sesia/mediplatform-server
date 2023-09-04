@@ -14,11 +14,13 @@ export default {
         // 이메일 체크
         let admin = await prisma.admin.findUnique({ where: { admin_email: admin_email } });
         if (!admin) throw 1;
+        console.log(admin);
 
         const ip = request.headers["x-forwarded-for"];
 
         // 로그인 제한시간이 10분이 경과되었을 경우 시도횟수 및 시간 초기화
         const checkLoginTime = new Date().toISOString();
+        console.log(checkLoginTime);
         if (admin.admin_loginFailTime && admin.admin_loginFailTime < checkLoginTime) {
           await prisma.admin.update({
             where: { admin_id: admin.admin_id },

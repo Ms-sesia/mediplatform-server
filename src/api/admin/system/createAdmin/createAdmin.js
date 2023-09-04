@@ -49,9 +49,9 @@ export default {
         return true;
       } catch (e) {
         console.log("관리자 추가 실패. createAdmin", e);
-        if (e === 0) throw new Error("마스터관리자만 사용할 수 있는 기능입니다.");
-        if (e === 1) throw new Error("해당 이메일로 이미 가입된 관리자가 있습니다. 이메일을 확인해주세요.");
-        throw new Error("관리자 추가에 실패하였습니다.");
+        if (e === 0) throw new Error("err_01");
+        if (e === 1) throw new Error("err_02");
+        throw new Error("err_00");
       }
     },
   },

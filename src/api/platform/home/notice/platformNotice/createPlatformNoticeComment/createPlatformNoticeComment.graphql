@@ -1,0 +1,17 @@
+type Mutation {
+  """
+  플랫폼 공지 댓글 등록
+  * error
+  err_00 : 플랫폼 공지 댓글 등록에 실패하였습니다.
+  """
+  createPlatformNoticeComment(
+    """
+    플랫폼 공지 id
+    """
+    pn_id: Int!
+    """
+    댓글 내용
+    """
+    text: String
+  ): Boolean
+}

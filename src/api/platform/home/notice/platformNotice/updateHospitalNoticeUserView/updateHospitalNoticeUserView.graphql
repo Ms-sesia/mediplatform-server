@@ -1,0 +1,13 @@
+type Mutation {
+  """
+  플랫폼 공지 조회 체크
+  * error
+  err_00 : 플랫폼 공지 조회수 체크에 실패하였습니다.
+  """
+  updateHospitalNoticeUserView(
+    """
+    플랫폼 공지 id
+    """
+    pn_id: Int!
+  ): Boolean
+}

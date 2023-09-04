@@ -611,6 +611,10 @@ type didDoctorRoom {
   휴진 여부
   """
   ddr_dayOff: Boolean
+  """
+  선택한 진료실 보여주기. true: 보여주기, false: 안보여주기
+  """
+  ddr_viewSelect: Boolean
   ddr_updatedAt: String
   """
   수정자 이름
@@ -732,6 +736,91 @@ type hnComment {
   작성자(사용자) id
   """
   hnc_creatorId: Int
+}
+
+"""
+플랫폼 공지
+"""
+type platformNotice {
+  pn_id: Int
+  pn_createdAt: String
+  """
+  수정일
+  """
+  pn_updatedAt: String
+  """
+  플랫폼 공지 구분 - 플랫폼, 긴급, 업데이트
+  """
+  pn_type: platformNoticeType
+  """
+  플랫폼 공지사항 100자
+  """
+  pn_title: String
+  """
+  플랫폼 공지사항 내용 500자
+  """
+  pn_text: String
+  """
+  작성자 이름
+  """
+  pn_adminCreatorName: String
+  """
+  작성자 직책(원장, 간호사, 의사)
+  """
+  pn_adminCreatorRank: String
+  """
+  작성자(사용자) id
+  """
+  pn_adminCreatorId: Int
+  pnAttached: [pnAttached]
+  pnComment: [pnComment]
+}
+
+"""
+플랫폼 공지 첨부파일
+"""
+type pnAttached {
+  pna_id: Int
+  """
+  플랫폼 공지사항 첨부파일 url
+  """
+  pna_url: String
+  """
+  첨부파일 타입
+  """
+  pna_fileType: String
+  """
+  첨부파일 사이즈
+  """
+  pna_fileSize: Int
+}
+
+"""
+플랫폼공지 댓글
+"""
+type pnComment {
+  pnc_id: Int
+  """
+  공지사항 댓글 내용 100자
+  """
+  pnc_text: String
+  pnc_createdAt: String
+  """
+  수정일
+  """
+  pnc_updatedAt: String
+  """
+  작성자 이름
+  """
+  pnc_creatorName: String
+  """
+  작성자 직책(원장, 간호사, 의사)
+  """
+  pnc_creatorRank: String
+  """
+  작성자(사용자) id
+  """
+  pnc_creatorId: Int
 }
 
 """
@@ -969,4 +1058,26 @@ enum hospitalOffdayType {
   고정
   """
   fix
+}
+
+"""
+플랫폼 공지 구분
+"""
+enum platformNoticeType {
+  """
+  전체 - 조회에만 사용
+  """
+  total
+  """
+  플랫폼 일반공지
+  """
+  normal
+  """
+  긴급
+  """
+  emergency
+  """
+  업데이트
+  """
+  update
 }
