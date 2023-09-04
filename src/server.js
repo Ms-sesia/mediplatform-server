@@ -63,6 +63,7 @@ const PORT = process.env.SERVER_PORT;
 
   // 이미지 혹은 파일들 경로 접속 허용
   app.use(express.static(path.join(__dirname, "../", "images")));
+  app.use(express.static(path.join(__dirname, "../", "files")));
   app.use(express.static(path.join(__dirname, "../", "didMedia")));
   app.use(graphqlUploadExpress()); // graphql 파일업로드
 

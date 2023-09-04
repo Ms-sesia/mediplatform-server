@@ -1,0 +1,6 @@
+type Query {
+  """
+  검색어 조회
+  """
+  seeSearchHistory: [searchHistory]
+}

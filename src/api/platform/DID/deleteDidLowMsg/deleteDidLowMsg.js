@@ -37,6 +37,7 @@ export default {
               select: {
                 ddr_id: true,
                 ddr_info: true,
+                ddr_dayOff: true,
                 ddr_number: true,
                 ddr_deptCode: true,
                 ddr_doctorName: true,

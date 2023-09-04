@@ -682,6 +682,7 @@ model didDoctorRoom {
   ddr_dayOff         Boolean   @default(false) // 휴진 여부
   ddr_deptCode       String    @default("") @db.VarChar(50) // 진료실 코드(부서코드)
   ddr_doctorRoomName String    @default("") @db.VarChar(50) // 진료실 이름
+  ddr_viewSelect     Boolean   @default(true) // 선택한 진료실 보여주기. true: 보여주기, false: 안보여주기
   ddr_doctorName     String    @default("") @db.VarChar(25) // 진료의사명
   ddr_updatedAt      DateTime  @updatedAt // 수정일
   ddr_editorName     String    @default("") @db.VarChar(25) // 수정자 이름

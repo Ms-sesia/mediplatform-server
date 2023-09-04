@@ -1,0 +1,30 @@
+type Mutation {
+  """
+  사내공지 수정
+  * error
+  err_00 : 사내공지 수정에 실패하였습니다.
+  err_01 : 작성자만 공지를 수정할 수 있습니다.
+  """
+  updateHospitalNotice(
+    """
+    변경할 사내 공지사항 id
+    """
+    hn_id: Int!
+    """
+    제목
+    """
+    title: String
+    """
+    내용
+    """
+    text: String
+    """
+    수정 업로드 할 첨부파일
+    """
+    updateAttached: [Upload!]
+    """
+    삭제할 첨부파일 id
+    """
+    deleteAttached: [Int]
+  ): Boolean
+}

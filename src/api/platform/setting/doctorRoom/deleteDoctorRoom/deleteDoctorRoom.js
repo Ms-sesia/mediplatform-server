@@ -12,7 +12,7 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
-        await prisma.doctorRoom.update({
+        const doctorRoom = await prisma.doctorRoom.update({
           where: { dr_id },
           data: {
             dr_editorName: loginUser.user_name,
@@ -21,6 +21,14 @@ export default {
             dr_isDelete: true,
             dr_deleteDate: today9,
           },
+        });
+
+        // 병원의 didDoctorRoom 삭제
+        await prisma.didDoctorRoom.updateMany({
+          where: {
+            AND: [{ ddr_doctorRoomName: { contains: doctorRoom.dr_roomName } }, { did: { hsp_id: doctorRoom.hsp_id } }],
+          },
+          data: { ddr_isDelete: true, ddr_deleteDate: today9 },
         });
 
         return true;

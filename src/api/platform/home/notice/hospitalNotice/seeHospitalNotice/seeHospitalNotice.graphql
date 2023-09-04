@@ -1,0 +1,24 @@
+type Query {
+  """
+  사내 공지사항 조회
+  * error
+  err_00: 사내 공지사항 조회 실패
+  """
+  seeHospitalNotice(
+    """
+    연도
+    """
+    year: Int!
+    """
+    정렬. desc: 내림차순, asc:오름차순
+    """
+    filter: String
+    take: Int
+    cursor: Int
+  ): seeHospitalNoticeInfo
+}
+
+type seeHospitalNoticeInfo {
+  totalLength: Int
+  hospitalNoticeList: [hospitalNotice]
+}

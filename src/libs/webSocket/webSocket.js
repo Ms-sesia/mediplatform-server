@@ -49,7 +49,6 @@ const webSocket = async (httpServer) => {
     let didUniqueId;
     if (socket.handshake.query.didUniqueId) {
       didUniqueId = socket.handshake.query.didUniqueId;
-      console.log("소켓 did unique:", didUniqueId);
 
       didClients[didUniqueId] = didClients[didUniqueId] || {};
       didClients[didUniqueId][socket.id] = socket;
@@ -69,20 +68,13 @@ const webSocket = async (httpServer) => {
       if (clients[channel] && clients[channel][socket.id]) {
         switch (JSON.parse(message).SendStatus) {
           case "send":
-            console.log("send 전송", channel, socket.id);
             clients[channel][socket.id].emit("getPatient", message);
             break;
           case "call":
-            // console.log("call 전송");
             clients[channel][socket.id].emit("callPatient", message);
             break;
-          case "update":
-            // console.log("update 전송");
-            clients[channel][socket.id].emit("updateDid", message);
-            break;
-          case "delete":
-            // console.log("delete 전송");
-            clients[channel][socket.id].emit("deleteDid", message);
+          case "allSaveDid":
+            clients[channel][socket.id].emit("allSaveDid", message);
             break;
         }
       }
@@ -93,29 +85,34 @@ const webSocket = async (httpServer) => {
       await sub.subscribe(didUniqueId, (message, channel) => {
         switch (JSON.parse(message).SendStatus) {
           case "update":
-            // console.log("update 전송");
-            // clients[channel][socket.id].emit("updateDid", message);
             socket.emit("updateDid", message);
             break;
           case "delete":
-            // console.log("delete 전송");
-            // clients[channel][socket.id].emit("deleteDid", message);
             socket.emit("deleteDid", message);
+            break;
+          case "saveDid":
+            socket.emit("saveDid", message);
             break;
         }
       });
 
     // 조회 데이터 요청 및 응답
+    // socket.on("reqSeeDid", async (did_id) => {
     socket.on("reqSeeDid", async (did_id) => {
       // console.log("reqSedDid data:", did_id);
+      // const findDid = await prisma.did.findUnique({
+      //   where: {did_uniqueId}
+      // })
       const did = await prisma.did.findUnique({
         where: { did_id },
         include: {
           didDoctorRoom: {
+            // where: { AND: [{ did_id }, { ddr_isDelete: false }] },
             where: { AND: [{ did_id }, { ddr_isDelete: false }] },
             select: {
               ddr_id: true,
               ddr_info: true,
+              ddr_dayOff: true,
               ddr_number: true,
               ddr_deptCode: true,
               ddr_doctorRoomName: true,
@@ -143,6 +140,7 @@ const webSocket = async (httpServer) => {
           hospital: { select: { hsp_name: true } },
         },
       });
+      console.log(did);
       socket.emit("resSeeDid", JSON.stringify(did));
     });
 

@@ -1,0 +1,18 @@
+type Mutation {
+  """
+  사내공지 댓글 수정
+  * error
+  err_00 : 사내공지 댓글 수정에 실패하였습니다.
+  err_01 : 작성자만 수정할 수 있습니다.
+  """
+  updateHospitalNoticeComment(
+    """
+    댓글 id
+    """
+    hnc_id: Int!
+    """
+    내용
+    """
+    text: String
+  ): Boolean
+}

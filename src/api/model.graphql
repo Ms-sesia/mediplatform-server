@@ -166,6 +166,21 @@ type userPermission {
 }
 
 """
+검색 기록
+"""
+type searchHistory {
+  sh_id: Int
+  """
+  검색일
+  """
+  sh_createdAt: String
+  """
+  검색어
+  """
+  sh_text: String
+}
+
+"""
 월 ~ 일 병원 운영 기본 일정
 """
 type defaultSchedule {
@@ -445,6 +460,10 @@ type did {
   """
   did_uniqueId: String
   """
+  모니터 절전모드
+  """
+  did_saveMode: Boolean
+  """
   첨부파일
   """
   didAttached: [didAttached]
@@ -640,6 +659,79 @@ type doctorRoom {
   did 휴진 표시. true: 휴진, false: 진료
   """
   dr_didOffDay: Boolean
+}
+
+"""
+병원 사내 공지
+"""
+type hospitalNotice {
+  hn_id: Int
+  """
+  사내 공지사항 100자
+  """
+  hn_title: String
+  """
+  사내 공지사항 내용 500자
+  """
+  hn_text: String
+  hn_createdAt: String
+  """
+  작성자 이름
+  """
+  hn_creatorName: String
+  """
+  작성자 직책(원장, 간호사, 의사)
+  """
+  hn_creatorRank: String
+  """
+  작성자(사용자) id
+  """
+  hn_creatorId: Int
+  hnAttached: [hnAttached]
+  hnComment: [hnComment]
+}
+
+"""
+사내공지 첨부파일
+"""
+type hnAttached {
+  hna_id: Int
+  """
+  사내 공지사항 첨부파일 url
+  """
+  hna_url: String
+  """
+  첨부파일 타입
+  """
+  han_fileType: String
+  """
+  첨부파일 사이즈
+  """
+  han_fileSize: Int
+}
+
+"""
+사내공지 댓글
+"""
+type hnComment {
+  hnc_id: Int
+  """
+  공지사항 댓글 내용 100자
+  """
+  hnc_text: String
+  hnc_createdAt: String
+  """
+  작성자 이름
+  """
+  hnc_creatorName: String
+  """
+  작성자 직책(원장, 간호사, 의사)
+  """
+  hnc_creatorRank: String
+  """
+  작성자(사용자) id
+  """
+  hnc_creatorId: Int
 }
 
 """

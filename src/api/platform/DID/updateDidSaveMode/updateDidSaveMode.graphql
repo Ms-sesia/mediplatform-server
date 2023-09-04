@@ -1,0 +1,12 @@
+type Mutation {
+  """
+  did 개별 절전 설정
+  """
+  updateDidSaveMode(
+    did_id: Int!
+    """
+    절전상태. true: 절전, false: 비절전
+    """
+    saveMode: Boolean
+  ): Boolean
+}

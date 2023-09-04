@@ -122,6 +122,7 @@ export default {
                 ddr_deptCode: drRoom.dr_deptCode,
                 ddr_doctorRoomName: drRoom.dr_roomName,
                 ddr_doctorName: drRoom.dr_doctorName,
+                ddr_isDelete: drRoom.dr_isDelete,
                 ddr_number: idx + 1,
                 did: { connect: { did_id: did.did_id } },
               },

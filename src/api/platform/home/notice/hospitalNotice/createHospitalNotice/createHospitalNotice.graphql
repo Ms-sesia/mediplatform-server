@@ -1,0 +1,21 @@
+type Mutation {
+  """
+  사내공지 작성
+  * error
+  err_00 : 사내공지 작성에 실패하였습니다.
+  """
+  createHospitalNotice(
+    """
+    제목
+    """
+    title: String!
+    """
+    내용
+    """
+    text: String
+    """
+    첨부파일
+    """
+    noticeAttached: [Upload!]
+  ): Boolean
+}
