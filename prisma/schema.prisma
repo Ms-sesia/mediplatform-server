@@ -226,6 +226,7 @@ model hospital {
   org                   org[]
   rank                  rank[]
   medicalSubject        medicalSubject[]
+  alimSet               alimSet?
 }
 
 // 병원 결제정보 ====
@@ -351,6 +352,8 @@ model patient {
   reservation      reservation[]
   hospital         hospital      @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id           Int
+
+  @@index([hsp_id, pati_name, pati_cellphone, pati_chartNumber])
 }
 
 // 환자 메모
@@ -384,6 +387,9 @@ model reservation {
   re_editorId         Int        @default(0) // 수정자 id
   re_isDelete         Boolean    @default(false) // 삭제여부
   re_deleteDate       DateTime? // 삭제일
+  re_desireDate       DateTime   @default(now()) // 예약 희망 일
+  re_desireTime       String     @default("") @db.VarChar(10) // 예약 희망 시간(10:30)
+  re_resDate          DateTime   @default(now()) // 예약일자
   re_year             Int        @default(0) // 예약 - 연도
   re_month            Int        @default(0) // 예약 - 월
   re_date             Int        @default(0) // 예약 - 일
@@ -396,10 +402,10 @@ model reservation {
   re_oneLineMem       String     @default("") @db.VarChar(65) // 한줄 메모 50자
   re_confirmUserName  String     @default("") @db.VarChar(20) // 승인자 이름
   re_confirmUserRank  String     @default("") @db.VarChar(20) // 승인자 직급
-  re_confirmDate      DateTime   @default(now()) // 승인일시 : 상태가 업데이트되는 날짜
+  re_confirmDate      DateTime? // 승인일시 : 상태가 업데이트되는 날짜
   re_LCategory        String     @default("") @db.VarChar(65) // 예약구분 - 대분류 50자
   re_SCategory        String     @default("") @db.VarChar(65) // 예약구분 - 소분류 50자
-  re_medicalRoom      String     @default("") @db.VarChar(25) // 진료실 정보
+  re_doctorRoomName   String     @default("") @db.VarChar(25) // 진료실 이름
   resAlim             resAlim?
   patient             patient    @relation(fields: [pati_id], references: [pati_id])
   pati_id             Int
@@ -575,8 +581,8 @@ model doctorRoom {
   dr_deptCode     String            @default("") @db.VarChar(50) // 진료실 코드(부서코드?)
   dr_roomName     String            @default("") @db.VarChar(60) // 진료실 이름 50자
   dr_doctorName   String            @default("") @db.VarChar(25) // 진료실 의사 이름 20자
-  dr_doctorRank   String            @default("") @db.VarChar(25) // 의사 직책
-  dr_didOffDay    Boolean           @default(false) // did 휴진 표시. true: 휴진, false: 진료
+  dr_medicalSub   String            @default("") @db.VarChar(25) // 진료과목
+  dr_doctorRank   String            @default("") @db.VarChar(25) // 의사 직책 - 사용안함
   specialSchedule specialSchedule[]
   hospital        hospital          @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id          Int
@@ -1016,6 +1022,20 @@ model medicalSubjectDetail {
   ms_id           Int
 }
 
+// 병원의 환자 알림 저장 내역
+model alimSet {
+  as_id         Int         @id @default(autoincrement())
+  as_updatedAt  DateTime    @updatedAt
+  as_type       resAlimType @default(sms) // 문자 / 카카오
+  as_time1      Boolean     @default(false) // 발송시간 - 즉시
+  as_time2      Boolean     @default(false) // 발송시간 - 1일전
+  as_time3      Boolean     @default(false) // 발송시간 - 2일전
+  as_time4      Boolean     @default(false) // 발송시간 - 당일오전9시
+  as_templateId Int         @default(0) // 문자발송 템픞릿
+  hospital      hospital    @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id        Int         @unique
+}
+
 // // 의료법 내용
 // model medicalLaw {
 //   ml_id          Int         @id @default(autoincrement())
@@ -1051,7 +1071,7 @@ enum rePlatform {
 // 예약 상태
 enum reStatus {
   waiting // 대기
-  complet // 완료
+  complete // 완료
   confirm // 확정
   cancel // 취소
 }

@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  환자정보 추가 - 임의로 하는 것
+  """
+  createPatient(
+    pati_name: String # 환자 이름
+    pati_rrn: String # 환자 주민번호. (resident registration number)
+    pati_cellphone: String # 환자 휴대폰번호
+    pati_chartNumber: String # 환자 차트번호 20자
+  ): Boolean
+}

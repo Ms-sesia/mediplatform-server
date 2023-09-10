@@ -1,0 +1,99 @@
+type Query {
+  """
+  주간 예약 내역 조회
+
+  * error
+  - err_00: 주간 예약 내역 조회에 실패하였습니다.
+  """
+  seeByWeekReservationList(
+    """
+    검색어 - 진료실, 이름, 휴대폰번호, 생년월일
+    """
+    searchTerm: String
+    """
+    검색 시작 연도
+    """
+    year: Int
+    """
+    검색 시작 월
+    """
+    month: Int
+    """
+    검색 시작 일
+    """
+    date: Int
+    """
+    예약상태
+    전체 - total
+    대기 - waiting
+    완료 - complet
+    확정 - confirm
+    취소 - cancel
+    """
+    status: reStatus
+    """
+    진료실명. 없으면 빈값
+    """
+    doctorRoom: String
+    """
+    예약매체 - 전체는 total(조회에서만 사용)
+    """
+    resPlatform: rePlatform
+    """
+    내원확정 - 표기 : true, 미표기 : false
+    """
+    visitConfirm: Boolean
+    """
+    대분류
+    """
+    largeCategory: String
+  ): [seeByWeekReservationListInfo]
+}
+
+type seeByWeekReservationListInfo {
+  """
+  연도
+  """
+  year: Int
+  """
+  월
+  """
+  month: Int
+  """
+  일자
+  """
+  date: Int
+  byDateReservationInfo: [byDateReservationInfo]
+}
+
+"""
+검색 월의 일별 예약 목록
+"""
+type byDateReservationInfo {
+  re_id: Int
+  """
+  예약 매체
+  전체 : total
+  네이버 : naver
+  카카오 : kakao
+  플랫폼 자체 : platform
+  emr 예약 : emr
+  """
+  re_platform: String
+  """
+  예약 시간(09:30)
+  """
+  re_time: String
+  """
+  예약자(환자) 이름
+  """
+  re_patientName: String
+  """
+  예약구분 - 대분류 50자
+  """
+  re_LCategory: String
+  """
+  예약구분 - 소분류 50자
+  """
+  re_SCategory: String
+}

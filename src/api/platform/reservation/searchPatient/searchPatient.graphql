@@ -1,0 +1,25 @@
+type Query {
+  """
+  환자 검색(이름칸)
+  """
+  searchPatient(
+    """
+    검색어 - 이름
+    """
+    searchTerm: String
+  ): searchPatientInfo
+}
+
+type searchPatientInfo {
+  totalLength: Int
+  patientList: [searchPatient]
+}
+
+# 검색 환자정보
+type searchPatient {
+  pati_id: Int
+  pati_name: String # 환자 이름
+  pati_rrn: String # 환자 주민번호
+  pati_cellphone: String # 환자 휴대폰번호
+  pati_chartNumber: String # 환자 차트번호
+}

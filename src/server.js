@@ -29,27 +29,11 @@ const PORT = process.env.SERVER_PORT;
   const httpServer = http.createServer(app);
 
   webSocket(httpServer);
-  // const wsServer = new WebSocketServer({
-  //   server: httpServer,
-  //   path: "/",
-  // });
-
-  // const serverCleanup = useServer({ schema }, wsServer);
 
   const server = new ApolloServer({
     schema,
-    plugins: [
-      ApolloServerPluginDrainHttpServer({ httpServer }),
-      //   {
-      //     async serverWillStart() {
-      //       return {
-      //         async drainServer() {
-      //           await serverCleanup.dispose();
-      //         },
-      //       };
-      //     },
-      //   },
-    ],
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    introspection: true, // 배포시 false, 개발 및 테스트시 true
   });
 
   await server.start();
@@ -67,9 +51,14 @@ const PORT = process.env.SERVER_PORT;
   app.use(express.static(path.join(__dirname, "../", "didMedia")));
   app.use(graphqlUploadExpress()); // graphql 파일업로드
 
+  const corsOptions = {
+    // origin: ["https://mediplatform.platcube.com"],
+    // optionsSuccessStatus: 200,
+  };
+
   app.use(
     "/graphql",
-    cors(),
+    cors(corsOptions),
     helmet({ contentSecurityPolicy: false }),
     json(),
     expressMiddleware(server, { context: async ({ req }) => ({ request: req, isAuthenticated }) })

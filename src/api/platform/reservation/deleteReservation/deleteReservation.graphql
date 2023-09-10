@@ -1,0 +1,14 @@
+type Mutation {
+  """
+  예약 정보 삭제
+  
+  * error
+  - err_00 : 예약 정보 삭제에 실패하였습니다.
+  """
+  deleteReservation(
+    """
+    예약 id
+    """
+    re_id: Int!
+  ): Boolean
+}

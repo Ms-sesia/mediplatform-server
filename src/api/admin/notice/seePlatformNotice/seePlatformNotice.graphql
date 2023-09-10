@@ -7,13 +7,17 @@ type Query {
   """
   seePlatformNotice(
     """
-    검색어 - 모니터이름, 없으면 빈값
+    검색어 - 제목 검색
     """
     searchTerm: String
     """
-    이미지/영상 필터, total은 조회에서 사용
+    필터 - 전체 / 플랫폼(일반) / 긴급 / 업데이트
     """
     filter: platformNoticeType
+    """
+    검색 연도 - 홈탭 이외의 곳에서는 0 입력
+    """
+    year: Int
     take: Int
     cursor: Int
   ): seePlatformNoticeInfo

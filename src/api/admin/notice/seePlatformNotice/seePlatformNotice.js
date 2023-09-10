@@ -7,17 +7,23 @@ export default {
     seePlatformNotice: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { searchTerm, filter, take, cursor } = args;
+      const { searchTerm, filter, year, take, cursor } = args;
       try {
         // if (user.userType !== "admin") throw 1;
 
         // const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
 
+        let start, end;
+        if (year !== 0) {
+          start = new Date(year, 0, 1, 9);
+          end = new Date(year + 1, 0, 1, 9);
+        }
+
         const totalPlatformNotice = await prisma.platformNotice.findMany({
           where: {
             AND: [
               { pn_title: { contains: searchTerm } },
-              { pn_text: { contains: searchTerm } },
+              { pn_createdAt: year !== 0 ? { gte: start, lte: end } : undefined },
               { pn_type: filter === "total" ? undefined : filter },
               { pn_isDelete: false },
             ],
@@ -38,7 +44,7 @@ export default {
           where: {
             AND: [
               { pn_title: { contains: searchTerm } },
-              { pn_text: { contains: searchTerm } },
+              { pn_createdAt: year !== 0 ? { gte: start, lte: end } : undefined },
               { pn_type: filter === "total" ? undefined : filter },
               { pn_isDelete: false },
             ],

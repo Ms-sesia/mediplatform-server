@@ -2,12 +2,7 @@ type Query {
   """
   대분류 진료항목 보기
   """
-  seeMedicalSubject(
-    """
-    접속한 병원 id
-    """
-    hsp_id: Int!
-  ): seeMedicalSubjectInfo
+  seeMedicalSubject: seeMedicalSubjectInfo
 }
 
 type seeMedicalSubjectInfo {

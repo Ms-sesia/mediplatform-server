@@ -143,9 +143,22 @@ type Mutation {
 진료실정보
 """
 input doctorRoomInfo {
-  ddr_id: Int # did 진료실 id
-  ddr_number: Int # 표기 순위
-  ddr_dayOff: Boolean # 휴진 여부
+  """
+  did 진료실 id
+  """
+  ddr_id: Int
+  """
+  표기 순위
+  """
+  ddr_number: Int
+  """
+  휴진 여부
+  """
+  ddr_dayOff: Boolean
+  """
+  진료실 보여주기 선택. true: 보여주기, false: 안보여주기
+  """
+  ddr_viewSelect: Boolean
 }
 
 """

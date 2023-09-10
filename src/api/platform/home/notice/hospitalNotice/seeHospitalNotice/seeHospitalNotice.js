@@ -9,12 +9,18 @@ export default {
       const { user } = request;
       const { year, filter, take, cursor } = args;
       try {
-        const start = new Date(year, 0, 1, 9);
-        const end = new Date(year + 1, 0, 1, 9);
+        let start, end;
+        if (year !== 0) {
+          start = new Date(year, 0, 1, 9);
+          end = new Date(year + 1, 0, 1, 9);
+        }
 
         const totalHospitalNotice = await prisma.hospitalNotice.findMany({
           where: {
-            AND: [{ hsp_id: user.hospital.hsp_id }, { hn_createdAt: { gte: start, lte: end } }],
+            AND: [
+              { hsp_id: user.hospital.hsp_id },
+              { hn_createdAt: year !== 0 ? { gte: start, lte: end } : undefined },
+            ],
           },
           orderBy: { hn_createdAt: filter },
         });
@@ -30,7 +36,11 @@ export default {
 
         const hospitalNotice = await prisma.hospitalNotice.findMany({
           where: {
-            AND: [{ hsp_id: user.hospital.hsp_id }, { hn_createdAt: { gte: start, lte: end } }, { hn_isDelete: false }],
+            AND: [
+              { hsp_id: user.hospital.hsp_id },
+              { hn_createdAt: year !== 0 ? { gte: start, lte: end } : undefined },
+              { hn_isDelete: false },
+            ],
           },
           ...cursorOpt,
           include: {

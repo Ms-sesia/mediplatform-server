@@ -1,0 +1,18 @@
+type Mutation {
+  """
+  알림 템플릿 등록
+  
+  * error
+  - err_00 : 알림 템플릿 등록에 실패하였습니다.
+  """
+  createResAlimTemplate(
+    """
+    제목
+    """
+    title: String!
+    """
+    내용
+    """
+    text: String!
+  ): Boolean
+}

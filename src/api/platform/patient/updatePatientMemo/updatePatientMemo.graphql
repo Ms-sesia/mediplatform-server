@@ -1,0 +1,18 @@
+type Mutation {
+  """
+  환자 메모 수정
+
+  * error
+  - err_00 : 환자 메모 수정에 실패하였습니다.
+  """
+  updatePatientMemo(
+    """
+    메모 id
+    """
+    prm_id: Int
+    """
+    메모 내용 200자
+    """
+    text: String
+  ): Boolean
+}

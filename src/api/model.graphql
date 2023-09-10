@@ -1081,3 +1081,69 @@ enum platformNoticeType {
   """
   update
 }
+
+"""
+예약 상태
+"""
+enum reStatus {
+  """
+  전체 - 조회에서만 사용
+  """
+  total
+  """
+  대기
+  """
+  waiting
+  """
+  완료
+  """
+  complete
+  """
+  확정
+  """
+  confirm
+  """
+  취소
+  """
+  cancel
+}
+
+"""
+예약 알림
+"""
+enum resAlimType {
+  """
+  문자
+  """
+  sms
+  """
+  카카오톡
+  """
+  kakao
+}
+
+"""
+예약 매체(플랫폼 - 네이버, 카카오, 똑딱 등)
+"""
+enum rePlatform {
+  """
+  전체 - 조회에서만 사용
+  """
+  total
+  """
+  네이버
+  """
+  naver
+  """
+  카카오
+  """
+  kakao
+  """
+  플랫폼 자체
+  """
+  platform
+  """
+  emr 예약
+  """
+  emr
+}

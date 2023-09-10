@@ -1,0 +1,131 @@
+type Query {
+  """
+  예약자 상세정보 조회
+
+  * error
+  - err_00 : 예약자 상세정보 조회에 실패하였습니다.
+  """
+  seeReservationPatientDetail(
+    """
+    조회할 예약정보 id
+    """
+    re_id: Int!
+  ): seeReservationPatientDetailInfo
+}
+
+type seeReservationPatientDetailInfo {
+  """
+  예약 상세정보
+  """
+  reservationInfo: reservationDetailInfo
+  """
+  예약 기록
+  """
+  resHistoryList: [resHistory]
+  """
+  메모
+  """
+  patientMemoList: [patientMemo]
+}
+
+"""
+예약 기록
+"""
+type resHistory {
+  """
+  예약일
+  """
+  resDate: String
+  """
+  예약 시간
+  """
+  resTime: String
+  """
+  예약상태
+
+  전체 - total
+  대기 - waiting
+  완료 - complet
+  확정 - confirm
+  취소 - cancel
+  """
+  resStatus: reStatus
+  """
+  한줄메모
+  """
+  oneLineMemo: String
+}
+
+"""
+환자 메모
+"""
+type patientMemo {
+  prm_id: Int
+  """
+  메모
+  """
+  prm_text: String
+  """
+  작성일
+  """
+  prm_createdAt: String
+  """
+  작성자 id
+  """
+  prm_creatorId: Int
+  """
+  작성자이름
+  """
+  prm_creatorName: String
+  """
+  작성자 직책
+  """
+  prm_creatorRank: String
+}
+
+"""
+예약 => 6개월 or 1년 예약 데이터 수집.
+"""
+type reservationDetailInfo {
+  re_id: Int
+  """
+  예약일
+  """
+  resDate: String
+  """
+  예약 희망 일
+  """
+  desireDate: String
+  """
+  예약 희망 시간(10:30)
+  """
+  desireTime: String
+  """
+  예약 시간(09:30)
+  """
+  time: String
+  """
+  예약자(환자) 이름
+  """
+  patientName: String
+  """
+  예약자(환자) 휴대폰번호
+  """
+  patientCellphone: String
+  """
+  예약 매체
+  """
+  platform: rePlatform
+  """
+  예약 상태
+  """
+  status: reStatus
+  """
+  승인자
+  """
+  approvalName: String
+  """
+  승인일자
+  """
+  approvalDate: String
+}

@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  예약자 메모 삭제
+  
+  * error
+  - err_00 : 예약자 메모 삭제에 실패하였습니다.
+  - err_01 : 작성자만 삭제가 가능합니다.
+  """
+  deletePatientMemo(
+    """
+    메모 id
+    """
+    prm_id: Int!
+  ): Boolean
+}

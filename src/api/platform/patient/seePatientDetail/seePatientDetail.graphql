@@ -1,0 +1,66 @@
+type Query {
+  """
+  환자정보 상세 조회
+
+  * error
+  - err_00: 환자정보 상세 조회에 실패하였습니다.
+  """
+  seePatientDetail(
+    """
+    환자 id
+    """
+    pati_id: Int!
+  ): seePatientDetailInfo
+}
+
+"""
+환자 정보
+"""
+type seePatientDetailInfo {
+  """
+  환자 이름
+  """
+  pati_name: String
+  """
+  환자 주민번호
+  """
+  pati_rrn: String
+  """
+  환자 휴대폰번호
+  """
+  pati_cellphone: String
+  """
+  환자 차트번호
+  """
+  pati_chartNumber: String
+  """
+  예약 기록
+  """
+  resList: [patientResInfo]
+  # """
+  # 메모
+  # """
+  # patientMemoList: [patientMemo]
+}
+
+"""
+환자 예약 기록 정보
+"""
+type patientResInfo {
+  """
+  예약 희망 일
+  """
+  re_desireDate: String
+  """
+  예약 희망 시간(10:30)
+  """
+  re_desireTime: String
+  """
+  예약 상태
+  """
+  re_status: reStatus
+  """
+  한줄 메모 50자
+  """
+  re_oneLineMem: String
+}

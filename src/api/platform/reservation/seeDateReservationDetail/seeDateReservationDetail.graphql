@@ -1,0 +1,74 @@
+type Query {
+  """
+  일간 예약 내역 조회
+  
+  * error
+  - err_00: 일간 예약 내역 조회에 실패하였습니다.
+  """
+  seeDateReservationDetail(
+    """
+    검색 연도
+    """
+    year: Int!
+    """
+    검색 월
+    """
+    month: Int!
+    """
+    검색 일
+    """
+    date: Int!
+    """
+    진료실명. 없으면 빈값
+    """
+    doctorRoom: String
+    """
+    예약매체 - 전체는 total(조회에서만 사용)
+    """
+    resPlatform: rePlatform
+  ): seeDateReservationDetailInfo
+}
+
+type seeDateReservationDetailInfo {
+  """
+  총 예약 인원 수
+  """
+  totalResCount: Int
+  byDateReservationDetailInfo: [byDateReservationDetailInfo]
+}
+
+"""
+일별 예약 목록
+"""
+type byDateReservationDetailInfo {
+  re_id: Int
+  """
+  예약 매체
+  전체 : total
+  네이버 : naver
+  카카오 : kakao
+  플랫폼 자체 : platform
+  emr 예약 : emr
+  """
+  re_platform: String
+  """
+  예약 시간(09:30)
+  """
+  re_time: String
+  """
+  예약자(환자) 이름
+  """
+  re_patientName: String
+  """
+  진료실 이름
+  """
+  re_doctorRoomName: String
+  """
+  예약구분 - 대분류 50자
+  """
+  re_LCategory: String
+  """
+  예약구분 - 소분류 50자
+  """
+  re_SCategory: String
+}

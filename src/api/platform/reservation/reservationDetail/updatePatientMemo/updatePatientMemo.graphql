@@ -1,0 +1,19 @@
+type Mutation {
+  """
+  예약자 메모 수정
+  
+  * error
+  - err_00 : 예약자 메모 수정에 실패하였습니다.
+  - err_01 : 작성자만 수정이 가능합니다.
+  """
+  updatePatientMemo(
+    """
+    메모 id
+    """
+    prm_id: Int!
+    """
+    내용
+    """
+    text: String
+  ): Boolean
+}

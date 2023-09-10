@@ -1,0 +1,23 @@
+type Mutation {
+  """
+  예약 상태 변경
+  
+  * error
+  - err_00 : 예약 상태 변경에 실패하였습니다.
+  """
+  updateReservationStatus(
+    """
+    예약 id
+    """
+    re_id: Int!
+    """
+    예약상태
+    전체 - total
+    대기 - waiting
+    완료 - complet
+    확정 - confirm
+    취소 - cancel
+    """
+    status: reStatus
+  ): Boolean
+}

@@ -1,14 +1,15 @@
 type Query {
   """
   사내 공지사항 조회
+  
   * error
-  err_00: 사내 공지사항 조회 실패
+  - err_00: 사내 공지사항 조회 실패
   """
   seeHospitalNotice(
     """
-    연도
+    연도 - 홈탭 이외의 곳에는 0 입력
     """
-    year: Int!
+    year: Int
     """
     정렬. desc: 내림차순, asc:오름차순
     """

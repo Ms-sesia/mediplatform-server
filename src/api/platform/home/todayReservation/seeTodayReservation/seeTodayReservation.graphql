@@ -1,0 +1,42 @@
+type Query {
+  """
+  홈 - 오늘의 예약 환자
+  
+  * error
+  - err_00: 오늘의 예약 환자 내역 조회에 실패하였습니다.
+  """
+  seeTodayReservation: seeTodayReservationInfo
+}
+
+type seeTodayReservationInfo {
+  """
+  총 예약 인원 수
+  """
+  totalResCount: Int
+  todayResInfo: [todayResInfo]
+}
+
+"""
+오늘의 예약 환자
+"""
+type todayResInfo {
+  re_id: Int
+
+  """
+  예약 시간(09:30)
+  """
+  re_time: String
+  """
+  예약자(환자) 이름
+  """
+  re_patientName: String
+  """
+  예약상태
+  전체 - total
+  대기 - waiting
+  완료 - complet
+  확정 - confirm
+  취소 - cancel
+  """
+  re_status: String
+}

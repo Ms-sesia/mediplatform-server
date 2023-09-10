@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `reservation` ADD COLUMN `re_desireTime` VARCHAR(10) NOT NULL DEFAULT '',
+    ADD COLUMN `re_desiredDate` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3);

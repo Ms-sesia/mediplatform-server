@@ -1,0 +1,53 @@
+type Query {
+  """
+  환자정보 조회
+
+  * error
+  - err_00: 환자정보 조회에 실패하였습니다.
+  """
+  seePatients(
+    """
+    검색 - 환자이름, 차트번호, 핸드폰번호
+    """
+    searchTerm: String
+    """
+    방문 검색 시작일
+    """
+    searchStartDate: String
+    """
+    방문 검색 종료일
+    """
+    searchEndDate: String
+    """
+    정렬
+
+    오름차순: asc
+    내림차순: desc
+    """
+    orderBy: String
+    take: Int
+    cursor: Int
+  ): seePatientsInfo
+}
+
+type seePatientsInfo {
+  totalLength: Int
+  patientList: [patientInfo]
+}
+
+"""
+환자 목록 정보
+"""
+type patientInfo {
+  """
+  환자 id
+  """
+  pati_id: Int
+  visitCount: Int # 방문 수
+  pati_name: String # 환자 이름
+  pati_rrn: String # 환자 주민번호(생년월일)
+  pati_cellphone: String # 환자 휴대폰번호
+  recentlyVisitDate: String # 최근 내원일
+  pati_chartNumber: String # 환자 차트번호
+  recentlyVisitMemo: String # 최근 내원 메모
+}

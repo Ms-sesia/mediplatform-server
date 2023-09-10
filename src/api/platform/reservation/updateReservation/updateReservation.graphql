@@ -1,0 +1,62 @@
+type Mutation {
+  """
+  예약자 정보 수정
+  
+  * error
+  - err_00 : 예약자 정보 수정에 실패하였습니다.
+  """
+  updateReservation(
+    """
+    예약 id
+    """
+    re_id: Int!
+    """
+    예약일
+    """
+    resDate: String!
+    """
+    예약 시간
+    """
+    time: String!
+    """
+    예약 상태
+    """
+    status: reStatus!
+    """
+    예약구분 (대분류)
+    """
+    largeCategory: String
+    """
+    예약구분 (소분류)
+    """
+    smallCategory: String
+    """
+    진료실 이름
+    """
+    doctorRoomName: String!
+    """
+    알림 유형 - 문자 / 카카오
+    """
+    alimType: resAlimType
+    """
+    발송시간 - 즉시
+    """
+    alimTime1: Boolean
+    """
+    발송시간 - 1일전
+    """
+    alimTime2: Boolean
+    """
+    발송시간 - 2일전
+    """
+    alimTime3: Boolean
+    """
+    발송시간 - 당일오전9시
+    """
+    alimTime4: Boolean
+    """
+    문자발송 템플릿 id
+    """
+    alimTemplateId: Int
+  ): Boolean
+}

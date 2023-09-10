@@ -1,0 +1,18 @@
+type Mutation {
+  """
+  환자 메모 작성
+
+  * error
+  - err_00 : 환자 메모 작성에 실패하였습니다.
+  """
+  createPatientMemo(
+    """
+    작성할 환자 id
+    """
+    pati_id: Int!
+    """
+    메모 내용 200자
+    """
+    text: String
+  ): Boolean
+}

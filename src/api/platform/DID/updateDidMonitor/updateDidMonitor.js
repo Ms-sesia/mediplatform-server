@@ -180,6 +180,7 @@ export default {
                 ddr_editorId: loginUser.user_id,
                 ddr_editorName: loginUser.user_name,
                 ddr_editorRank: loginUser.user_rank,
+                ddr_viewSelect: did_doctorRoomInfoUpdate[i].ddr_viewSelect,
                 ddr_number: did_doctorRoomInfoUpdate[i].ddr_number,
                 ddr_dayOff: did_doctorRoomInfoUpdate[i].ddr_dayOff,
               },

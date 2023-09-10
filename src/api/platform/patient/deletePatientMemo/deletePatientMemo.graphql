@@ -1,0 +1,14 @@
+type Mutation {
+  """
+  환자 메모 삭제
+
+  * error
+  - err_00 : 환자 메모 삭제에 실패하였습니다.
+  """
+  deletePatientMemo(
+    """
+    메모 id
+    """
+    prm_id: Int
+  ): Boolean
+}

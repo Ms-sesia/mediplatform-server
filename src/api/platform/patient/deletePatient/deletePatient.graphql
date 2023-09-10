@@ -1,0 +1,14 @@
+type Mutation {
+  """
+  환자 정보 삭제
+
+  * error
+  - err_00 : 환자 정보 삭제에 실패하였습니다.
+  """
+  deletePatient(
+    """
+    환자 id
+    """
+    pati_id: Int!
+  ): Boolean
+}
