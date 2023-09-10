@@ -1,0 +1,37 @@
+type Mutation {
+  """
+  개인정보 수정
+
+  * error
+  - err_00 : 개인정보 수정에 실패하였습니다.
+  - err_01 : 전송된 인증번호가 없습니다. 다시 요청해주세요.
+  - err_02 : 인증번호가 일치하지 않습니다. 다시 입력해주세요.
+  - err_03 : 이미 사용중인 휴대폰 번호입니다. 확인 후 다시 입력해주세요.
+  """
+  updateMyInfo(
+    """
+    이름
+    """
+    user_name: String
+    """
+    생년월일
+    """
+    user_birthday: String
+    """
+    휴대폰번호
+    """
+    user_cellphone: String
+    """
+    사용자 주소
+    """
+    user_address: String
+    """
+    사용자 상세 주소
+    """
+    user_detailAddress: String
+    """
+    휴대폰 인증번호
+    """
+    authCode: String
+  ): Boolean
+}

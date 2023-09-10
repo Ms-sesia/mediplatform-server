@@ -1,0 +1,18 @@
+type Mutation {
+  """
+  내 인사정보 수정
+
+  * error
+  - err_00 : 내 인사정보 수정에 실패하였습니다.
+  """
+  updateMyEmployeeInfo(
+    """
+    조직
+    """
+    user_org: String
+    """
+    직무
+    """
+    user_job: String
+  ): Boolean
+}

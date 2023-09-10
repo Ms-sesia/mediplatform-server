@@ -281,6 +281,7 @@ model user {
   userPermission      userPermission?
   hospital            hospital              @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id              Int
+  userPhoneAuthCode   userPhoneAuthCode[]
 
   @@index([user_name, user_cellphone])
 }
@@ -305,6 +306,15 @@ model userEmailAuthCode {
   ueac_createdAt DateTime
   ueac_code      String   @default("") @db.VarChar(10) // 인증코드 8자리
   ueac_email     String   @default("") @db.VarChar(125) // 변경할 이메일 
+  user           user     @relation(fields: [user_id], references: [user_id])
+  user_id        Int
+}
+
+model userPhoneAuthCode {
+  upac_id        Int      @id @default(autoincrement())
+  upac_createdAt DateTime
+  upac_code      String   @default("") @db.VarChar(10) // 인증코드 6자리
+  upac_cellphone String   @default("") @db.VarChar(25) // 힌증받을 핸드폰번호
   user           user     @relation(fields: [user_id], references: [user_id])
   user_id        Int
 }

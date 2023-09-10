@@ -1,0 +1,14 @@
+type Mutation {
+  """
+  휴대폰 인증번호 전송
+
+  * error
+  - err_00 : 휴대폰 인증번호 전송에 실패하였습니다.
+  """
+  requestPhoneAuthCode(
+    """
+    인증번호 전송할 휴대폰번호
+    """
+    cellphone: String
+  ): Boolean
+}

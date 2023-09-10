@@ -79,7 +79,7 @@ export default {
         };
       } catch (e) {
         console.log("관리자 목록 조회 실패. seeDidMonitors ==>\n", e);
-        throw new Error("관리자 목록 조회에 실패하였습니다.");
+        throw new Error("err_00");
       }
     },
   },

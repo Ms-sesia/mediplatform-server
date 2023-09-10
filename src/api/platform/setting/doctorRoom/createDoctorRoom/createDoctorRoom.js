@@ -44,7 +44,7 @@ export default {
         return true;
       } catch (e) {
         console.log("진료실 등록 실패. createDoctorRoom", e);
-        throw new Error("진료실 등록에 실패하였습니다.");
+        throw new Error("err_00");
       }
     },
   },
