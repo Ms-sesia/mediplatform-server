@@ -1,0 +1,46 @@
+type Mutation {
+  """
+  병원 쉬는날 수정
+
+  * error
+  - err_00 : 병원 쉬는날 수정에 실패하였습니다.
+  """
+  updateHospitalOffday(
+    """
+    업데이트할 id
+    """
+    updateId: Int!
+    """
+    기존의 반복여부
+    """
+    aldyoffdayRepeat: offdayRepeat!
+    """
+    변경할 반복여부
+
+    * 반복없음: none
+    * 매주반복: week
+    * 매월반복: month
+    """
+    offdayRepeat: offdayRepeat
+    """
+    시작일
+    """
+    offStartDate: String
+    """
+    종료일
+    """
+    offEndDate: String
+    """
+    시작 시간. 선택 안하면 빈값(해당일 전체)
+    """
+    offStartTime: String
+    """
+    종료 시간. 선택 안하면 빈값(해당일 전체)
+    """
+    offEndTime: String
+    """
+    메모 200자
+    """
+    memo: String
+  ): Boolean
+}

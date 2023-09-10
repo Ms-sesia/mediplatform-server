@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { weekdays } from "../../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 
@@ -7,61 +8,85 @@ export default {
     seeHospitalOffday: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { searchTerm, year, month, ho_type, take, cursor } = args;
+      const {
+        searchTerm,
+        year,
+        month,
+        offType,
+        // take,
+        //  cursor
+      } = args;
       try {
         const startDate = new Date(year, month - 1, 1, 9);
         const endDate = new Date(year, month, 1, 9);
 
-        console.log("시작일:", startDate, "종료일:", endDate);
+        let aldyMonthFixed, aldyWeekFixed;
+        let fixedDays = new Array();
+        let tempHospitalOffday = new Array();
 
-        const searchHospitalOffday = await prisma.hospitalOffday.findMany({
-          where: {
-            AND: [
-              { hsp_id: user.hospital.hsp_id },
-              {
-                OR: [
-                  { ho_offStartDate: { gte: startDate, lte: endDate } }, // 시작일
-                  { ho_offEndDate: { gte: startDate, lte: endDate } }, // 종료일
-                ],
-              },
-              { ho_type: ho_type === "total" ? undefined : ho_type },
-              { ho_memo: { contains: searchTerm } },
-            ],
-          },
-        });
+        if (offType !== "temp") {
+          aldyMonthFixed = await prisma.monthOffday.findMany({
+            where: {
+              AND: [{ hsp_id: user.hospital.hsp_id }, { fo_isDelete: false }, { fo_memo: { contains: searchTerm } }],
+            },
+          });
+          aldyWeekFixed = await prisma.weekOffday.findMany({
+            where: {
+              AND: [{ hsp_id: user.hospital.hsp_id }, { wo_isDelete: false }, { wo_memo: { contains: searchTerm } }],
+            },
+          });
 
-        console.log(searchHospitalOffday);
+          fixedDays = generateFixedDaysForMonth(month, year, aldyMonthFixed, aldyWeekFixed);
+        }
 
-        if (!searchHospitalOffday.length)
-          return {
-            totalLength: 0,
-            hospitalOffdayList: [],
-          };
+        if (offType !== "fix") {
+          tempHospitalOffday = await prisma.hospitalOffday.findMany({
+            where: {
+              AND: [
+                { hsp_id: user.hospital.hsp_id },
+                { ho_isDelete: false },
+                {
+                  OR: [
+                    { ho_offStartDate: { gte: startDate, lte: endDate } }, // 시작일
+                    { ho_offEndDate: { gte: startDate, lte: endDate } }, // 종료일
+                  ],
+                },
+                { ho_type: offType === "total" ? undefined : offType },
+                { ho_memo: { contains: searchTerm } },
+              ],
+            },
+          });
+        }
 
-        const cursorId = hospitalOffday[cursor].ho_id;
-        const cursorOpt = cursor === 0 ? { take } : { take, skip: 0, cursor: { ho_id: cursorId } };
+        const combinedDays = [
+          ...fixedDays,
+          ...tempHospitalOffday.map((day) => {
+            const startDate = new Date(day.ho_offStartDate);
+            const endDate = new Date(day.ho_offEndDate);
+            return {
+              id: day.ho_id,
+              offType: "temp",
+              startDate: startDate.toISOString(),
+              startDay: weekdays[startDate.getDay()],
+              endDate: endDate.toISOString(),
+              endDay: weekdays[endDate.getDay()],
+              // date: day.ho_offStartDate,
+              // day: weekdays[date.getDay()],
+              reType: "temp",
+              startTime: day.ho_offStartTime,
+              endTime: day.ho_offEndTime,
+              memo: day.ho_memo,
+              createdAt: new Date(day.ho_createdAt).toISOString(),
+              creatorName: day.ho_creatorName,
+            };
+          }),
+        ];
 
-        const hospitalOffday = await prisma.hospitalOffday.findMany({
-          where: {
-            AND: [
-              { hsp_id: user.hospital.hsp_id },
-              {
-                OR: [
-                  { ho_offStartDate: { gte: startDate, lte: endDate } }, // 시작일
-                  { ho_offEndDate: { gte: startDate, lte: endDate } }, // 종료일
-                ],
-              },
-              { ho_type: ho_type === "total" ? undefined : ho_type },
-              { ho_memo: { contains: searchTerm } },
-            ],
-          },
-          ...cursorOpt,
-          orderBy: {},
-        });
+        const sortedDays = combinedDays.sort((a, b) => a - b);
 
         return {
-          // totalLength: totalDid.length ? totalDid.length : 0,
-          // didList: didList.length ? didList : [],
+          totalLength: sortedDays.length ? sortedDays.length : 0,
+          offdayList: sortedDays.length ? sortedDays : [],
         };
       } catch (e) {
         console.log("병원 쉬는날 조회 실패. seeHospitalOffday ==>\n", e);
@@ -69,4 +94,66 @@ export default {
       }
     },
   },
+};
+
+const generateFixedDaysForMonth = (month, year, monthOffdays, weekOffdays) => {
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const fixedDays = [];
+
+  // monthOffday 처리
+  monthOffdays.forEach((offday) => {
+    let startDay = offday.fo_startDate.getDate();
+    let endDay = offday.fo_endDate.getDate();
+
+    for (let day = startDay; day <= endDay; day++) {
+      const startDate = new Date(offday.fo_startDate);
+      const endDate = new Date(offday.fo_endDate);
+      const date = new Date(year, month - 1, day);
+      fixedDays.push({
+        id: offday.fo_id,
+        offType: "fix", //휴무구분 (임시, 고정)
+        startDate: startDate.toISOString(),
+        startDay: weekdays[startDate.getDay()],
+        endDate: endDate.toISOString(),
+        endDay: weekdays[endDate.getDay()],
+        // date: new Date(year, month - 1, day),
+        // day: weekdays[date.getDay()],
+        reType: "month", // 반복 구분
+        startTime: offday.fo_startTime,
+        endTime: offday.fo_endTime,
+        memo: offday.fo_memo,
+        createdAt: new Date(offday.fo_createdAt).toISOString(),
+        creatorName: offday.fo_creatorName,
+      });
+    }
+  });
+
+  // weekOffday 처리
+  weekOffdays.forEach((offday) => {
+    for (let day = 1; day <= daysInMonth; day++) {
+      const startDate = new Date(offday.wo_startDate);
+      const endDate = new Date(offday.wo_endDate);
+      const date = new Date(year, month - 1, day);
+      if (date.getDay() >= offday.wo_startDate.getDay() && date.getDay() <= offday.wo_endDate.getDay()) {
+        fixedDays.push({
+          id: offday.wo_id,
+          offType: "fix", //휴무구분 (임시, 고정)
+          startDate: startDate.toISOString(),
+          startDay: weekdays[startDate.getDay()],
+          endDate: endDate.toISOString(),
+          endDay: weekdays[endDate.getDay()],
+          // date,
+          // day: weekdays[date.getDay()],
+          reType: "week", // 반복 구분
+          startTime: offday.wo_startTime,
+          endTime: offday.wo_endTime,
+          memo: offday.wo_memo,
+          createdAt: new Date(offday.wo_createdAt).toISOString(),
+          creatorName: offday.wo_creatorName,
+        });
+      }
+    }
+  });
+
+  return fixedDays.sort((a, b) => a.date - b.date);
 };

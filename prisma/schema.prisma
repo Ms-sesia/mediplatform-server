@@ -227,6 +227,8 @@ model hospital {
   rank                  rank[]
   medicalSubject        medicalSubject[]
   alimSet               alimSet?
+  monthOffday           monthOffday[]
+  weekOffday            weekOffday[]
 }
 
 // 병원 결제정보 ====
@@ -502,6 +504,50 @@ model hospitalOffday {
   hsp_id          Int
 
   @@index([hsp_id, ho_offStartDate, ho_offEndDate])
+}
+
+// 매월 고정 휴뮤일
+model monthOffday {
+  fo_id          Int       @id @default(autoincrement())
+  fo_createdAt   DateTime  @default(now())
+  fo_updatedAt   DateTime  @default(now()) @updatedAt
+  fo_creatorName String    @default("") @db.VarChar(25)
+  fo_creatorRank String    @default("") @db.VarChar(25) // 등록자 직책
+  fo_creatorId   Int       @default(0) // 등록자 id
+  fo_editorName  String    @default("") @db.VarChar(25) // 수정자 이름
+  fo_editorRank  String    @default("") @db.VarChar(25) // 수정자 직책
+  fo_editorId    Int       @default(0) // 수정자 id
+  fo_isDelete    Boolean   @default(false) // 삭제여부
+  fo_deleteDate  DateTime? // 삭제일
+  fo_startDate   DateTime // 매월 고정 반복 휴일 시작일
+  fo_endDate     DateTime // 매월 고정 반복 휴일 종료일
+  fo_startTime   String    @default("") @db.VarChar(25) // 휴무 시작 시간
+  fo_endTime     String    @default("") @db.VarChar(25) // 휴무 종료 시간
+  fo_memo        String    @default("") @db.VarChar(250) // 메모
+  hospital       hospital  @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id         Int
+}
+
+// 매주 고정 휴무
+model weekOffday {
+  wo_id          Int       @id @default(autoincrement())
+  wo_createdAt   DateTime  @default(now())
+  wo_updatedAt   DateTime  @default(now()) @updatedAt
+  wo_creatorName String    @default("") @db.VarChar(25)
+  wo_creatorRank String    @default("") @db.VarChar(25) // 등록자 직책
+  wo_creatorId   Int       @default(0) // 등록자 id
+  wo_editorName  String    @default("") @db.VarChar(25) // 수정자 이름
+  wo_editorRank  String    @default("") @db.VarChar(25) // 수정자 직책
+  wo_editorId    Int       @default(0) // 수정자 id
+  wo_isDelete    Boolean   @default(false) // 삭제여부
+  wo_deleteDate  DateTime? // 삭제일
+  wo_startDate   DateTime // 매주 고정 요일 시작일
+  wo_endDate     DateTime // 매주 고정 요일 종료일
+  wo_startTime   String    @default("") @db.VarChar(25) // 휴무 시작 시간
+  wo_endTime     String    @default("") @db.VarChar(25) // 휴무 종료 시간
+  wo_memo        String    @default("") @db.VarChar(250) // 메모
+  hospital       hospital  @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id         Int
 }
 
 // 병원(진료실) 특별 일정(휴무 등)

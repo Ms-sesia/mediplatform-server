@@ -7,18 +7,74 @@ type Query {
     검색어 - 메모 검색
     """
     searchTerm: String
-    year: Int
-    month: Int
+    year: Int!
+    month: Int!
     """
     병원 휴일 구분 - 전체(조회만) : total / 임시 : temp / 고정 : fix
     """
-    ho_type: hospitalOffdayType
-    take: Int
-    cursor: Int
+    offType: hospitalOffdayType!
   ): seeHospitalOffdayInfo
 }
 
 type seeHospitalOffdayInfo {
   totalLength: Int
-  hospitalOffdayList: [hospitalOffday]
+  offdayList: [offday]
+}
+
+"""
+휴일
+"""
+type offday {
+  """
+  휴일 id
+  """
+  id: Int
+  """
+  휴일 구분
+  """
+  offType: String
+  """
+  시작일
+  """
+  startDate: String
+  """
+  시작 요일
+  """
+  startDay: String
+  """
+  종료일
+  """
+  endDate: String
+  """
+  종료 요일
+  """
+  endDay: String
+  """
+  반복
+
+  * 반복없음 : temp
+  * 매월반복 : month
+  * 매주반복 : week
+  """
+  reType: String
+  """
+  시작 시간
+  """
+  startTime: String
+  """
+  종료 시간
+  """
+  endTime: String
+  """
+  메모
+  """
+  memo: String
+  """
+  등록시간
+  """
+  createdAt: String
+  """
+  작성자
+  """
+  creatorName: String
 }
