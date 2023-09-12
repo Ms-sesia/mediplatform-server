@@ -7,13 +7,12 @@ export default {
     seeDefaultSchedule: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { hsp_id } = args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const order = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
         const scheduleList = await prisma.defaultSchedule.findMany({
-          where: { AND: [{ ds_isDelete: false }, { hsp_id }] },
+          where: { AND: [{ ds_isDelete: false }, { hsp_id: user.hospital.hsp_id }] },
         });
 
         const sortedDays = scheduleList.sort((a, b) => order.indexOf(a.ds_day) - order.indexOf(b.ds_day));
@@ -29,3 +28,5 @@ export default {
     },
   },
 };
+
+// 개발 다시 필요

@@ -573,18 +573,13 @@ model specialSchedule {
   ss_editorId               Int                        @default(0) // 수정자 id
   ss_isDelete               Boolean                    @default(false) // 삭제여부
   ss_deleteDate             DateTime? // 삭제일
-  ss_roomType               String                     @default("") @db.VarChar(35) // 진료실 30자 (진료실 이름)
+  ss_doctorRoomName         String                     @default("") @db.VarChar(35) // 진료실 30자 (진료실 이름)
   ss_doctorName             String                     @default("") @db.VarChar(20) // 진료실일 경우 의사 이름
-  ss_startYear              Int                        @default(0) // 일정 시작 - 연
-  ss_startMonth             Int                        @default(0) // 일정 시작 - 월
-  ss_startDate              Int                        @default(0) // 일정 시작 - 일
-  ss_endYear                Int                        @default(0) // 일정 종료 - 연
-  ss_endMonth               Int                        @default(0) // 일정 종료 - 월
-  ss_endDate                Int                        @default(0) // 일정 종료 - 일
-  ss_subUsed                Boolean                    @default(false) // 조정구분. false면 휴무, ture면 대체의사
+  ss_startDate              DateTime                   @default(now()) // 일정 시작일
+  ss_endDate                DateTime                   @default(now()) // 일정 종료일
+  ss_subDoctorUsed          Boolean                    @default(false) // 구분(대체의사). false면 휴무, ture면 대체의사
   ss_startTime              Int                        @default(0) // 조정 시작 시간
   ss_endTime                Int                        @default(0) // 조정 종료 시간
-  ss_dayoff                 Boolean                    @default(false) // 휴무(휴진)여부. false면 근무(진료), true 휴무(휴진)
   ss_memo                   String                     @default("") @db.VarChar(250) // 메모 - 일정 추가 사유
   ss_status                 scheduleConfirm            @default(notSign) // 결재상태 - 승인 전, 승인완료, 반려
   specialScheduleAttactheds specialScheduleAttacthed[]
@@ -599,6 +594,8 @@ model specialSchedule {
 model specialScheduleAttacthed {
   sa_id           Int             @id @default(autoincrement())
   sa_url          String          @default("") @db.VarChar(300) // 첨부파일 url
+  sa_fileType     String          @default("") @db.VarChar(50) // 첨부파일 타입
+  sa_fileSize     Int             @default(0) // 첨부파일 사이즈
   specialSchedule specialSchedule @relation(fields: [ss_id], references: [ss_id])
   ss_id           Int
 }
@@ -623,25 +620,53 @@ model specialScheduleHistory {
 
 // 진료실 => 진료실 코드를 기준으로 업데이트
 model doctorRoom {
-  dr_id           Int               @id @default(autoincrement())
-  dr_createdAt    DateTime          @default(now()) // 등록일
-  dr_updatedAt    DateTime          @updatedAt // 수정일
-  dr_creatorName  String            @default("") @db.VarChar(25) // 등록자 이름
-  dr_creatorRank  String            @default("") @db.VarChar(25) // 등록자 직책
-  dr_creatorId    Int               @default(0) // 등록자 id
-  dr_editorName   String            @default("") @db.VarChar(25) // 수정자이름
-  dr_editorRank   String            @default("") @db.VarChar(25) // 수정자직책
-  dr_editorId     Int               @default(0) // 수정자 id
-  dr_isDelete     Boolean           @default(false) // 삭제여부
-  dr_deleteDate   DateTime? // 삭제일
-  dr_deptCode     String            @default("") @db.VarChar(50) // 진료실 코드(부서코드?)
-  dr_roomName     String            @default("") @db.VarChar(60) // 진료실 이름 50자
-  dr_doctorName   String            @default("") @db.VarChar(25) // 진료실 의사 이름 20자
-  dr_medicalSub   String            @default("") @db.VarChar(25) // 진료과목
-  dr_doctorRank   String            @default("") @db.VarChar(25) // 의사 직책 - 사용안함
-  specialSchedule specialSchedule[]
-  hospital        hospital          @relation(fields: [hsp_id], references: [hsp_id])
-  hsp_id          Int
+  dr_id              Int                  @id @default(autoincrement())
+  dr_createdAt       DateTime             @default(now()) // 등록일
+  dr_updatedAt       DateTime             @updatedAt // 수정일
+  dr_creatorName     String               @default("") @db.VarChar(25) // 등록자 이름
+  dr_creatorRank     String               @default("") @db.VarChar(25) // 등록자 직책
+  dr_creatorId       Int                  @default(0) // 등록자 id
+  dr_editorName      String               @default("") @db.VarChar(25) // 수정자이름
+  dr_editorRank      String               @default("") @db.VarChar(25) // 수정자직책
+  dr_editorId        Int                  @default(0) // 수정자 id
+  dr_isDelete        Boolean              @default(false) // 삭제여부
+  dr_deleteDate      DateTime? // 삭제일
+  dr_deptCode        String               @default("") @db.VarChar(50) // 진료실 코드(부서코드?)
+  dr_roomName        String               @default("") @db.VarChar(60) // 진료실 이름 50자
+  dr_doctorName      String               @default("") @db.VarChar(25) // 진료실 의사 이름 20자
+  dr_medicalSub      String               @default("") @db.VarChar(25) // 진료과목
+  dr_doctorRank      String               @default("") @db.VarChar(25) // 의사 직책 - 사용안함
+  specialSchedule    specialSchedule[]
+  doctorRoomSchedule doctorRoomSchedule[]
+  hospital           hospital             @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id             Int
+}
+
+// 진료실 일정
+model doctorRoomSchedule {
+  drs_id          Int        @id @default(autoincrement())
+  drs_createdAt   DateTime   @default(now()) // 등록일
+  drs_updatedAt   DateTime   @updatedAt // 수정일
+  drs_creatorName String     @default("") @db.VarChar(25) // 등록자 이름
+  drs_creatorRank String     @default("") @db.VarChar(25) // 등록자 직책
+  drs_creatorId   Int        @default(0) // 등록자 id
+  drs_editorName  String     @default("") @db.VarChar(25) // 수정자이름
+  drs_editorRank  String     @default("") @db.VarChar(25) // 수정자직책
+  drs_editorId    Int        @default(0) // 수정자 id
+  drs_isDelete    Boolean    @default(false) // 삭제여부
+  drs_deleteDate  DateTime? // 삭제일
+  drs_day         day // 요일
+  drs_startHour   Int        @default(0) // 시작 시간
+  drs_startMin    Int        @default(0) // 시작 분
+  drs_endHour     Int        @default(0) // 종료 시간
+  drs_endMin      Int        @default(0) // 종료 분
+  drs_lunchBreak  Boolean    @default(false) // 점심시간 휴진 사용 여부. false 미사용, true 사용
+  drs_lbStartHour Int        @default(0) // 점심시간 시작 시간
+  drs_lbStartMin  Int        @default(0) // 점심시간 시작 분
+  drs_lbEndHour   Int        @default(0) // 점심시간 종료 시간
+  drs_lbEndMin    Int        @default(0) // 점심시간 종료 분
+  doctorRoom      doctorRoom @relation(fields: [dr_id], references: [dr_id])
+  dr_id           Int
 }
 
 // did

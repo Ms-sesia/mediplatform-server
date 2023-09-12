@@ -1,0 +1,23 @@
+type Query {
+  """
+  일별 운영 스케쥴 조회
+
+  * error
+  - err_00 : 일별 운영 스케쥴 조회에 실패하였습니다.
+  """
+  seeByDaySchedule(
+    """
+    조회할 일자
+    """
+    searchDate: String
+  ): seeByDayScheduleInfo
+}
+
+type seeByDayScheduleInfo {
+  defaultScheduleList: [defaultSchedule]
+}
+
+# 다시 설정 필요함
+type operationSchedule {
+  time: String
+}

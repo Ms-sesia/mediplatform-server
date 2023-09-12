@@ -2,12 +2,7 @@ type Query {
   """
   기본 영업시간
   """
-  seeDefaultSchedule(
-    """
-    영업시간 조회할 병원 id
-    """
-    hsp_id: Int!
-  ): seeDefaultScheduleInfo
+  seeDefaultSchedule: seeDefaultScheduleInfo
 }
 
 type seeDefaultScheduleInfo {

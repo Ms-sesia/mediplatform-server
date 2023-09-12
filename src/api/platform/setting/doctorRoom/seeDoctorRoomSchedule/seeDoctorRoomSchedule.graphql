@@ -1,0 +1,30 @@
+type Query {
+  """
+  진료실 별 스케쥴 조회
+
+  * error
+  - err_00 : 진료실 별 스케쥴 조회에 실패하였습니다.
+  """
+  seeDoctorRoomSchedule(
+    """
+    진료실 id
+
+    기본값 0넣으면 빈배열 리턴
+    """
+    dr_id: Int!
+  ): [doctorRoomSchdule]
+}
+
+type doctorRoomSchdule {
+  drs_id: Int
+  drs_day: day # 요일
+  drs_startHour: Int # 시작 시간
+  drs_startMin: Int # 시작 분
+  drs_endHour: Int # 종료 시간
+  drs_endMin: Int # 종료 분
+  drs_lunchBreak: Boolean # 점심시간 휴진 사용 여부. false 미사용, true 사용
+  drs_lbStartHour: Int # 점심시간 시작 시간
+  drs_lbStartMin: Int # 점심시간 시작 분
+  drs_lbEndHour: Int # 점심시간 종료 시간
+  drs_lbEndMin: Int # 점심시간 종료 분
+}

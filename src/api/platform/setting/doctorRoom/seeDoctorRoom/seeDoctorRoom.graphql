@@ -1,13 +1,11 @@
 type Query {
   """
   진료실 목록 조회
+
+  * error
+  - err_00 : 진료실 정보 조회에 실패하였습니다.
   """
-  seeDoctorRoom(
-    """
-    접속한 병원 id
-    """
-    hsp_id: Int!
-  ): seeDoctorRoomInfo
+  seeDoctorRoom: seeDoctorRoomInfo
 }
 
 type seeDoctorRoomInfo {

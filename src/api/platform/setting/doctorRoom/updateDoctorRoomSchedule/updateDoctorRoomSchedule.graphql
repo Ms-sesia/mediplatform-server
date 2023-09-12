@@ -1,0 +1,62 @@
+type Mutation {
+  """
+  진료실 스케쥴 수정
+
+  * error
+  - err_00 : 진료실 스케쥴 수정에 실패하였습니다.
+  """
+  updateDoctorRoomSchedule(
+    """
+    삭제할 진료실 일정 id
+    """
+    drs_id: Int!
+    """
+    요일
+
+    mon
+    tue
+    wed
+    thu
+    fri
+    sat
+    sun
+    """
+    day: day
+    """
+    시작 시간
+    """
+    startHour: Int
+    """
+    시작 분
+    """
+    startMin: Int
+    """
+    종료 시간
+    """
+    endHour: Int
+    """
+    종료 분
+    """
+    endMin: Int
+    """
+    점심시간 휴진 사용 여부. false 미사용, true 사용
+    """
+    lunchBreak: Boolean
+    """
+    점심시간 시작 시간
+    """
+    lunchBreakStartHour: Int
+    """
+    점심시간 시작 분
+    """
+    lunchBreakStartMin: Int
+    """
+    점심시간 종료 시간
+    """
+    lunchBreakEndHour: Int
+    """
+    점심시간 종료 분
+    """
+    lunchBreakEndMin: Int
+  ): Boolean
+}
