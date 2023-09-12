@@ -482,10 +482,6 @@ model defaultSchedule {
   ds_lbStartMin  Int       @default(0) // 점심시간 시작 분
   ds_lbEndHour   Int       @default(0) // 점심시간 종료 시간
   ds_lbEndMin    Int       @default(0) // 점심시간 종료 분
-  // ds_nightStartHour Int      @default(0) // 야간진료 시작 시간
-  // ds_nightStartMin  Int      @default(0) // 야간진료 시작 분
-  // ds_nightEndHour   Int      @default(0) // 야간진료 종료 시간
-  // ds_nightEndMin    Int      @default(0) // 야간진료 종료 분
   hospital       hospital  @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id         Int
 }
@@ -573,13 +569,14 @@ model specialSchedule {
   ss_editorId               Int                        @default(0) // 수정자 id
   ss_isDelete               Boolean                    @default(false) // 삭제여부
   ss_deleteDate             DateTime? // 삭제일
+  ss_type                   specialScheduleType        @default(offDay) // 구분. 휴무 / 일정
   ss_doctorRoomName         String                     @default("") @db.VarChar(35) // 진료실 30자 (진료실 이름)
   ss_doctorName             String                     @default("") @db.VarChar(20) // 진료실일 경우 의사 이름
   ss_startDate              DateTime                   @default(now()) // 일정 시작일
   ss_endDate                DateTime                   @default(now()) // 일정 종료일
   ss_subDoctorUsed          Boolean                    @default(false) // 구분(대체의사). false면 휴무, ture면 대체의사
-  ss_startTime              Int                        @default(0) // 조정 시작 시간
-  ss_endTime                Int                        @default(0) // 조정 종료 시간
+  ss_startTime              String                     @default("") @db.VarChar(25) // 조정 시작 시간
+  ss_endTime                String                     @default("") @db.VarChar(25) // 조정 종료 시간
   ss_memo                   String                     @default("") @db.VarChar(250) // 메모 - 일정 추가 사유
   ss_status                 scheduleConfirm            @default(notSign) // 결재상태 - 승인 전, 승인완료, 반려
   specialScheduleAttactheds specialScheduleAttacthed[]
@@ -1200,14 +1197,11 @@ enum monitorType {
   horizontal // 가로
 }
 
-// // 광고 위치
-// enum adLocation {
-//   empty //없음
-//   up // 위
-//   down // 아래
-//   left // 왼쪽
-//   right // 오른쪽
-// }
+// 진료실 일정 구분 
+enum specialScheduleType {
+  offDay // 휴무
+  schedule // 일정
+}
 
 // did 정보 분류
 enum mediaType {

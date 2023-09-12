@@ -1,12 +1,12 @@
 type Mutation {
   """
   병원 기본 스케쥴 추가
+
+  * error
+  - err_00 : 병원 기본 스케쥴 추가에 실패하였습니다.
+  - err_01 : 해당 요일에 이미 등록된 일정이 있습니다.
   """
   createDefaultSchedule(
-    """
-    스케쥴 추가할 병원 id
-    """
-    hsp_id: Int!
     """
     요일
     """

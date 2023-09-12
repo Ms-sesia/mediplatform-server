@@ -7,10 +7,11 @@ const prisma = new PrismaClient();
 
 export default {
   Mutation: {
-    createSpecialSchedule: async (_, args, { request, isAuthenticated }) => {
+    updateSpecialSchedule: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { dr_id, startDate, endDate, subDoctorUsed, startTime, endTime, memo, attached } = args;
+      const { ss_id, dr_id, startDate, endDate, subDoctorUsed, startTime, endTime, memo, attached, deleteAttachedIds } =
+        args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const storagePath = path.join(__dirname, "../../../../../", "files");
@@ -20,13 +21,13 @@ export default {
         const start = new Date(startDate);
         const end = new Date(endDate);
 
-        const specialSchedule = await prisma.specialSchedule.create({
+        const specialSchedule = await prisma.specialSchedule.update({
+          where: { ss_id },
           data: {
-            ss_createdAt: today9,
             ss_updatedAt: today9,
-            ss_creatorId: loginUser.user_id,
-            ss_creatorName: loginUser.user_name,
-            ss_creatorRank: loginUser.user_rank,
+            ss_editorId: loginUser.user_id,
+            ss_editorName: loginUser.user_name,
+            ss_editorRank: loginUser.user_rank,
             ss_doctorName: doctorRoom.dr_doctorName,
             ss_doctorRoomName: doctorRoom.dr_roomName,
             ss_startDate: start,
@@ -35,19 +36,22 @@ export default {
             ss_startTime: startTime,
             ss_endTime: endTime,
             ss_memo: memo,
-            hospital: { connect: { hsp_id: user.hospital.hsp_id } },
-            doctorRoom: { connect: { dr_id } },
-            specialScheduleHistory: {
-              create: {
-                ssh_createdAt: today9,
-                ssh_creatorId: loginUser.user_id,
-                ssh_creatorName: loginUser.user_name,
-                ssh_creatorRank: loginUser.user_rank,
-                ssh_text: `${loginUser.user_name}님이 특별일정을 등록했습니다.`,
-              },
-            },
           },
         });
+
+        if (deleteAttachedIds.length) {
+          deleteAttachedIds.forEach(async (sa_id) => {
+            const ssaUrl = (await prisma.specialScheduleAttacthed.findUnique({ where: { sa_id } })).sa_url;
+            const fileName = ssaUrl.split("/")[3];
+
+            if (fs.existsSync(`${storagePath}/${fileName}`)) {
+              // console.log("존재");
+              fs.unlinkSync(`${storagePath}/${fileName}`);
+            }
+
+            await prisma.specialScheduleAttacthed.delete({ where: { sa_id } });
+          });
+        }
 
         if (attached.length) {
           for (let i = 0; i < attached.length; i++) {
@@ -84,7 +88,7 @@ export default {
 
         return true;
       } catch (e) {
-        console.log("진료실 특별일정 추가 실패. createSpecialSchedule", e);
+        console.log("진료실 특별일정 수정 실패. updateSpecialSchedule", e);
         throw new Error("err_00");
       }
     },

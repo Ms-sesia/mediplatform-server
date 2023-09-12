@@ -1,0 +1,32 @@
+type Mutation {
+  """
+  진료실 특별일정 수정
+
+  * error
+  - err_00 : 진료실 특별일정 수정에 실패하였습니다.
+  """
+  updateSpecialSchedule(
+    """
+    특별일정 id
+    """
+    ss_id: Int!
+    """
+    변경할 진료실 id
+    """
+    dr_id: Int
+    startDate: String # 일정 시작일
+    endDate: String # 일정 종료일
+    subDoctorUsed: Boolean # 구분(대체의사). false면 휴무, ture면 대체의사
+    startTime: String # 조정 시작 시간
+    endTime: String # 조정 종료 시간
+    memo: String # 메모 - 일정 추가 사유
+    """
+    첨부파일
+    """
+    attached: [Upload!]
+    """
+    삭제할 첨부파일
+    """
+    deleteAttachedIds: [Int]
+  ): Boolean
+}

@@ -4,20 +4,99 @@ type Query {
 
   * error
   - err_00 : 일별 운영 스케쥴 조회에 실패하였습니다.
+
+  * isOffDay(휴무)
+  - 휴무일 경우(true) 시작시간, 종료시간이 0이면 전체 휴무
+  - 휴뮤가 아닐경우 휴무관련 시간은 99
   """
   seeByDaySchedule(
     """
     조회할 일자
     """
     searchDate: String
-  ): seeByDayScheduleInfo
+    """
+    검색 - 진료실
+    """
+    searchTerm: String
+    """
+    진료실 이름
+
+    - 내림차순 : desc
+    - 오름차순 : asc
+    """
+    orderBy: String
+  ): [operationSchedule]
 }
 
-type seeByDayScheduleInfo {
-  defaultScheduleList: [defaultSchedule]
-}
-
-# 다시 설정 필요함
+"""
+운영 스케쥴
+"""
 type operationSchedule {
-  time: String
+  """
+  타이틀 - 병원 운영 스케쥴 / 진료실 이름(의사이름)
+  """
+  title: String
+  """
+  휴무 여부
+
+  - true: 휴무
+  - false: 휴무아님
+  """
+  isOffDay: Boolean
+  """
+  휴무 시작 시간
+  """
+  offStartHour: Int
+  """
+  휴무 시작 분
+  """
+  offStartMin: Int
+  """
+  휴무 종료 시간
+  """
+  offEndHour: Int
+  """
+  휴무 종료 분
+  """
+  offEndMin: Int
+  """
+  총 운영 시간
+  """
+  totalOperTime: String
+  """
+  시작 시간
+  """
+  startHour: Int
+  """
+  시작 분
+  """
+  startMin: Int
+  """
+  종료 시간
+  """
+  endHour: Int
+  """
+  종료 분
+  """
+  endMin: Int
+  """
+  점심시간 휴진 사용 여부. false 미사용, true 사용
+  """
+  lunchBreak: Boolean
+  """
+  점심시간 시작 시간
+  """
+  lbStartHour: Int
+  """
+  점심시간 시작 분
+  """
+  lbStartMin: Int
+  """
+  점심시간 종료 시간
+  """
+  lbEndHour: Int
+  """
+  점심시간 종료 분
+  """
+  lbEndMin: Int
 }

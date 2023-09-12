@@ -1,0 +1,22 @@
+type Mutation {
+  """
+  특별일정 결재 상태 변경
+
+  * error
+  - err_00 : 특별일정 결재 상태 변경에 실패하였습니다.
+  """
+  updateSpecialScheduleStatus(
+    """
+    특별일정 id
+    """
+    ss_id: Int!
+    """
+    특별일정 승인 상태
+
+    - 승인전 : notSign
+    - 승인 : sign
+    - 반려 : reject
+    """
+    status: scheduleConfirm
+  ): Boolean
+}

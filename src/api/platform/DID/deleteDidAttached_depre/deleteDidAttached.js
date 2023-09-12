@@ -16,8 +16,7 @@ export default {
 
         if (fileName) {
           if (fs.existsSync(`${storagePath}/${fileName}`)) {
-            console.log("존재");
-            // fs.unlinkSync(`${storagePath}/${fileName}`);
+            fs.unlinkSync(`${storagePath}/${fileName}`);
           }
         }
 

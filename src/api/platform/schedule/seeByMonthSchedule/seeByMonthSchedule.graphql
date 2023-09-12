@@ -1,0 +1,64 @@
+type Query {
+  """
+  월별 운영 스케쥴 조회
+
+  * error
+  - err_00 : 월별 운영 스케쥴 조회에 실패하였습니다.
+  """
+  seeByMonthSchedule(
+    """
+    조회할 연도
+    """
+    year: Int
+    """
+    조회할 월
+    """
+    month: Int
+    """
+    검색 - 진료실
+    """
+    searchTerm: String
+    """
+    진료실 이름
+
+    - 내림차순 : desc
+    - 오름차순 : asc
+    """
+    orderBy: String
+  ): [seeByMonthScheduleInfo]
+}
+
+type seeByMonthScheduleInfo {
+  """
+  타이틀 - 병원 운영 스케쥴 / 진료실 이름(의사이름)
+  """
+  title: String
+  """
+  근무일 수
+  """
+  workdayCount: Int
+  """
+  휴진일 수
+  """
+  offDayCount: Int
+  """
+  대체일 수
+  """
+  subDoctorDayCount: Int
+  byDateInfo: [byDateInfo]
+}
+
+type byDateInfo {
+  """
+  일
+  """
+  date: Int
+  """
+  근무 휴무 정보
+
+  - 근무 : work
+  - 휴무 : off
+  - 대체 : subDoctor
+  """
+  offInfo: String
+}

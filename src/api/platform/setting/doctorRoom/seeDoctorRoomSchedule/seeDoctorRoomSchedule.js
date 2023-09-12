@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { weekdays_eng } from "../../../../../libs/todayCal";
+import { getDayIndex } from "../../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 
@@ -37,9 +37,4 @@ export default {
       }
     },
   },
-};
-
-// 요일별 인덱스를 반환하는 함수
-const getDayIndex = (day) => {
-  return weekdays_eng.indexOf(day);
 };

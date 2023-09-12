@@ -1,0 +1,80 @@
+type Query {
+  """
+  월별 특별일정 목록 조회
+
+  * error
+  - err_00 : 월별 특별일정 목록 조회에 실패하였습니다.
+  """
+  seeSpecialSchedule(
+    """
+    조회할 연도
+    """
+    year: Int
+    """
+    조회할 월
+    """
+    month: Int
+    """
+    검색 - 진료실명
+    """
+    searchTerm: String
+    """
+    진료실 이름
+
+    - 내림차순 : desc
+    - 오름차순 : asc
+    """
+    orderBy: String
+  ): [seeSpecialScheduleInfo]
+}
+
+type seeSpecialScheduleInfo {
+  """
+  특별일정 id
+  """
+  ss_id: Int
+  """
+  구분 - 휴무시간추가 : offDay, 일정 추가: schedule
+  """
+  ss_type: specialScheduleType
+  """
+  진료실 30자 (진료실 이름)
+  """
+  ss_doctorRoomName: String
+  """
+  진료실일 경우 의사 이름
+  """
+  ss_doctorName: String
+  """
+  일정 시작일
+  """
+  ss_startDate: String
+  """
+  일정 종료일
+  """
+  ss_endDate: String
+  """
+  구분(대체의사). false면 휴무, ture면 대체의사
+  """
+  ss_subDoctorUsed: Boolean
+  """
+  조정 시작 시간
+  """
+  ss_startTime: String
+  """
+  조정 종료 시간
+  """
+  ss_endTime: String
+  """
+  메모 - 일정 추가 사유
+  """
+  ss_memo: String
+  """
+  특별일정 승인 상태
+
+  - 승인전 : notSign
+  - 승인 : sign
+  - 반려 : reject
+  """
+  ss_status: scheduleConfirm
+}

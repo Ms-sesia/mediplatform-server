@@ -1147,3 +1147,35 @@ enum rePlatform {
   """
   emr
 }
+
+"""
+진료실 일정 구분
+"""
+enum specialScheduleType {
+  """
+  휴무
+  """
+  offDay
+  """
+  일정
+  """
+  schedule
+}
+
+"""
+특별일정 승인 상태
+"""
+enum scheduleConfirm {
+  """
+  승인전
+  """
+  notSign
+  """
+  승인
+  """
+  sign
+  """
+  반려
+  """
+  reject
+}

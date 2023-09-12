@@ -8,7 +8,6 @@ export default {
       isAuthenticated(request);
       const { user } = request;
       const {
-        hsp_id,
         ds_day,
         ds_startHour,
         ds_startMin,
@@ -22,6 +21,14 @@ export default {
       } = args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
+
+        const ds = await prisma.defaultSchedule.findMany({
+          where: {
+            AND: [{ hsp_id: user.hospital.hsp_id }, { ds_isDelete: false }, { ds_day }],
+          },
+        });
+
+        if (ds.length) throw 1;
 
         await prisma.defaultSchedule.create({
           data: {
@@ -38,14 +45,15 @@ export default {
             ds_lbStartMin,
             ds_lbEndHour,
             ds_lbEndMin,
-            hospital: { connect: { hsp_id } },
+            hospital: { connect: { hsp_id: user.hospital.hsp_id } },
           },
         });
 
         return true;
       } catch (e) {
         console.log("병원 기본 스케쥴 추가 실패. createDefaultSchedule", e);
-        throw new Error("병원 기본 스케쥴 추가에 실패하였습니다.");
+        if (e === 1) throw new Error("err_01");
+        throw new Error("err_00");
       }
     },
   },
