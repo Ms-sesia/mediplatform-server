@@ -1,0 +1,36 @@
+type Query {
+  """
+  관리자 일대일 문의 목록 조회
+
+  * error
+  - err_00 : 관리자 일대일 문의 목록 조회에 실패하였습니다.
+  - err_01 : 관리자만 사용할 수 있는 기능입니다.
+  """
+  seeAdminOneOnOneList(
+    """
+    정렬
+
+    오름차순: asc
+    내림차순: desc
+    """
+    orderBy: String
+    take: Int
+    cursor: Int
+  ): seeAdminOneOnOneListInfo
+}
+
+type seeAdminOneOnOneListInfo {
+  totalLength: Int
+  inquireList: [adminOneOnOneList]
+}
+
+type adminOneOnOneList {
+  oneq_id: Int # 일대일 문의 id
+  text: String # 일대일 문의 내용
+  hospitalName: String # 병원명
+  creatorName: String # 작성자이름
+  creatorRank: String # 작성자 직책
+  creatorEmail: String # 작성자 이메일
+  createdAt: String # 작성일(문의일)
+  answerStatus: Boolean # 답변상태
+}

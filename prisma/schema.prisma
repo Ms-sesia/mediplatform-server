@@ -399,6 +399,7 @@ model reservation {
   re_editorId         Int        @default(0) // 수정자 id
   re_isDelete         Boolean    @default(false) // 삭제여부
   re_deleteDate       DateTime? // 삭제일
+  re_emrId            Int        @default(0) // emr의 예약 id
   re_desireDate       DateTime   @default(now()) // 예약 희망 일
   re_desireTime       String     @default("") @db.VarChar(10) // 예약 희망 시간(10:30)
   re_resDate          DateTime   @default(now()) // 예약일자
@@ -411,6 +412,7 @@ model reservation {
   re_patientName      String     @default("") @db.VarChar(20) // 예약자(환자) 이름
   re_patientRrn       String     @default("") @db.VarChar(25) // 예약자(환자) 주민번호 871012-1
   re_patientCellphone String     @default("") @db.VarChar(25) // 예약자(환자) 휴대폰번호
+  re_chartNumber      String     @default("") @db.VarChar(25) // 환자 차트번호
   re_oneLineMem       String     @default("") @db.VarChar(65) // 한줄 메모 50자
   re_confirmUserName  String     @default("") @db.VarChar(20) // 승인자 이름
   re_confirmUserRank  String     @default("") @db.VarChar(20) // 승인자 직급
@@ -419,8 +421,8 @@ model reservation {
   re_SCategory        String     @default("") @db.VarChar(65) // 예약구분 - 소분류 50자
   re_doctorRoomName   String     @default("") @db.VarChar(25) // 진료실 이름
   resAlim             resAlim?
-  patient             patient    @relation(fields: [pati_id], references: [pati_id])
-  pati_id             Int
+  patient             patient?   @relation(fields: [pati_id], references: [pati_id])
+  pati_id             Int?
   hospital            hospital   @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id              Int
 
@@ -949,15 +951,15 @@ model faqLike {
 model oneOnOne {
   oneq_id            Int                @id @default(autoincrement())
   oneq_createdAt     DateTime           @default(now())
-  oneq_title         String             @default("") @db.VarChar(125) // 일대일 문의 질문 제목
-  oneq_text          String             @default("") @db.VarChar(125) // 일대일 문의 질문 내용
   oneq_creatorName   String             @default("") @db.VarChar(20) // 작성자 이름
   oneq_creatorRank   String             @default("") @db.VarChar(20) // 작성자 직책
   oneq_creatorId     Int                @default(0) // 작성자(사용자) id
-  oneq_status        Boolean            @default(false) // 답변 상태. false: 답변대기, true: 답변완료
-  oneq_publicPrivate Boolean            @default(false) // 공개 비공개 여부. false: 비공개, true: 공개
   oneq_isDelete      Boolean            @default(false) // 삭제 여부
   oneq_deleteDate    DateTime? // 삭제일
+  oneq_title         String             @default("") @db.VarChar(125) // 일대일 문의 질문 제목
+  oneq_text          String             @default("") @db.VarChar(900) // 일대일 문의 질문 내용
+  oneq_status        Boolean            @default(false) // 답변 상태. false: 답변대기, true: 답변완료
+  oneq_publicPrivate Boolean            @default(false) // 공개 비공개 여부. false: 비공개, true: 공개
   oneOnOneAttached   oneOnOneAttached[]
   oneOnOneAnswer     oneOnOneAnswer[]
   hospital           hospital           @relation(fields: [hsp_id], references: [hsp_id])
@@ -978,12 +980,16 @@ model oneOnOneAttached {
 model oneOnOneAnswer {
   oneAn_id               Int       @id @default(autoincrement())
   oneAn_createdAt        DateTime  @default(now())
-  oneAn_answer           String    @default("") @db.VarChar(250) // 일대일 문의 답변
-  oneAn_adminCreatorName String    @default("") @db.VarChar(20) // 작성자 이름
-  oneAn_adminCreatorRank String    @default("") @db.VarChar(20) // 작성자 직책
-  oneAn_adminCreatorId   Int       @default(0) // 작성자(사용자) id
+  oneAn_adminAble        Boolean   @default(false) // 관리자 답변 혹은 사용자 댓글. true:관리자, false:사용자
+  oneAn_adminCreatorName String    @default("") @db.VarChar(20) // 관리자 작성자 이름
+  oneAn_adminCreatorRank String    @default("") @db.VarChar(20) // 관리자 작성자 직책
+  oneAn_adminCreatorId   Int       @default(0) // 관리자 작성자(사용자) id
   oneAn_isDelete         Boolean   @default(false) // 삭제 여부
   oneAn_deleteDate       DateTime? // 삭제일
+  oneAn_creatorName      String    @default("") @db.VarChar(20) // 작성자 이름
+  oneAn_creatorRank      String    @default("") @db.VarChar(20) // 작성자 직책
+  oneAn_creatorId        Int       @default(0) // 작성자(사용자) id
+  oneAn_answer           String    @default("") @db.VarChar(250) // 일대일 문의 답변
   oneOnOne               oneOnOne  @relation(fields: [oneq_id], references: [oneq_id])
   oneq_id                Int
 }

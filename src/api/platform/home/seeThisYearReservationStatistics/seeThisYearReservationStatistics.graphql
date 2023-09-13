@@ -1,0 +1,36 @@
+type Query {
+  """
+  예약 환자 통계 조회
+
+  * error
+  - err_00 : 예약 환자 통계 조회에 실패하였습니다.
+  """
+  seeThisYearReservationStatistics: seeThisYearReservationStatisticsInfo
+}
+
+type seeThisYearReservationStatisticsInfo {
+  """
+  연도
+  """
+  year: Int
+  """
+  남성 수
+  """
+  manCount: Int
+  """
+  여성 수
+  """
+  womanCount: Int
+  byMonthCount: [byMonthCount]
+}
+
+type byMonthCount {
+  """
+  월별
+  """
+  month: Int
+  """
+  예약 수 (완료 및 확정)
+  """
+  count: Int
+}

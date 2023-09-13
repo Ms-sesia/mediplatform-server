@@ -1,0 +1,57 @@
+type Query {
+  """
+  일대일 문의 조회
+
+  * error
+  - err_00 : 일대일 문의 조회에 실패하였습니다.
+  """
+  seeOneOnOneList(
+    """
+    공개 비공개 여부.
+
+    - total : 전체
+    - public : 공개
+    - private : 비공개
+    """
+    answerStatus: String
+    """
+    정렬 - 기본 내림차순 입력
+
+    오름차순: asc
+    내림차순: desc
+    """
+    orderBy: String
+    take: Int
+    cursor: Int
+  ): seeOneOnOneListInfo
+}
+
+type seeOneOnOneListInfo {
+  totalLength: Int
+  inquireList: [oneOnOneList]
+}
+
+type oneOnOneList {
+  oneq_id: Int
+  oneq_createdAt: String
+  """
+  작성자 이름
+  """
+  oneq_creatorName: String
+  """
+  작성자 직책
+  """
+  oneq_creatorRank: String
+  """
+  작성자(사용자) id
+  """
+  oneq_creatorId: Int
+  """
+  일대일 문의 질문 제목
+  """
+  oneq_title: String
+  """
+  답변 상태. false: 답변대기, true: 답변완료
+  """
+  oneq_status: Boolean
+}

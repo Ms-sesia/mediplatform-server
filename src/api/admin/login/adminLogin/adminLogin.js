@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import useragent from "useragent";
-import { generateToken } from "../../../generate";
-import { createAdminLoginHistory } from "../../../libs/createLog";
-import { makeHashPassword } from "../../../libs/passwordHashing";
+import { generateToken } from "../../../../generate";
+import { createAdminLoginHistory } from "../../../../libs/createLog";
+import { makeHashPassword } from "../../../../libs/passwordHashing";
 
 const prisma = new PrismaClient();
 

@@ -33,15 +33,6 @@ export default {
 
         let patientInfo;
         if (patientId) patientInfo = await prisma.patient.findUnique({ where: { pati_id: patientId } });
-        else {
-          patientInfo = await prisma.patient.create({
-            data: {
-              pati_name: patientName,
-              pati_cellphone: patientCellphone,
-              hospital: { connect: { hsp_id: user.hospital.hsp_id } },
-            },
-          });
-        }
 
         const reservation = await prisma.reservation.create({
           data: {
@@ -69,7 +60,7 @@ export default {
             re_SCategory: smallCategory,
             re_doctorRoomName: doctorRoomName,
             hospital: { connect: { hsp_id: user.hospital.hsp_id } },
-            patient: { connect: { pati_id: patientInfo.pati_id } },
+            patient: patientId ? { connect: { pati_id: patientInfo.pati_id } } : undefined,
           },
         });
 

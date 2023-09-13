@@ -1,0 +1,19 @@
+type Mutation {
+  """
+  일대일 문의 답변 등록
+
+  * error
+  - err_00 : 일대일 문의 답변 등록에 실패하였습니다.
+  - err_01 : 관리자만 사용할 수 있는 기능입니다.
+  """
+  createAdminOneOnOneAnswer(
+    """
+    답변 등록할 일대일 문의 id
+    """
+    oneq_id: Int!
+    """
+    답변
+    """
+    answer: String!
+  ): Boolean
+}

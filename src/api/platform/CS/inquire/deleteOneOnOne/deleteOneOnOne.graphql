@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  일대일 문의 삭제
+
+  * error
+  - err_00 : 일대일 문의 삭제하기에 실패하였습니다.
+  - err_01 : 작성자만 삭제할 수 있습니다.
+  """
+  deleteOneOnOne(
+    """
+    삭제할 일대일 문의 id
+    """
+    oneq_id: Int!
+  ): Boolean
+}

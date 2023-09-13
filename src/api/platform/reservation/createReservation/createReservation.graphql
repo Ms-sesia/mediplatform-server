@@ -9,7 +9,7 @@ type Mutation {
     """
     예약자(환자) id. 환자 검색 후 있을경우 입력. 없으면 0
     """
-    patientId: Int!
+    patientId: Int
     """
     예약자(환자) 이름
     """
