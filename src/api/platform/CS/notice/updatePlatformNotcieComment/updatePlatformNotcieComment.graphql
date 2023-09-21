@@ -1,0 +1,19 @@
+type Mutation {
+  """
+  플랫폼 공지 댓글 수정
+
+  * error
+  - err_00 : 플랫폼 공지 댓글 수정에 실패하였습니다.
+  - err_01 : 작성자만 수정이 가능합니다.
+  """
+  updatePlatformNotcieComment(
+    """
+    플랫폼 공지 댓글 id
+    """
+    pnc_id: Int!
+    """
+    댓글 내용
+    """
+    text: String
+  ): Boolean
+}

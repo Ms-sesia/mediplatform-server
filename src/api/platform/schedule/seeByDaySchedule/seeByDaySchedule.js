@@ -67,7 +67,7 @@ export default {
 
         const isOffDay = offDayGenerate(hspOffDay, hspMonthOffDay, hspWeekOffDay);
 
-        let calTotalOfferTime = 99;
+        let calTotalOfferTime = -1;
         if (isOffDay) {
           if (isOffDay.offStartHour !== 0 && isOffDay.offEndHour !== 0)
             calTotalOfferTime =
@@ -86,18 +86,18 @@ export default {
             (hspSchedule[0].ds_startHour * 60 + hspSchedule[0].ds_startMin)
           : 0;
 
-        // 휴무가 아니면 기존계산시간, 휴무면(!99) 기존 계산시간 - 휴무시간
-        const dsOffTotalOperTime = calTotalOfferTime !== 99 ? dsTotalOperTime - calTotalOfferTime : dsTotalOperTime;
+        // 휴무가 아니면 기존계산시간, 휴무면(! -1) 기존 계산시간 - 휴무시간
+        const dsOffTotalOperTime = calTotalOfferTime !== -1 ? dsTotalOperTime - calTotalOfferTime : dsTotalOperTime;
 
         operSchedule.push({
           title: "병원 운영 스케쥴",
           isOffDay: isOffDay ? Boolean(isOffDay) : false,
-          offStartHour: isOffDay ? isOffDay.offStartHour : 99,
-          offStartMin: isOffDay ? isOffDay.offStartMin : 99,
-          offEndHour: isOffDay ? isOffDay.offEndHour : 99,
-          offEndMin: isOffDay ? isOffDay.offEndMin : 99,
+          offStartHour: isOffDay ? isOffDay.offStartHour : -1,
+          offStartMin: isOffDay ? isOffDay.offStartMin : -1,
+          offEndHour: isOffDay ? isOffDay.offEndHour : -1,
+          offEndMin: isOffDay ? isOffDay.offEndMin : -1,
           totalOperTime: hspSchedule.length
-            ? calTotalOfferTime !== 99
+            ? calTotalOfferTime !== -1
               ? `${Math.floor(dsOffTotalOperTime / 60)}h ${dsOffTotalOperTime % 60}m`
               : calTotalOfferTime === 0
               ? ""
@@ -179,7 +179,7 @@ export default {
                 (drSchedule[0].drs_startHour * 60 + drSchedule[0].drs_startMin)
               : 0;
 
-            let calSpOfferTime = 99; // 휴무 계산 기본값
+            let calSpOfferTime = -1; // 휴무 계산 기본값
             if (spSchedule) {
               if (spSchedule.ss_startTime !== 0 && spSchedule.ss_endTime !== 0)
                 calSpOfferTime =
@@ -190,18 +190,19 @@ export default {
               else calSpOfferTime = 0;
             }
 
-            // 휴무가 아니면 기존계산시간, 휴무면(!99) 기존 계산시간 - 휴무시간
-            const spOffTotalOperTime = calSpOfferTime !== 99 ? drsTotalOperTime - calSpOfferTime : drsTotalOperTime;
+            // 휴무가 아니면 기존계산시간, 휴무면(! -1) 기존 계산시간 - 휴무시간
+            const spOffTotalOperTime = calSpOfferTime !== -1 ? drsTotalOperTime - calSpOfferTime : drsTotalOperTime;
 
             return {
-              title: `${dr.dr_roomName}(${dr.dr_doctorName})`,
+              // title: `${dr.dr_roomName}(${dr.dr_doctorName})`,
+              title: dr.dr_roomName,
               isOffDay: spSchedule ? Boolean(spSchedule) : false,
-              offStartHour: spSchedule ? parseInt(spSchedule.ss_startTime.split(":")[0]) : 99,
-              offStartMin: spSchedule ? parseInt(spSchedule.ss_startTime.split(":")[1]) : 99,
-              offEndHour: spSchedule ? parseInt(spSchedule.ss_endTime.split(":")[0]) : 99,
-              offEndMin: spSchedule ? parseInt(spSchedule.ss_endTime.split(":")[1]) : 99,
+              offStartHour: spSchedule ? parseInt(spSchedule.ss_startTime.split(":")[0]) : -1,
+              offStartMin: spSchedule ? parseInt(spSchedule.ss_startTime.split(":")[1]) : -1,
+              offEndHour: spSchedule ? parseInt(spSchedule.ss_endTime.split(":")[0]) : -1,
+              offEndMin: spSchedule ? parseInt(spSchedule.ss_endTime.split(":")[1]) : -1,
               totalOperTime:
-                calSpOfferTime !== 99
+                calSpOfferTime !== -1
                   ? calSpOfferTime === 0
                     ? ""
                     : `${Math.floor(spOffTotalOperTime / 60)}h ${spOffTotalOperTime % 60}m`

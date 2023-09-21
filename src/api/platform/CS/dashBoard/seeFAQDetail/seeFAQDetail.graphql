@@ -1,0 +1,14 @@
+type Query {
+  """
+  faq 상세보기
+
+  * error
+  - err_00 : faq 상세보기에 실패하였습니다.
+  """
+  seeFAQDetail(
+    """
+    조회수 증가할 faq id
+    """
+    faq_id: Int!
+  ): faq
+}

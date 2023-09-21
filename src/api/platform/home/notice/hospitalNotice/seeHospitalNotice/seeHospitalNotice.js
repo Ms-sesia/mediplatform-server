@@ -67,9 +67,15 @@ export default {
           orderBy: { hn_createdAt: filter },
         });
 
+        const hospitalNoticeList = hospitalNotice.map((hn) => {
+          hn.hn_createdAt = new Date(hn.hn_createdAt).toISOString();
+
+          return hn;
+        });
+
         return {
           totalLength: totalHospitalNotice.length ? totalHospitalNotice.length : 0,
-          hospitalNoticeList: hospitalNotice.length ? hospitalNotice : [],
+          hospitalNoticeList: hospitalNotice.length ? hospitalNoticeList : [],
         };
       } catch (e) {
         console.log("사내 공지사항 조회 실패. seeHospitalNotice ==>\n", e);

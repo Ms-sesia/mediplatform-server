@@ -666,6 +666,50 @@ type doctorRoom {
 }
 
 """
+자주묻는질문
+"""
+type faq {
+  faq_id: Int
+  faq_createdAt: String
+  """
+  작성자 이름
+  """
+  faq_creatorName: String
+  """
+  작성자 직책(원장, 간호사, 의사)
+  """
+  faq_creatorRank: String
+  """
+  작성자(사용자) id
+  """
+  faq_creatorId: Int
+  """
+  수정자 이름
+  """
+  faq_adminEditorName: String
+  """
+  수정자 직책
+  """
+  faq_adminEditorRank: String
+  """
+  수정자 id
+  """
+  faq_adminEditorId: Int
+  """
+  질문
+  """
+  faq_question: String
+  """
+  답변
+  """
+  faq_answer: String
+  """
+  조회수
+  """
+  faq_viewCount: Int
+}
+
+"""
 병원 사내 공지
 """
 type hospitalNotice {
