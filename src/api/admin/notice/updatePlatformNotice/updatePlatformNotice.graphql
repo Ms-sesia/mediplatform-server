@@ -1,0 +1,36 @@
+type Mutation {
+  """
+  플랫폼 공지 수정
+
+  * error
+  - err_00 : 플랫폼 공지 등록에 실패하였습니다.
+  - err_01 : 관리자만 수정 가능합니다.
+  """
+  updatePlatformNotice(
+    """
+    플랫폼 공지 id
+    """
+    pn_id: Int!
+    """
+    플랫폼 공지 구분
+    일반공지 - normal / 긴급 - emergency / 업데이트 - update
+    """
+    type: platformNoticeType
+    """
+    공지사항 제목
+    """
+    title: String
+    """
+    공지 내용
+    """
+    text: String
+    """
+    삭제할 이미지 ids
+    """
+    deleteAttachedIds: [Int]
+    """
+    새로 생성할 첨부파일
+    """
+    noticeAttached: [Upload!]
+  ): Boolean
+}

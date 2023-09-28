@@ -1,0 +1,14 @@
+type Query {
+  """
+  사내 공지 상세보기
+
+  * error
+  - err_00 : 사내 공지 상세보기 조회에 실패하였습니다.
+  """
+  seeHospitalNoticeDetail(
+    """
+    조회할 사내 공지 id
+    """
+    hn_id: Int!
+  ): hospitalNotice
+}

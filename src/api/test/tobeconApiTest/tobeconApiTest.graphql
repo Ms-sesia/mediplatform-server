@@ -1,0 +1,6 @@
+type Mutation {
+  """
+  투비콘 연동 테스트
+  """
+  tobeconApiTest: Boolean
+}

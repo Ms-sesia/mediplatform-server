@@ -16,6 +16,7 @@ import path from "path";
 import { isAuthenticated } from "./middleWare";
 import { authenticateJwt } from "./passport";
 import webSocket from "./libs/webSocket/webSocket";
+import tobeSchedule from "./libs/scheduler/tobeSchedule";
 
 /* subscription libs */
 // import { WebSocketServer } from "ws";
@@ -50,6 +51,8 @@ const PORT = process.env.SERVER_PORT;
   app.use(express.static(path.join(__dirname, "../", "files")));
   app.use(express.static(path.join(__dirname, "../", "didMedia")));
   app.use(graphqlUploadExpress()); // graphql 파일업로드
+
+  tobeSchedule();
 
   const corsOptions = {
     // origin: ["https://mediplatform.platcube.com"],

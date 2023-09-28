@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  플랫폼 공지 삭제
+
+  * error
+  - err_00 : 플랫폼 공지 삭제에 실패하였습니다.
+  - err_01 : 관리자만 삭제 가능합니다.
+  """
+  deletePlatformNotice(
+    """
+    삭제할 플랫폼 공지 id
+    """
+    pn_id: Int!
+  ): Boolean
+}

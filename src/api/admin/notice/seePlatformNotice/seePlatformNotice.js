@@ -75,9 +75,27 @@ export default {
           orderBy: { pn_createdAt: "desc" },
         });
 
+        const convNotice = platformNoticeList.map(async (pn) => {
+          pn.pn_createdAt = new Date(pn.pn_createdAt).toISOString();
+          pn.pn_updatedAt = new Date(pn.pn_updatedAt).toISOString();
+
+          pn.pnComment = pn.pnComment.map(async (pnc) => {
+            pnc.pnc_createdAt = new Date(pnc.pnc_createdAt).toISOString();
+            pnc.pnc_updatedAt = new Date(pnc.pnc_updatedAt).toISOString();
+
+            const pncCreator = await prisma.user.findUnique({ where: { user_id: pnc.pnc_creatorId } });
+
+            pnc.pnc_creatorImg = pncCreator.user_img;
+
+            return pnc;
+          });
+
+          return pn;
+        });
+
         return {
           totalLength: totalPlatformNotice.length ? totalPlatformNotice.length : 0,
-          platformNotice: platformNoticeList.length ? platformNoticeList : [],
+          platformNotice: platformNoticeList.length ? convNotice : [],
         };
       } catch (e) {
         console.log("관리자 목록 조회 실패. seePlatformNotice ==>\n", e);

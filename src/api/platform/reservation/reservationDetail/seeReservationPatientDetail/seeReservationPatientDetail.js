@@ -22,6 +22,7 @@ export default {
                     prm_createdAt: true,
                     prm_creatorName: true,
                     prm_creatorRank: true,
+                    prm_creatorId: true,
                   },
                 },
                 reservation: {
@@ -40,6 +41,8 @@ export default {
           },
         });
 
+        console.log(reservation);
+
         if (!reservation)
           return {
             reservationInfo: {},
@@ -47,15 +50,19 @@ export default {
             patientMemoList: [],
           };
 
-        const resHistoryList = reservation.patient.reservation.map((res) => {
-          const resHistoryDate = new Date(res.re_year, res.re_month, res.re_date).toISOString();
-          return {
-            resDate: resHistoryDate,
-            resTime: res.re_time,
-            resStatus: res.re_status,
-            oneLineMemo: res.re_oneLineMem,
-          };
-        });
+        const resHistoryList = reservation.patient
+          ? reservation.patient.reservation
+            ? reservation.patient.reservation.map((res) => {
+                const resHistoryDate = new Date(res.re_year, res.re_month, res.re_date).toISOString();
+                return {
+                  resDate: resHistoryDate,
+                  resTime: res.re_time,
+                  resStatus: res.re_status,
+                  oneLineMemo: res.re_oneLineMem,
+                };
+              })
+            : []
+          : [];
 
         const resDate = new Date(reservation.re_year, reservation.re_month, reservation.re_date).toISOString();
         const desireDate = new Date(reservation.re_desireDate).toISOString();
@@ -77,7 +84,15 @@ export default {
             }
           : {};
 
-        const patientMemoList = reservation.patient.patientMemo;
+        const patientMemoList = reservation.patient
+          ? reservation.patient.patientMemo.length
+            ? reservation.patient.patientMemo.map(async (prmMemo) => {
+                const memoCreator = await prisma.user.findUnique({ where: { user_id: prmMemo.prm_creatorId } });
+                prmMemo.prm_creatorImg = memoCreator.user_img;
+                return prmMemo;
+              })
+            : []
+          : [];
 
         return {
           reservationInfo: resDetail,

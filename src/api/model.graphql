@@ -732,6 +732,10 @@ type hospitalNotice {
   """
   hn_creatorRank: String
   """
+  작성자 이미지
+  """
+  hn_creatorImg: String
+  """
   작성자(사용자) id
   """
   hn_creatorId: Int
@@ -780,6 +784,10 @@ type hnComment {
   작성자(사용자) id
   """
   hnc_creatorId: Int
+  """
+  작성자 이미지
+  """
+  hnc_creatorImg: String
 }
 
 """
@@ -865,6 +873,10 @@ type pnComment {
   작성자(사용자) id
   """
   pnc_creatorId: Int
+  """
+  작성자 이미지
+  """
+  pnc_creatorImg: String
 }
 
 """

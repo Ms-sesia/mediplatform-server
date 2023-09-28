@@ -67,8 +67,19 @@ export default {
           orderBy: { hn_createdAt: filter },
         });
 
-        const hospitalNoticeList = hospitalNotice.map((hn) => {
+        const hospitalNoticeList = hospitalNotice.map(async (hn) => {
           hn.hn_createdAt = new Date(hn.hn_createdAt).toISOString();
+          const creator = await prisma.user.findUnique({ where: { user_id: hn.hn_creatorId } });
+          hn.hn_creatorImg = creator.user_img;
+
+          hn.hnComment = hn.hnComment.map(async (hnc) => {
+            hnc.hnc_createdAt = new Date(hnc.hnc_createdAt).toISOString();
+
+            const hncCreator = await prisma.user.findUnique({ where: { user_id: hnc.hnc_creatorId } });
+            hnc.hnc_creatorImg = hncCreator.user_img;
+
+            return hnc;
+          });
 
           return hn;
         });

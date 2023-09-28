@@ -48,12 +48,15 @@ export default {
           },
         });
 
+        const ssStartDate = new Date(today.getFullYear(), today.getMonth(), 1, 9);
+        const ssEndDate = new Date(today.getFullYear(), today.getMonth() + 1, 1, 9);
+
         const thisMonthSpecialScheduleCount = await prisma.specialSchedule.count({
           where: {
             AND: [
               { hsp_id: user.hospital.hsp_id },
-              { ss_startYear: today.getFullYear() },
-              { OR: [{ ss_startMonth: today.getMonth() + 1 }, { ss_endDate: today.getMonth() + 1 }] },
+              { ss_startDate: { gte: ssStartDate } },
+              { ss_endDate: { lte: ssEndDate } },
               { ss_isDelete: false },
             ],
           },

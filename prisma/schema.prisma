@@ -119,6 +119,9 @@ model homepageServiceContent {
 model homepageServiceContentDetail {
   hsd_id                 Int                    @id @default(autoincrement())
   hsd_text               String                 @default("") @db.VarChar(250) // 세부항목 내용 200자
+  hsd_adminName          String                 @default("") @db.VarChar(25) // 담당자 이름
+  hsd_adminRank          String                 @default("") @db.VarChar(25) // 담당자 직책
+  hsd_adminId            Int                    @default(0) // 담당자 id
   homepageServiceContent homepageServiceContent @relation(fields: [hsc_id], references: [hsc_id])
   hsc_id                 Int
 }
@@ -128,6 +131,8 @@ model homepageServiceImg {
   hsi_id                 Int                    @id @default(autoincrement())
   hsi_createdAt          DateTime               @default(now()) // 동록일
   hsi_img                String                 @default("") @db.VarChar(250) // 홈페이지 서비스 이미지 url
+  hsi_imgType            String                 @default("") @db.VarChar(250) // 이미지 타입
+  hsi_imgSize            Int                    @default(0) // 이미지 사이즈
   hsi_adminName          String                 @default("") @db.VarChar(25) // 담당자 이름
   hsi_adminRank          String                 @default("") @db.VarChar(25) // 담당자 직책
   hsi_adminId            Int                    @default(0) // 담당자 id
@@ -784,8 +789,12 @@ model didDoctorRoom {
 model insuranceHistory {
   ih_id                 Int             @id @default(autoincrement())
   ih_createdAt          DateTime        @default(now())
-  ih_companyName        String          @default("") @db.VarChar(25) // 요청 업체 명 20자
-  ih_reqNumber          String          @default("") @db.VarChar(65) //  요청번호 50자
+  ih_companyName        String          @default("") @db.VarChar(25) // 요청 업체 명 20자(투비콘 - tobecon / 하이웹넷 - hiweb)
+  ih_reqNumber          String          @default("") @db.VarChar(65) // 요청번호 50자 - 자체 생성
+  ih_tobeUnique         String          @default("") @db.VarChar(50) // 투비콘 - 요청 유니크 값
+  ih_tobePatno          String          @default("") @db.VarChar(50) // 투비콘 - 환자 번호
+  ih_tobeDate           String          @default("") @db.VarChar(50) // 투비콘 - 진료일
+  ih_tobeClaimDate      String          @default("") @db.VarChar(50) // 투비콘 - 청구일
   ih_patientChartNumber String          @default("") @db.VarChar(25) // 요청환자 차트번호
   ih_patientName        String          @default("") @db.VarChar(20) // 환자 이름 
   ih_status             insuranceStatus @default(processing) // 진행상태, 진행중 / 실패 / 완료

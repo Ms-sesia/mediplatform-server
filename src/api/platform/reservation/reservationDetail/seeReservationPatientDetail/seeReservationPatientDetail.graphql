@@ -81,6 +81,10 @@ type patientMemo {
   작성자 직책
   """
   prm_creatorRank: String
+  """
+  작성자 이미지
+  """
+  prm_creatorImg: String
 }
 
 """

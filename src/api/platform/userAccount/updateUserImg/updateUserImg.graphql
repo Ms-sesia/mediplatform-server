@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  사용자 이미지 업데이트
+
+  * error
+  - err_00: 사용자 이미지 업데이트 실패
+  - err_01: 이미지를 선택해주세요.
+  """
+  updateUserImg(
+    """
+    업데이트할 사용자 이미지
+    """
+    user_img: Upload
+  ): Boolean
+}
