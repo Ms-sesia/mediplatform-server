@@ -41,8 +41,6 @@ export default {
           },
         });
 
-        console.log(reservation);
-
         if (!reservation)
           return {
             reservationInfo: {},

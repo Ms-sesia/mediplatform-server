@@ -40,9 +40,13 @@ export default {
         platformNotice.pn_createdAt = new Date(platformNotice.pn_createdAt).toISOString();
         platformNotice.pn_updatedAt = new Date(platformNotice.pn_updatedAt).toISOString();
 
-        platformNotice.pnComment = platformNotice.pnComment.map((pnc) => {
+        platformNotice.pnComment = platformNotice.pnComment.map(async (pnc) => {
+          const commentCreator = await prisma.user.findUnique({ where: { user_id: pnc.pnc_creatorId } });
+
           pnc.pnc_createdAt = new Date(pnc.pnc_createdAt).toISOString();
           pnc.pnc_updatedAt = new Date(pnc.pnc_updatedAt).toISOString();
+          pnc.pnc_creatorImg = commentCreator.user_img;
+
           return pnc;
         });
 

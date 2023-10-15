@@ -1,0 +1,19 @@
+type Mutation {
+  """
+  홈페이지 회사 소개 변경
+
+  * error
+  - err_00 : 홈페이지 회사 소개 변경에 실패하였습니다.
+  - err_01 : 관리자만 수정 가능합니다.
+  """
+  updateCompanyInfo(
+    """
+    변경할 회사소개 id
+    """
+    hi_id: Int!
+    """
+    변경할 이미지
+    """
+    hiImg: Upload
+  ): Boolean
+}

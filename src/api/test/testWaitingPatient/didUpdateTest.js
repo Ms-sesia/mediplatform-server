@@ -64,7 +64,6 @@ export default {
 
         if (email) await pub.publish(channelName, JSON.stringify(updateDidInfo));
         if (uniqueId) {
-          console.log(uniqueId);
           await pub.publish(uniqueId, JSON.stringify(updateDidInfo));
         }
 

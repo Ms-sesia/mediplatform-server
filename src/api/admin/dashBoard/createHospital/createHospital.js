@@ -96,8 +96,6 @@ export default {
 
         const hashedInfo = await hashPassword(tempPw);
 
-        console.log(tempPw);
-
         await prisma.user.create({
           data: {
             user_name: name,

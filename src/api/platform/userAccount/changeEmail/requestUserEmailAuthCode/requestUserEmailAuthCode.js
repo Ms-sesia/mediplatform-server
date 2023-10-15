@@ -13,7 +13,6 @@ export default {
       const { email } = args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
-        console.log(loginUser);
         // 탈퇴한 이메일
         const deleteCheckEmail = await prisma.user.findMany({
           where: { AND: [{ user_email: email }, { user_isDelete: true }] },
@@ -51,9 +50,9 @@ export default {
         return true;
       } catch (e) {
         console.log("이메일 인증코드 전송 실패. requestUserEmailAuthCode", e);
-        if (e === 1) throw new Error("탈퇴한 사용자 이메일 입니다. 플랫폼 관리자에게 문의하세요.");
-        if (e === 2) throw new Error("이미 사용중인 이메일입니다. 다른 이메일을 입력해주세요.");
-        throw new Error("이메일 인증코드 전송에 실패하였습니다.");
+        if (e === 1) throw new Error("err_01");
+        if (e === 2) throw new Error("err_02");
+        throw new Error("err_00");
       }
     },
   },

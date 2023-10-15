@@ -18,7 +18,6 @@ export default {
             hnc_creatorId: loginUser.user_id,
             hnc_creatorName: loginUser.user_name,
             hnc_creatorRank: loginUser.user_rank,
-            hnc_createdAt: today9,
             hospitalNotice: { connect: { hn_id } },
           },
         });

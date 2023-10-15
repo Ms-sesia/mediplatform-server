@@ -54,10 +54,10 @@ export default {
         return true;
       } catch (e) {
         console.log("이메일 변경 실패. updateUserEmail", e);
-        if (e === 1) throw new Error("발급된 인증번호가 없습니다. 인증번호 발급을 먼저 진행해주세요.");
-        if (e === 2) throw new Error("입력한 인증코드가 다릅니다. 다시 확인하고 입력해주세요.");
-        if (e === 3) throw new Error("입력한 이메일과 인증 이메일이 다릅니다.");
-        throw new Error("이메일 변경에 실패하였습니다.");
+        if (e === 1) throw new Error("err_01");
+        if (e === 2) throw new Error("err_02");
+        if (e === 3) throw new Error("err_03");
+        throw new Error("err_00");
       }
     },
   },

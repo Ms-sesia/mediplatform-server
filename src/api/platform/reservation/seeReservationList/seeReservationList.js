@@ -18,9 +18,9 @@ export default {
               { hsp_id: user.hospital.hsp_id },
               { re_year: searchDateConv.getFullYear() },
               { re_month: searchDateConv.getMonth() + 1 },
-              { re_date: searchDateConv.getDate() },
+              // { re_date: searchDateConv.getDate() },
               { re_isDelete: false },
-              { patient: { pati_isDelete: false } },
+              // { patient: { pati_isDelete: false } },
               {
                 OR: [
                   { re_patientName: { contains: searchTerm } },
@@ -29,11 +29,11 @@ export default {
                   { re_doctorRoomName: { contains: searchTerm } },
                 ],
               },
-              { re_doctorRoomName: { contains: doctorRoom } },
+              { re_doctorRoomName: { contains: doctorRoom === "total" ? "" : doctorRoom } },
               // 전체 상태보기에서 내원확정 미표기일 때만 표시 안함. 전체가 아니면 다 표기
               { re_status: status === "total" ? (visitConfirm ? undefined : { not: "confirm" }) : status },
               { re_platform: resPlatform === "total" ? undefined : resPlatform },
-              { re_LCategory: { contains: largeCategory } },
+              { re_LCategory: { contains: largeCategory === "total" ? "" : largeCategory } },
             ],
           },
           orderBy: [{ re_year: "desc" }, { re_month: "desc" }, { re_date: "desc" }],
@@ -54,9 +54,9 @@ export default {
               { hsp_id: user.hospital.hsp_id },
               { re_year: searchDateConv.getFullYear() },
               { re_month: searchDateConv.getMonth() + 1 },
-              { re_date: searchDateConv.getDate() },
+              // { re_date: searchDateConv.getDate() },
               { re_isDelete: false },
-              { patient: { pati_isDelete: false } },
+              // { patient: { pati_isDelete: false } },
               {
                 OR: [
                   { re_patientName: { contains: searchTerm } },
@@ -65,11 +65,11 @@ export default {
                   { re_doctorRoomName: { contains: searchTerm } },
                 ],
               },
+              { re_doctorRoomName: { contains: doctorRoom === "total" ? "" : doctorRoom } },
               // 전체 상태보기에서 내원확정 미표기일 때만 표시 안함. 전체가 아니면 다 표기
-              { re_doctorRoomName: { contains: doctorRoom } },
               { re_status: status === "total" ? (visitConfirm ? undefined : { not: "confirm" }) : status },
               { re_platform: resPlatform === "total" ? undefined : resPlatform },
-              { re_LCategory: { contains: largeCategory } },
+              { re_LCategory: { contains: largeCategory === "total" ? "" : largeCategory } },
             ],
           },
           ...cursorOpt,
@@ -91,7 +91,8 @@ export default {
           if (recentlyVisit.length)
             recentlyVisitDate = new Date(recentlyVisit[0].re_year, recentlyVisit[0].re_month, recentlyVisit[0].re_date);
 
-          const patientInfo = await prisma.patient.findUnique({ where: { pati_id: res.pati_id } });
+          let patientInfo;
+          if (res.pati_id) patientInfo = await prisma.patient.findUnique({ where: { pati_id: res.pati_id } });
 
           const alimSet = await prisma.resAlim.findUnique({ where: { re_id: res.re_id } });
           const template = await prisma.resAlimTemplate.findUnique({ where: { rat_id: alimSet.ra_templateId } });
@@ -99,7 +100,7 @@ export default {
           return {
             re_id: res.re_id,
             resDate: searchDateConv.toISOString(),
-            desiredDate: res.re_desiredDate,
+            desireDate: new Date(res.re_desireDate).toISOString(),
             desireTime: res.re_desireTime,
             time: res.re_time,
             doctorRoomName: res.re_doctorRoomName,
@@ -111,7 +112,7 @@ export default {
             status: res.re_status,
             visitCount,
             recentlyVisitDate: recentlyVisitDate ? recentlyVisitDate.toISOString() : "",
-            patientChartNumber: patientInfo.pati_chartNumber,
+            patientChartNumber: patientInfo ? patientInfo.pati_chartNumber : "",
             largeCategory: res.re_LCategory,
             smallCategory: res.re_SCategory,
             alimType: alimSet.ra_type,

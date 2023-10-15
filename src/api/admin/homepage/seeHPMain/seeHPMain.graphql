@@ -1,0 +1,19 @@
+type Query {
+  """
+  홈페이지 메인 이미지 조회
+
+  *error
+  err_00 : 홈페이지 메인이미지 조회에 실패하였습니다.
+  err_01 : 관리자만 사용할 수 있는 기능입니다.
+  """
+  seeHPMain: seeHPMainInfo
+}
+
+type seeHPMainInfo {
+  hm_id: Int
+  hm_createdAt: String # 등록일(혹은 수정일)
+  hm_url: String # 메인 이미지 url
+  hm_adminName: String # 메인 이미지 담당자 이름
+  hm_adminRank: String # 메인 이미지 담당자 직책
+  hm_adminId: Int # 담당자 id
+}

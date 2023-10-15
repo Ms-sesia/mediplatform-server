@@ -1,6 +1,7 @@
 import { Server as IoServer } from "socket.io";
 import { PrismaClient } from "@prisma/client";
 import { clients, didClients } from "./clients";
+import getInsureData from "./resSocket/getInsureData";
 
 const redis = require("redis");
 
@@ -30,12 +31,12 @@ const webSocket = async (httpServer) => {
 
   socketIo.on("connection", async (socket) => {
     socket.emit("resConnection", resConnection);
-    // console.log(
-    //   "웹 프론트 사용자 연결 완료. 이메일:",
-    //   socket.handshake.query.hospitalEmail,
-    //   "/ 접속 socket Id:",
-    //   socket.id
-    // );
+    console.log(
+      "웹 프론트 사용자 연결 완료. 이메일:",
+      socket.handshake.query.hospitalEmail,
+      "/ 접속 socket Id:",
+      socket.id
+    );
 
     // 프론트가 받을 구독 채널이름
     const hospitalChannel = `h-${socket.handshake.query.hospitalEmail}`;
@@ -55,15 +56,21 @@ const webSocket = async (httpServer) => {
     }
 
     /**각 SendStatus별 socket.on 이벤트 명
-     * send : getPatient // 대기환자 정보
-     * call : callPatient // 호출환자 정보
-     * update : updateDid // did 수정
-     * delete: deleteDid // did 삭제
-     * see :
-     *  emit - reqSeeDid // did정보 조회 요청
-     *  on - resSeeDid // did정보 조회 응답
+     * 1. DID
+     * - send : getPatient // 대기환자 정보
+     * - call : callPatient // 호출환자 정보
+     * - update : updateDid // did 수정
+     * - delete: deleteDid // did 삭제
+     * - see :
+     *   emit - reqSeeDid // did정보 조회 요청
+     *   on - resSeeDid // did정보 조회 응답
+     *
+     * 2. 실손보험(투비콘)
+     * - reqInsureData // 진료정보 데이터 요청
+     * - getInsureData // 진료정보(실손보험) 데이터 조회(수집)
      */
-    // 상태별 데이터 전송 - 병원
+
+    // 상태별 데이터 전송 - 병원(did / 실손)
     await sub.subscribe(hospitalChannel, (message, channel) => {
       if (clients[channel] && clients[channel][socket.id]) {
         switch (JSON.parse(message).SendStatus) {
@@ -76,11 +83,14 @@ const webSocket = async (httpServer) => {
           case "allSaveDid":
             clients[channel][socket.id].emit("allSaveDid", message);
             break;
+          case "reqInsureData":
+            clients[channel][socket.id].emit("reqInsureData", message);
+            break;
         }
       }
     });
 
-    // did 데이터 전송
+    // did - 데이터 전송
     if (didUniqueId)
       await sub.subscribe(didUniqueId, (message, channel) => {
         switch (JSON.parse(message).SendStatus) {
@@ -141,7 +151,7 @@ const webSocket = async (httpServer) => {
       socket.emit("resSeeDid", JSON.stringify(did));
     });
 
-    // 대기환자
+    // did - 대기환자
     socket.on("getWaitingPatiInfo", async (data) => {
       const getPatient = JSON.parse(data);
       // console.log("getPatient:", getPatient);
@@ -153,7 +163,7 @@ const webSocket = async (httpServer) => {
       socket.emit("resGetWaitingPatient", resGetWaitingPatient);
     });
 
-    // 호출환자
+    // did - 호출환자
     socket.on("callWaitingPatient", async (data) => {
       const callPatient = JSON.parse(data);
       // console.log("getPatient:", callPatient);
@@ -163,6 +173,14 @@ const webSocket = async (httpServer) => {
       await pub.publish(sendChannel, JSON.stringify(callPatient));
       socket.emit("resCallWaitingPatient", resCallWaitingPatient);
     });
+
+    // insure(실손보험) - 진료 정보 데이터
+    await getInsureData(socket);
+    // socket.on("getInsureData", await getInsureData(data));
+    // socket.on("getInsureData", async (data) => {
+    //   const insureData = JSON.parse(data);
+    //   console.log(insureData);
+    // });
 
     socket.on("disconnect", async () => {
       // console.log("user disconnected.", socket.id);

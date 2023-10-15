@@ -15,10 +15,7 @@ export default {
           where: { AND: [{ pn_id }, { user_id: user.user_id }] },
         });
 
-        if (platformNoticeCheck.length) {
-          console.log("체크 확인");
-          return true;
-        }
+        if (platformNoticeCheck.length) return true;
 
         await prisma.platformNoticeCheck.create({
           data: {

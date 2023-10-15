@@ -1,0 +1,19 @@
+type Mutation {
+  """
+  홈페이지 메인이미지 수정(등록)
+
+  * error
+  - err_00 : 홈페이지 메인이미지 수정(등록) 실패하였습니다.
+  - err_01 : 관리자만 이용 가능합니다.
+  """
+  updateHPMain(
+    """
+    수정할 메인 이미지 id, 없으면 0
+    """
+    hm_id: Int!
+    """
+    메인 이미지
+    """
+    mainImg: Upload
+  ): Boolean
+}

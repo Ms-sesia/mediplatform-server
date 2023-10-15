@@ -1,10 +1,10 @@
 type Query {
   """
-  예약 목록 조회
-  
+    예약 목록 조회
 
-* error
-  err_00: 예약 목록 조회에 실패하였습니다.
+
+  * error
+    err_00: 예약 목록 조회에 실패하였습니다.
   """
   seeReservationList(
     """
@@ -25,7 +25,7 @@ type Query {
     """
     status: reStatus
     """
-    진료실명. 없으면 빈값
+    진료실명. 전체 - total
     """
     doctorRoom: String
     """
@@ -37,7 +37,7 @@ type Query {
     """
     visitConfirm: Boolean
     """
-    대분류
+    대분류. 전체 - total
     """
     largeCategory: String
     take: Int

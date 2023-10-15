@@ -1,0 +1,8 @@
+type Mutation {
+  test(
+    """
+    삭제할 플랫폼 공지 id
+    """
+    time: String
+  ): Boolean
+}

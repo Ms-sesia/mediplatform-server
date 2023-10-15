@@ -598,7 +598,7 @@ model specialSchedule {
 model specialScheduleAttacthed {
   sa_id           Int             @id @default(autoincrement())
   sa_url          String          @default("") @db.VarChar(300) // 첨부파일 url
-  sa_fileType     String          @default("") @db.VarChar(50) // 첨부파일 타입
+  sa_fileType     String          @default("") @db.VarChar(250) // 첨부파일 타입
   sa_fileSize     Int             @default(0) // 첨부파일 사이즈
   specialSchedule specialSchedule @relation(fields: [ss_id], references: [ss_id])
   ss_id           Int
@@ -740,7 +740,7 @@ model didAttached {
   da_deleteDate  DateTime? // 삭제일 
   da_number      Int       @default(0) // 순서
   da_url         String    @default("") @db.VarChar(250) // 첨부파일 url
-  da_fileType    String    @default("") @db.VarChar(50) // 첨부파일 타입
+  da_fileType    String    @default("") @db.VarChar(250) // 첨부파일 타입
   da_fileSize    Int       @default(0) // 첨부파일 사이즈
   did            did       @relation(fields: [did_id], references: [did_id])
   did_id         Int
@@ -800,6 +800,9 @@ model insuranceHistory {
   ih_status             insuranceStatus @default(processing) // 진행상태, 진행중 / 실패 / 완료
   ih_editorName         String          @default("") @db.VarChar(25) // 수정자(삭제자) 이름
   ih_editorRank         String          @default("") @db.VarChar(25) // 수정자(삭제자) 직책
+  ih_receipt            String          @default("") @db.VarChar(250) // 영수증 파일
+  ih_prescription       String          @default("") @db.VarChar(250) // 처방전 파일
+  ih_detail             String          @default("") @db.VarChar(250) // 세부내역서 파일
   ih_editorId           Int             @default(0) // 수정자(삭제자) id
   ih_isDelete           Boolean         @default(false) // 삭제 여부
   ih_deleteDate         DateTime? // 삭제일
@@ -815,6 +818,13 @@ model ihText {
   iht_text         String           @default("") @db.VarChar(250) // 기록 및 프로세스 내용
   insuranceHistory insuranceHistory @relation(fields: [ih_id], references: [ih_id])
   ih_id            Int
+}
+
+// 청구 요청 기록 번호 생성(00시부터 0번으로 시작)
+model ihNum {
+  ihn_id        Int      @id @default(autoincrement())
+  ihn_createdAt DateTime @default(now())
+  ihn_num       Int      @default(0)
 }
 
 // 병원 사내 공지
@@ -842,7 +852,7 @@ model hospitalNotice {
 model hnAttached {
   hna_id         Int            @id @default(autoincrement())
   hna_url        String         @default("") @db.VarChar(300) // 사내 공지사항 첨부파일 url
-  han_fileType   String         @default("") @db.VarChar(50) // 첨부파일 타입
+  han_fileType   String         @default("") @db.VarChar(250) // 첨부파일 타입
   han_fileSize   Int            @default(0) // 첨부파일 사이즈
   hospitalNotice hospitalNotice @relation(fields: [hn_id], references: [hn_id])
   hn_id          Int
@@ -901,7 +911,7 @@ model platformNoticeCheck {
 model pnAttached {
   pna_id         Int            @id @default(autoincrement())
   pna_url        String         @default("") @db.VarChar(300) // 플랫폼 공지사항 첨부파일 url
-  pna_fileType   String         @default("") @db.VarChar(50) // 첨부파일 타입
+  pna_fileType   String         @default("") @db.VarChar(250) // 첨부파일 타입
   pna_fileSize   Int            @default(0) // 첨부파일 사이즈
   platformNotice platformNotice @relation(fields: [pn_id], references: [pn_id])
   pn_id          Int
@@ -979,7 +989,7 @@ model oneOnOne {
 model oneOnOneAttached {
   oneAt_id       Int      @id @default(autoincrement())
   oneAt_url      String   @default("") @db.VarChar(250) // 일대일 문의 첨부파일 url
-  oneAt_fileType String   @default("") @db.VarChar(50) // 첨부파일 타입
+  oneAt_fileType String   @default("") @db.VarChar(250) // 첨부파일 타입
   oneAt_fileSize Int      @default(0) // 첨부파일 사이즈
   oneOnOne       oneOnOne @relation(fields: [oneq_id], references: [oneq_id])
   oneq_id        Int
