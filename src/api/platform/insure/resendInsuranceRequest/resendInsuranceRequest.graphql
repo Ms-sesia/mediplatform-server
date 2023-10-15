@@ -1,0 +1,14 @@
+type Mutation {
+  """
+  청구기록 연동 실패 재전송
+
+  * error
+  - err_00 : 청구기록 연동 실패 재전송에 실패하였습니다.
+  """
+  resendInsuranceRequest(
+    """
+    청구기록 id
+    """
+    ih_id: Int!
+  ): Boolean
+}

@@ -1,0 +1,27 @@
+type Query {
+  """
+  청구기록 상세 및 처리내용 조회
+
+  *error
+  err_00 : 데이터 조회에 실패하였습니다.
+  """
+  seeInsuranceHistoryDetail(
+    """
+    실손보험 청구기록 id
+    """
+    ih_id: Int!
+  ): seeInsuranceHistoryDetailInfo
+}
+
+type seeInsuranceHistoryDetailInfo {
+  ih_createdAt: String # 요청일
+  status: insuranceStatus # 보험 청구 상태
+  ihTextList: [ihText] # 청구 기록 내용
+}
+
+# 청구 요청 기록 내용
+type ihText {
+  iht_id: Int # 처리내용 id
+  iht_createdAt: String # 처리내용 생성일
+  iht_text: String # 처리내용
+}

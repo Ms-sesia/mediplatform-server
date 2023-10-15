@@ -16,6 +16,7 @@ export default {
         largeCategory,
         smallCategory,
         doctorRoomName,
+        oneLineMemo,
         alimType,
         alimTime1,
         alimTime2,
@@ -43,6 +44,7 @@ export default {
             re_LCategory: largeCategory,
             re_SCategory: smallCategory,
             re_doctorRoomName: doctorRoomName,
+            re_oneLineMem: oneLineMemo,
             resAlim: {
               update: {
                 data: {

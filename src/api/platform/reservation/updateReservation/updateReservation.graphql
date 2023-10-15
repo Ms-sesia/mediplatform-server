@@ -1,7 +1,7 @@
 type Mutation {
   """
   예약자 정보 수정
-  
+
   * error
   - err_00 : 예약자 정보 수정에 실패하였습니다.
   """
@@ -22,6 +22,10 @@ type Mutation {
     예약 상태
     """
     status: reStatus!
+    """
+    한줄 메모
+    """
+    oneLineMemo: String
     """
     예약구분 (대분류)
     """

@@ -114,51 +114,6 @@ export default {
             : await prisma.ihNum.create({ data: { ihn_num: reqNum } });
         }
 
-        // 오늘 요청 실패한 기록
-        const failIh = await prisma.insuranceHistory.findMany({
-          where: { AND: [{ ih_createdAt: { gte: startToday, lte: endToday } }, { ih_status: "fail" }] },
-        });
-
-        if (failIh.length) {
-          for (let i = 0; i < failIh.length; i++) {
-            const reqInsureData = {
-              SendStatus: "reqInsureData",
-              company: "tobecon",
-              data: insHistory[i],
-            };
-
-            const returnPub = await pub.publish(channelName, JSON.stringify(reqInsureData));
-            if (returnPub) {
-              // 재요청 실패
-              console.log("재요청 성공. unique:", failIh[i].ih_tobeUnique);
-              await prisma.ihText.create({
-                data: {
-                  iht_text: `플랫폼 -> EMR로 데이터를 다시 요청하였습니다.`,
-                  insuranceHistory: { connect: { ih_id: failIh[i].ih_id } },
-                },
-              });
-
-              await prisma.insuranceHistory.update({
-                where: { ih_id: failIh[i].ih_id },
-                data: { ih_status: "processing" },
-              });
-            } else {
-              console.log("재요청 실패. unique:", failIh[i].ih_tobeUnique);
-              await prisma.ihText.create({
-                data: {
-                  iht_text: `플랫폼 -> EMR로 데이터 재요청에 실패하였습니다.`,
-                  insuranceHistory: { connect: { ih_id: failIh[i].ih_id } },
-                },
-              });
-
-              await prisma.insuranceHistory.update({
-                where: { ih_id: failIh[i].ih_id },
-                data: { ih_status: "fail" },
-              });
-            }
-          }
-        }
-
         return true;
       } catch (e) {
         console.log("투비콘 연동 실패. tobiconApiTest", e);

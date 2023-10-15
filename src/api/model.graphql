@@ -1176,6 +1176,10 @@ enum resAlimType {
   카카오톡
   """
   kakao
+  """
+  선택안함
+  """
+  none
 }
 
 """
@@ -1234,4 +1238,22 @@ enum scheduleConfirm {
   반려
   """
   reject
+}
+
+"""
+보험청구 상태
+"""
+enum insuranceStatus {
+  """
+  완료
+  """
+  complete
+  """
+  실패
+  """
+  fail
+  """
+  진행중
+  """
+  processing
 }

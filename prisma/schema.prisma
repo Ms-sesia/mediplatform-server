@@ -1183,6 +1183,7 @@ enum reStatus {
 enum resAlimType {
   sms // 문자
   kakao // 카카오톡
+  none // 선택안함
 }
 
 // 요일 
