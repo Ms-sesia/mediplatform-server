@@ -1,0 +1,9 @@
+type Query {
+  """
+  공지 확인율
+
+  *error
+  err_00 : 데이터 조회에 실패하였습니다.
+  """
+  seeErNoticeCheckRatio: Int
+}

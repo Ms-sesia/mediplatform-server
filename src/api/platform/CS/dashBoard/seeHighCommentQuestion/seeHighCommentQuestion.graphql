@@ -1,0 +1,21 @@
+type Query {
+  """
+  리뷰(댓글)이 많은 질문
+
+  *error
+  err_00 : 데이터 조회에 실패하였습니다.
+  """
+  seeHighCommentQuestion: [seeHighCommentQuestionInfo]
+}
+
+type seeHighCommentQuestionInfo {
+  faq_id: Int
+  """
+  질문
+  """
+  faq_question: String
+  """
+  답변
+  """
+  faq_answer: String
+}

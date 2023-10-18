@@ -25,7 +25,7 @@ export default {
                 { re_month: searchMonth },
                 { re_date: searchDate },
                 { re_isDelete: false },
-                { patient: { pati_isDelete: false } },
+                // { patient: { pati_isDelete: false } },
                 {
                   OR: [
                     { re_patientName: { contains: searchTerm } },
@@ -34,11 +34,11 @@ export default {
                     { re_doctorRoomName: { contains: searchTerm } },
                   ],
                 },
-                { re_doctorRoomName: { contains: doctorRoom } },
+                { re_doctorRoomName: { contains: doctorRoom === "total" ? "" : doctorRoom } },
                 // 전체 상태보기에서 내원확정 미표기일 때만 표시 안함. 전체가 아니면 다 표기
                 { re_status: status === "total" ? (visitConfirm ? undefined : { not: "confirm" }) : status },
                 { re_platform: resPlatform === "total" ? undefined : resPlatform },
-                { re_LCategory: { contains: largeCategory } },
+                { re_LCategory: { contains: largeCategory === "total" ? "" : largeCategory } },
               ],
             },
             orderBy: { re_date: "desc" },

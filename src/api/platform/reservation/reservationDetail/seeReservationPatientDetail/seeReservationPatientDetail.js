@@ -38,6 +38,16 @@ export default {
                 },
               },
             },
+            resAlim: {
+              select: {
+                ra_type: true,
+                ra_time1: true,
+                ra_time2: true,
+                ra_time3: true,
+                ra_time4: true,
+                ra_templateId: true,
+              },
+            },
           },
         });
 
@@ -62,9 +72,12 @@ export default {
             : []
           : [];
 
-        const resDate = new Date(reservation.re_year, reservation.re_month, reservation.re_date).toISOString();
+        const resDate = new Date(reservation.re_year, reservation.re_month - 1, reservation.re_date).toISOString();
         const desireDate = new Date(reservation.re_desireDate).toISOString();
         const approvalDate = reservation.re_confirmDate ? new Date(reservation.re_confirmDate).toISOString() : "";
+
+        const alimSet = await prisma.resAlim.findUnique({ where: { re_id } });
+        const template = await prisma.resAlimTemplate.findUnique({ where: { rat_id: alimSet.ra_templateId } });
 
         const resDetail = reservation
           ? {
@@ -77,8 +90,20 @@ export default {
               patientCellphone: reservation.re_patientCellphone,
               platform: reservation.re_platform,
               status: reservation.re_status,
+              doctorRoomName: reservation.re_doctorRoomName,
+              patientRrn: reservation.re_patientRrn,
+              patientChartNumber: reservation.re_chartNumber,
+              oneLineMemo: reservation.re_oneLineMem,
               approvalName: reservation.re_confirmUserName,
               approvalDate,
+              largeCategory: reservation.re_LCategory,
+              smallCategory: reservation.re_SCategory,
+              alimType: alimSet.ra_type,
+              alimTime1: alimSet.ra_time1,
+              alimTime2: alimSet.ra_time2,
+              alimTime3: alimSet.ra_time3,
+              alimTime4: alimSet.ra_time4,
+              template: template ? template.rat_text : "",
             }
           : {};
 
@@ -86,6 +111,7 @@ export default {
           ? reservation.patient.patientMemo.length
             ? reservation.patient.patientMemo.map(async (prmMemo) => {
                 const memoCreator = await prisma.user.findUnique({ where: { user_id: prmMemo.prm_creatorId } });
+                prmMemo.prm_createdAt = new Date(prmMemo.prm_createdAt).toISOString();
                 prmMemo.prm_creatorImg = memoCreator.user_img;
                 return prmMemo;
               })

@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import searchHistory from "../../../../../libs/searchHistory";
 
 const prisma = new PrismaClient();
 
@@ -9,6 +10,9 @@ export default {
       const { user } = request;
       const { filter, searchTerm, orderby } = args;
       try {
+        const createSearchHistory = await searchHistory(searchTerm, user.user_id);
+        if (!createSearchHistory.status) throw createSearchHistory.error;
+
         const totalPlatformNotice = await prisma.platformNotice.findMany({
           where: {
             AND: [{ pn_isDelete: false }, { pn_type: filter }, { pn_title: { contains: searchTerm } }],

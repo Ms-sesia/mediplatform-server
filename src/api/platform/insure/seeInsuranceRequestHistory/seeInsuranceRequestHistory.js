@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import searchHistory from "../../../../libs/searchHistory";
 
 const prisma = new PrismaClient();
 
@@ -9,6 +10,9 @@ export default {
       const { user } = request;
       const { searchTerm, company, orderBy, take, cursor } = args;
       try {
+        const createSearchHistory = await searchHistory(searchTerm, user.user_id);
+        if (!createSearchHistory.status) throw createSearchHistory.error;
+
         const totalIh = await prisma.insuranceHistory.findMany({
           where: { AND: [{ ih_tobePatno: { contains: searchTerm } }, { ih_companyName: { contains: company } }] },
           orderBy: { ih_createdAt: orderBy },

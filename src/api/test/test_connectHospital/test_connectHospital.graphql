@@ -1,0 +1,6 @@
+type Mutation {
+  """
+  병원 연동 api 테스트
+  """
+  test_connectHospital: Boolean
+}

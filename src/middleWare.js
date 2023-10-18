@@ -3,7 +3,7 @@ import { today9 } from "./libs/todayCal";
 export const isAuthenticated = (request) => {
   if (!request.user) throw new Error("먼저 로그인이 필요합니다.");
   if (today9 > request.user.expired) {
-    console.log("token expired");
+    // console.log("token expired");
     // throw new Error("err_99");
   }
   return;

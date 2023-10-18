@@ -16,7 +16,7 @@ export default {
               { re_year: year },
               { re_month: month },
               { re_isDelete: false },
-              { patient: { pati_isDelete: false } },
+              // { patient: { pati_isDelete: false } },
               {
                 OR: [
                   { re_patientName: { contains: searchTerm } },
@@ -25,11 +25,11 @@ export default {
                   { re_doctorRoomName: { contains: searchTerm } },
                 ],
               },
-              { re_doctorRoomName: { contains: doctorRoom } },
+              { re_doctorRoomName: { contains: doctorRoom === "total" ? "" : doctorRoom } },
               // 전체 상태보기에서 내원확정 미표기일 때만 표시 안함. 전체가 아니면 다 표기
               { re_status: status === "total" ? (visitConfirm ? undefined : { not: "confirm" }) : status },
               { re_platform: resPlatform === "total" ? undefined : resPlatform },
-              { re_LCategory: { contains: largeCategory } },
+              { re_LCategory: { contains: largeCategory === "total" ? "" : largeCategory } },
             ],
           },
           orderBy: { re_date: "desc" },
@@ -37,7 +37,11 @@ export default {
 
         if (!reservationDateList.length) return [];
 
-        const byMonthData = transformData(reservationDateList);
+        let byMonthData = transformData(reservationDateList);
+        const byMonthDataSort = byMonthData.map((monData) => {
+          const sortMonData = timeSort(monData.byDateReservationInfo);
+          return sortMonData;
+        });
 
         return byMonthData;
       } catch (e) {
@@ -66,6 +70,7 @@ const transformData = (data) => {
       re_platform: resData.re_platform,
       re_time: resData.re_time,
       re_patientName: resData.re_patientName,
+      re_status: resData.re_status,
       re_LCategory: resData.re_LCategory,
       re_SCategory: resData.re_SCategory,
     }));
@@ -80,4 +85,33 @@ const transformData = (data) => {
   // 일자별로 정렬합니다.
   result.sort((a, b) => a.date - b.date);
   return result;
+};
+
+const timeSort = (data) => {
+  data.sort((a, b) => {
+    // "HH:MM" 형식의 문자열을 시간과 분으로 나눕니다.
+    let aHour = parseInt(a.re_time.split(":")[0]);
+    let aMinute = parseInt(a.re_time.split(":")[1]);
+    let bHour = parseInt(b.re_time.split(":")[0]);
+    let bMinute = parseInt(b.re_time.split(":")[1]);
+
+    // 먼저 시간을 비교합니다.
+    if (aHour < bHour) {
+      return -1;
+    } else if (aHour > bHour) {
+      return 1;
+    }
+
+    // 시간이 같다면 분을 비교합니다.
+    if (aMinute < bMinute) {
+      return -1;
+    } else if (aMinute > bMinute) {
+      return 1;
+    }
+
+    // 시간과 분이 모두 같다면, 두 문자열은 같습니다.
+    return 0;
+  });
+
+  return data;
 };

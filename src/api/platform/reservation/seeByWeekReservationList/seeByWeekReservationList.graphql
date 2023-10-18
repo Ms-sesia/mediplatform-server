@@ -81,6 +81,15 @@ type byDateReservationInfo {
   """
   re_platform: String
   """
+  예약상태
+  전체 - total
+  대기 - waiting
+  완료 - complet
+  확정 - confirm
+  취소 - cancel
+  """
+  re_status: String
+  """
   예약 시간(09:30)
   """
   re_time: String

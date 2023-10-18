@@ -17,6 +17,34 @@ export default {
           where: { user_id: user.user_id },
         });
 
+        const rank = await prisma.rank.findFirst({
+          where: { AND: [{ rank_name: loginUser.user_rank }, { hsp_id: loginUser.hsp_id }] },
+        });
+        const rankPermission = await prisma.rankPermission.findUnique({
+          where: { rank_id: rank.rank_id },
+          select: {
+            rp_home: true,
+            rp_reservation: true,
+            rp_schedule: true,
+            rp_patient: true,
+            rp_did: true,
+            rp_insurance: true,
+            rp_cs: true,
+            rp_setting: true,
+          },
+        });
+        
+        loginUser.user_rankPermission = {
+          home: rankPermission.rp_home,
+          reservation: rankPermission.rp_reservation,
+          schedule: rankPermission.rp_schedule,
+          patient: rankPermission.rp_patient,
+          did: rankPermission.rp_did,
+          insurance: rankPermission.rp_insurance,
+          cs: rankPermission.rp_cs,
+          setting: rankPermission.rp_setting,
+        };
+
         return loginUser;
       } catch (e) {
         console.log("사용자 기본 정보 조회 실패. seeUserInfoDetail ==>\n", e);

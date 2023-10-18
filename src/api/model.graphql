@@ -121,49 +121,87 @@ type user {
   """
   user_specialAlim: Boolean
   """
-  사용자 권한
+  사용자 권한(직책 권한)
   """
-  user_permission: userPermission
+  user_rankPermission: rankPermission
 }
 
 """
-사용자 권한
+직책 권한
 """
-type userPermission {
-  up_id: Int
+type rankPermission {
   """
   홈
   """
-  up_home: Boolean
+  home: Boolean
   """
   예약
   """
-  up_reservation: Boolean
+  reservation: Boolean
   """
   일정
   """
-  up_schedule: Boolean
+  schedule: Boolean
   """
   환자
   """
-  up_patient: Boolean
+  patient: Boolean
   """
   did
   """
-  up_did: Boolean
+  did: Boolean
   """
   보험
   """
-  up_insurance: Boolean
+  insurance: Boolean
   """
   고객센터
   """
-  up_cs: Boolean
+  cs: Boolean
   """
   환경설정
   """
-  up_setting: Boolean
+  setting: Boolean
 }
+
+# """
+# 사용자 권한
+# """
+# type userPermission {
+#   up_id: Int
+#   """
+#   홈
+#   """
+#   up_home: Boolean
+#   """
+#   예약
+#   """
+#   up_reservation: Boolean
+#   """
+#   일정
+#   """
+#   up_schedule: Boolean
+#   """
+#   환자
+#   """
+#   up_patient: Boolean
+#   """
+#   did
+#   """
+#   up_did: Boolean
+#   """
+#   보험
+#   """
+#   up_insurance: Boolean
+#   """
+#   고객센터
+#   """
+#   up_cs: Boolean
+#   """
+#   환경설정
+#   """
+#   up_setting: Boolean
+# }
 
 """
 검색 기록

@@ -17,6 +17,7 @@ import { isAuthenticated } from "./middleWare";
 import { authenticateJwt } from "./passport";
 import webSocket from "./libs/webSocket/webSocket";
 import tobeSchedule from "./libs/scheduler/tobeSchedule";
+import apiRoute from "./api/expApi/router";
 
 /* subscription libs */
 // import { WebSocketServer } from "ws";
@@ -66,6 +67,10 @@ const PORT = process.env.SERVER_PORT;
     json(),
     expressMiddleware(server, { context: async ({ req }) => ({ request: req, isAuthenticated }) })
   );
+
+  app.use(json());
+  app.use(express.urlencoded({ extended: false }));
+  app.use("/api", apiRoute);
 
   await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
   console.log(`Server ready at http://localhost:${PORT}`);

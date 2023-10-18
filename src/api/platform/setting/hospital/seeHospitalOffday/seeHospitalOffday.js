@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import searchHistory from "../../../../../libs/searchHistory";
 import { weekdays } from "../../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
@@ -57,6 +58,9 @@ export default {
             },
           });
         }
+
+        const createSearchHistory = await searchHistory(searchTerm, user.user_id);
+        if (!createSearchHistory.status) throw createSearchHistory.error;
 
         const combinedDays = [
           ...fixedDays,

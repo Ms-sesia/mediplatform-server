@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import searchHistory from "../../../../libs/searchHistory";
 import { weekdays_eng } from "../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
@@ -12,22 +13,9 @@ export default {
       try {
         const startDate = new Date(year, month - 1, 1, 9);
         const endDate = new Date(year, month, 1, 9);
-        const searchHistory = await prisma.searchHistory.findMany({
-          where: { user_id: user.user_id },
-          select: { sh_text: true },
-          take: 10,
-          orderBy: { sh_createdAt: "desc" },
-        });
 
-        const searchText = searchHistory.map((search) => search.sh_text);
-        if (searchTerm && !searchText.includes(searchTerm)) {
-          await prisma.searchHistory.create({
-            data: {
-              sh_text: searchTerm,
-              user: { connect: { user_id: user.user_id } },
-            },
-          });
-        }
+        const createSearchHistory = await searchHistory(searchTerm, user.user_id);
+        if (!createSearchHistory.status) throw createSearchHistory.error;
 
         // 일~월 병원 기본 스케쥴
         const dfSch = await Promise.all(

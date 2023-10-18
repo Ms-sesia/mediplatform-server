@@ -132,4 +132,52 @@ type reservationDetailInfo {
   승인일자
   """
   approvalDate: String
+  """
+  진료실 이름
+  """
+  doctorRoomName: String
+  """
+  예약자(환자) 주민번호 871012-1
+  """
+  patientRrn: String
+  """
+  환자 차트번호
+  """
+  patientChartNumber: String
+  """
+  한줄메모
+  """
+  oneLineMemo: String
+  """
+  예약 구분 - 대분류
+  """
+  largeCategory: String
+  """
+  예약 구분 - 소분류
+  """
+  smallCategory: String
+  """
+  예약 문자 / 카카오톡
+  """
+  alimType: resAlimType
+  """
+  발송시간 - 즉시
+  """
+  alimTime1: Boolean
+  """
+  발송시간 - 1일전
+  """
+  alimTime2: Boolean
+  """
+  발송시간 - 2일전
+  """
+  alimTime3: Boolean
+  """
+  발송시간 - 당일오전9시
+  """
+  alimTime4: Boolean
+  """
+  문자 발송 템플릿
+  """
+  template: String
 }

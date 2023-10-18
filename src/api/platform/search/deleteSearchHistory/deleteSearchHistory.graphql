@@ -1,0 +1,11 @@
+type Mutation {
+  """
+  검색어 삭제
+  """
+  deleteSearchHistory(
+    """
+    삭제할 검색어id
+    """
+    sh_id: Int!
+  ): Boolean
+}

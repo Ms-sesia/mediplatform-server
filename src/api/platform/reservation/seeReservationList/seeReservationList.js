@@ -18,9 +18,7 @@ export default {
               { hsp_id: user.hospital.hsp_id },
               { re_year: searchDateConv.getFullYear() },
               { re_month: searchDateConv.getMonth() + 1 },
-              // { re_date: searchDateConv.getDate() },
               { re_isDelete: false },
-              // { patient: { pati_isDelete: false } },
               {
                 OR: [
                   { re_patientName: { contains: searchTerm } },
@@ -54,9 +52,7 @@ export default {
               { hsp_id: user.hospital.hsp_id },
               { re_year: searchDateConv.getFullYear() },
               { re_month: searchDateConv.getMonth() + 1 },
-              // { re_date: searchDateConv.getDate() },
               { re_isDelete: false },
-              // { patient: { pati_isDelete: false } },
               {
                 OR: [
                   { re_patientName: { contains: searchTerm } },

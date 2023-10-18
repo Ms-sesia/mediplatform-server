@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import searchHistory from "../../../../libs/searchHistory";
 
 const prisma = new PrismaClient();
 
@@ -18,6 +19,9 @@ export default {
           start = new Date(year, 0, 1, 9);
           end = new Date(year + 1, 0, 1, 9);
         }
+
+        const createSearchHistory = await searchHistory(searchTerm, user.user_id);
+        if (!createSearchHistory.status) throw createSearchHistory.error;
 
         const totalPlatformNotice = await prisma.platformNotice.findMany({
           where: {
