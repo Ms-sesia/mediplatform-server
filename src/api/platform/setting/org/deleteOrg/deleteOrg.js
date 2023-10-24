@@ -19,7 +19,7 @@ export default {
             org_editorName: loginUser.user_name,
             org_editorRank: loginUser.user_rank,
             org_isDelete: true,
-            org_deleteDate: today9,
+            org_deleteDate: new Date(),
           },
         });
 

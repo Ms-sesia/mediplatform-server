@@ -15,8 +15,6 @@ export default {
 
         await prisma.faq.create({
           data: {
-            faq_createdAt: today9,
-            faq_updatedAt: today9,
             faq_creatorId: loginAdmin.admin_id,
             faq_creatorName: loginAdmin.admin_name,
             faq_question: question,

@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { today9 } from "../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 
@@ -14,11 +13,11 @@ export default {
 
         await prisma.specialScheduleHistory.create({
           data: {
-            ssh_createdAt: today9,
-            ssh_updatedAt: today9,
             ssh_creatorId: loginUser.user_id,
             ssh_creatorName: loginUser.user_name,
             ssh_creatorRank: loginUser.user_rank,
+            ssh_creatorImg: loginUser.user_img,
+            ssh_type: "comment",
             ssh_text,
             specialSchedule: { connect: { ss_id } },
           },

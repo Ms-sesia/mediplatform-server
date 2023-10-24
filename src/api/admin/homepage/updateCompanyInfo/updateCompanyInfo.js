@@ -45,7 +45,6 @@ export default {
               where: { hi_id },
               data: {
                 hi_url: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
-                hi_createdAt: today9,
                 hi_adminName: loginAdmin.admin_name,
                 hi_adminRank: loginAdmin.admin_rank,
                 hi_adminId: loginAdmin.admin_id,
@@ -56,7 +55,6 @@ export default {
             await prisma.homepageIntroduce.create({
               data: {
                 hi_url: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
-                hi_createdAt: today9,
                 hi_adminName: loginAdmin.admin_name,
                 hi_adminRank: loginAdmin.admin_rank,
                 hi_adminId: loginAdmin.admin_id,

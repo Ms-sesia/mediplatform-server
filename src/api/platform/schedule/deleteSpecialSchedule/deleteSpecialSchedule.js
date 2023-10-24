@@ -15,12 +15,11 @@ export default {
         await prisma.specialSchedule.update({
           where: { ss_id },
           data: {
-            ss_updatedAt: today9,
             ss_editorId: loginUser.user_id,
             ss_editorName: loginUser.user_name,
             ss_editorRank: loginUser.user_rank,
             ss_isDelete: true,
-            ss_deleteDate: today9,
+            ss_deleteDate: new Date(),
           },
         });
 

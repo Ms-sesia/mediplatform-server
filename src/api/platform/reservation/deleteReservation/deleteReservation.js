@@ -15,12 +15,11 @@ export default {
         await prisma.reservation.update({
           where: { re_id },
           data: {
-            re_updatedAt: today9,
             re_editorId: loginUser.user_id,
             re_editorName: loginUser.user_name,
             re_editorRank: loginUser.user_rank,
             re_isDelete: true,
-            re_deleteDate: today9,
+            re_deleteDate: new Date(),
           },
         });
 

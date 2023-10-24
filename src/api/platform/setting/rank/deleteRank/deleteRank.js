@@ -19,7 +19,7 @@ export default {
             rank_editorName: loginUser.user_name,
             rank_editorRank: loginUser.user_rank,
             rank_isDelete: true,
-            rank_deleteDate: today9,
+            rank_deleteDate: new Date(),
           },
         });
 

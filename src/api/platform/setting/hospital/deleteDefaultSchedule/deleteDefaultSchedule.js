@@ -18,7 +18,7 @@ export default {
             ds_editorId: loginUser.user_id,
             ds_editorName: loginUser.user_name,
             ds_editorRank: loginUser.user_rank,
-            ds_deleteDate: today9,
+            ds_deleteDate: new Date(),
             ds_isDelete: true,
           },
         });

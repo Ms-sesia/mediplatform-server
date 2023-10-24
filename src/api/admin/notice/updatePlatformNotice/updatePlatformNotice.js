@@ -20,7 +20,6 @@ export default {
         const platformNotice = await prisma.platformNotice.update({
           where: { pn_id },
           data: {
-            pn_updatedAt: today9,
             pn_adminEditorId: loginAdmin.admin_id,
             pn_adminEditorName: loginAdmin.admin_name,
             pn_adminEditorRank: loginAdmin.admin_rank,

@@ -17,7 +17,6 @@ export default {
 
         const oneInquire = await prisma.oneOnOne.create({
           data: {
-            oneq_createdAt: today9,
             oneq_creatorId: loginUser.user_id,
             oneq_creatorName: loginUser.user_name,
             oneq_creatorRank: loginUser.user_rank,

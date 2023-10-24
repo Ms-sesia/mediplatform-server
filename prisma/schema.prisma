@@ -606,20 +606,23 @@ model specialScheduleAttacthed {
 
 // 특별일정 댓글, 기록
 model specialScheduleHistory {
-  ssh_id          Int             @id @default(autoincrement())
-  ssh_createdAt   DateTime        @default(now()) // 등록일(가입일)
-  ssh_updatedAt   DateTime        @updatedAt
-  ssh_creatorName String          @default("") @db.VarChar(25) // 등록자 이름
-  ssh_creatorRank String          @default("") @db.VarChar(25) // 등록자 직책
-  ssh_creatorId   Int             @default(0) // 등록자 id
-  ssh_editorName  String          @default("") @db.VarChar(25) // 수정자 이름
-  ssh_editorRank  String          @default("") @db.VarChar(25) // 수정자 직책
-  ssh_editorId    Int             @default(0) // 수정자 id
-  ssh_isDelete    Boolean         @default(false) // 삭제여부
-  ssh_deleteDate  DateTime? // 삭제일
-  ssh_text        String          @default("") @db.VarChar(250) // 댓글 및 기록 내용
-  specialSchedule specialSchedule @relation(fields: [ss_id], references: [ss_id])
-  ss_id           Int
+  ssh_id            Int             @id @default(autoincrement())
+  ssh_createdAt     DateTime        @default(now()) // 등록일(가입일)
+  ssh_updatedAt     DateTime        @updatedAt
+  ssh_creatorName   String          @default("") @db.VarChar(25) // 등록자 이름
+  ssh_creatorRank   String          @default("") @db.VarChar(25) // 등록자 직책
+  ssh_creatorId     Int             @default(0) // 등록자 id
+  ssh_editorName    String          @default("") @db.VarChar(25) // 수정자 이름
+  ssh_editorRank    String          @default("") @db.VarChar(25) // 수정자 직책
+  ssh_editorId      Int             @default(0) // 수정자 id
+  ssh_isDelete      Boolean         @default(false) // 삭제여부
+  ssh_deleteDate    DateTime? // 삭제일
+  ssh_creatorImg    String          @default("") @db.VarChar(250) // 작성자 이미지
+  ssh_type          String          @default("") @db.VarChar(20) // 댓글(comment), 기록(history) 구분
+  ssh_confirmStatus scheduleConfirm @default(notSign) // 결재상태 - 승인 전, 승인완료, 반려
+  ssh_text          String          @default("") @db.VarChar(250) // 댓글 및 기록 내용
+  specialSchedule   specialSchedule @relation(fields: [ss_id], references: [ss_id])
+  ss_id             Int
 }
 
 // 진료실 => 진료실 코드를 기준으로 업데이트

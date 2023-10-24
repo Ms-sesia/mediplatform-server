@@ -19,8 +19,7 @@ export default {
           where: { pnc_id },
           data: {
             pnc_isDelete: true,
-            pnc_deleteDate: today9,
-            pnc_updatedAt: today9,
+            pnc_deleteDate: new Date(),
             pnc_editorId: loginUser.user_id,
             pnc_editorName: loginUser.user_name,
             pnc_editorRank: loginUser.user_rank,

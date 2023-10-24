@@ -23,7 +23,7 @@ export default {
             prm_editorName: loginUser.user_name,
             prm_editorRank: loginUser.user_rank,
             prm_isDelete: true,
-            prm_deleteDate: today9,
+            prm_deleteDate: new Date(),
           },
         });
 

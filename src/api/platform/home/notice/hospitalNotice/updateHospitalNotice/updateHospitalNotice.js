@@ -76,7 +76,6 @@ export default {
             hn_editorId: loginUser.user_id,
             hn_editorName: loginUser.user_name,
             hn_editorRank: loginUser.user_rank,
-            hn_updatedAt: today9,
             hn_title: title,
             hn_text: text,
           },

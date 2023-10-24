@@ -17,7 +17,6 @@ export default {
 
         const hospitalNotice = await prisma.hospitalNotice.create({
           data: {
-            hn_createdAt: today9,
             hn_creatorId: loginUser.user_id,
             hn_creatorName: loginUser.user_name,
             hn_creatorRank: loginUser.user_rank,

@@ -22,7 +22,6 @@ export default {
               await prisma.hospitalOffday.update({
                 where: { ho_id: updateId },
                 data: {
-                  ho_updatedAt: today9,
                   ho_editorId: loginUser.user_id,
                   ho_editorName: loginUser.user_name,
                   ho_editorRank: loginUser.user_rank,
@@ -38,19 +37,16 @@ export default {
               await prisma.hospitalOffday.update({
                 where: { ho_id: updateId },
                 data: {
-                  ho_updatedAt: today9,
                   ho_editorId: loginUser.user_id,
                   ho_editorName: loginUser.user_name,
                   ho_editorRank: loginUser.user_rank,
                   ho_isDelete: true,
-                  ho_deleteDate: today9,
+                  ho_deleteDate: new Date(),
                 },
               });
               // 주간 고정 생성
               await prisma.weekOffday.create({
                 data: {
-                  wo_createdAt: today9,
-                  wo_updatedAt: today9,
                   wo_creatorId: loginUser.user_id,
                   wo_creatorName: loginUser.user_name,
                   wo_creatorRank: loginUser.user_rank,
@@ -68,19 +64,16 @@ export default {
               await prisma.hospitalOffday.update({
                 where: { ho_id: updateId },
                 data: {
-                  ho_updatedAt: today9,
                   ho_editorId: loginUser.user_id,
                   ho_editorName: loginUser.user_name,
                   ho_editorRank: loginUser.user_rank,
                   ho_isDelete: true,
-                  ho_deleteDate: today9,
+                  ho_deleteDate: new Date(),
                 },
               });
               // 월간 고정 생성
               await prisma.monthOffday.create({
                 data: {
-                  mo_createdAt: today9,
-                  mo_updatedAt: today9,
                   mo_creatorId: loginUser.user_id,
                   mo_creatorName: loginUser.user_name,
                   mo_creatorRank: loginUser.user_rank,
@@ -100,18 +93,15 @@ export default {
               await prisma.weekOffday.update({
                 where: { wo_id: updateId },
                 data: {
-                  wo_updatedAt: today9,
                   wo_editorId: loginUser.user_id,
                   wo_editorName: loginUser.user_name,
                   wo_editorRank: loginUser.user_rank,
                   wo_isDelete: true,
-                  wo_deleteDate: today9,
+                  wo_deleteDate: new Date(),
                 },
               });
             await prisma.hospitalOffday.create({
               data: {
-                ho_createdAt: today9,
-                ho_updatedAt: today9,
                 ho_creatorId: loginUser.user_id,
                 ho_creatorName: loginUser.user_name,
                 ho_creatorRank: loginUser.user_rank,
@@ -129,7 +119,6 @@ export default {
               await prisma.weekOffday.update({
                 where: { wo_id: updateId },
                 data: {
-                  wo_updatedAt: today9,
                   wo_editorId: loginUser.user_id,
                   wo_editorName: loginUser.user_name,
                   wo_editorRank: loginUser.user_rank,
@@ -147,19 +136,16 @@ export default {
               await prisma.weekOffday.update({
                 where: { wo_id: updateId },
                 data: {
-                  wo_updatedAt: today9,
                   wo_editorId: loginUser.user_id,
                   wo_editorName: loginUser.user_name,
                   wo_editorRank: loginUser.user_rank,
                   wo_isDelete: true,
-                  wo_deleteDate: today9,
+                  wo_deleteDate: new Date(),
                 },
               });
               // 월간 고정 생성
               await prisma.monthOffday.create({
                 data: {
-                  mo_createdAt: today9,
-                  mo_updatedAt: today9,
                   mo_creatorId: loginUser.user_id,
                   mo_creatorName: loginUser.user_name,
                   mo_creatorRank: loginUser.user_rank,
@@ -179,19 +165,16 @@ export default {
               await prisma.monthOffday.update({
                 where: { fo_id: updateId },
                 data: {
-                  fo_updatedAt: today9,
                   fo_editorId: loginUser.user_id,
                   fo_editorName: loginUser.user_name,
                   fo_editorRank: loginUser.user_rank,
                   fo_isDelete: true,
-                  fo_deleteDate: today9,
+                  fo_deleteDate: new Date(),
                 },
               });
             // 임시 휴무 데이터 생성
             await prisma.hospitalOffday.create({
               data: {
-                ho_createdAt: today9,
-                ho_updatedAt: today9,
                 ho_creatorId: loginUser.user_id,
                 ho_creatorName: loginUser.user_name,
                 ho_creatorRank: loginUser.user_rank,
@@ -209,19 +192,17 @@ export default {
               await prisma.monthOffday.update({
                 where: { fo_id: updateId },
                 data: {
-                  fo_updatedAt: today9,
                   fo_editorId: loginUser.user_id,
                   fo_editorName: loginUser.user_name,
                   fo_editorRank: loginUser.user_rank,
                   fo_isDelete: true,
-                  fo_deleteDate: today9,
+                  fo_deleteDate: new Date(),
                 },
               });
               // 주간 고정 수정
               await prisma.weekOffday.update({
                 where: { wo_id: updateId },
                 data: {
-                  wo_updatedAt: today9,
                   wo_editorId: loginUser.user_id,
                   wo_editorName: loginUser.user_name,
                   wo_editorRank: loginUser.user_rank,
@@ -239,7 +220,6 @@ export default {
               await prisma.monthOffday.update({
                 where: { fo_id: updateId },
                 data: {
-                  fo_updatedAt: today9,
                   fo_editorId: loginUser.user_id,
                   fo_editorName: loginUser.user_name,
                   fo_editorRank: loginUser.user_rank,

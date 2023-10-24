@@ -18,12 +18,11 @@ export default {
         await prisma.specialScheduleHistory.update({
           where: { ssh_id },
           data: {
-            ssh_updatedAt: today9,
             ssh_editorId: loginUser.user_id,
             ssh_editorName: loginUser.user_name,
             ssh_editorRank: loginUser.user_rank,
             ssh_isDelete: true,
-            ssh_deleteDate: today9,
+            ssh_deleteDate: new Date(),
           },
         });
 

@@ -26,7 +26,7 @@ export default {
             hnc_editorName: loginUser.user_name,
             hnc_editorRank: loginUser.user_rank,
             hnc_isDelete: true,
-            hnc_deleteDate: today9,
+            hnc_deleteDate: new Date(),
           },
         });
 
@@ -49,7 +49,7 @@ export default {
             hn_editorName: loginUser.user_name,
             hn_editorRank: loginUser.user_rank,
             hn_isDelete: true,
-            hn_deleteDate: today9,
+            hn_deleteDate: new Date(),
           },
         });
 

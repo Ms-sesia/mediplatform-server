@@ -17,12 +17,11 @@ export default {
             await prisma.hospitalOffday.update({
               where: { ho_id: deleteId },
               data: {
-                ho_updatedAt: today9,
                 ho_editorId: loginUser.user_id,
                 ho_editorName: loginUser.user_name,
                 ho_editorRank: loginUser.user_rank,
                 ho_isDelete: true,
-                ho_deleteDate: today9,
+                ho_deleteDate: new Date(),
               },
             });
             break;
@@ -30,12 +29,11 @@ export default {
             await prisma.weekOffday.update({
               where: { wo_id: deleteId },
               data: {
-                wo_updatedAt: today9,
                 wo_editorId: loginUser.user_id,
                 wo_editorName: loginUser.user_name,
                 wo_editorRank: loginUser.user_rank,
                 wo_isDelete: true,
-                wo_deleteDate: today9,
+                wo_deleteDate: new Date(),
               },
             });
             break;
@@ -43,7 +41,6 @@ export default {
             await prisma.monthOffday.update({
               where: { fo_id: deleteId },
               data: {
-                fo_updatedAt: today9,
                 fo_editorId: loginUser.user_id,
                 fo_editorName: loginUser.user_name,
                 fo_editorRank: loginUser.user_rank,

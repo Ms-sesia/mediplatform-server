@@ -37,7 +37,7 @@ export default {
             da_editorName: loginUser.user_name,
             da_editorRank: loginUser.user_rank,
             da_isDelete: true,
-            da_deleteDate: today9,
+            da_deleteDate: new Date(),
           },
         });
 
@@ -47,7 +47,7 @@ export default {
             ddr_editorId: loginUser.user_id,
             ddr_editorName: loginUser.user_name,
             ddr_editorRank: loginUser.user_rank,
-            ddr_deleteDate: today9,
+            ddr_deleteDate: new Date(),
             ddr_isDelete: true,
           },
         });
@@ -59,7 +59,7 @@ export default {
             dlm_editorName: loginUser.user_name,
             dlm_editorRank: loginUser.user_rank,
             dlm_isDelete: true,
-            dlm_deleteDate: today9,
+            dlm_deleteDate: new Date(),
           },
         });
 
@@ -70,7 +70,7 @@ export default {
             did_editorName: loginUser.user_name,
             did_editorRank: loginUser.user_rank,
             did_isDelete: true,
-            did_deleteDate: today9,
+            did_deleteDate: new Date(),
           },
         });
 

@@ -20,7 +20,6 @@ export default {
           case "none":
             await prisma.hospitalOffday.create({
               data: {
-                ho_createdAt: today9,
                 ho_creatorId: loginUser.user_id,
                 ho_creatorName: loginUser.user_name,
                 ho_creatorRank: loginUser.user_rank,
@@ -38,7 +37,6 @@ export default {
           case "week":
             await prisma.weekOffday.create({
               data: {
-                wo_createdAt: today9,
                 wo_creatorId: loginUser.user_id,
                 wo_creatorName: loginUser.user_name,
                 wo_creatorRank: loginUser.user_rank,
@@ -54,7 +52,6 @@ export default {
           case "month":
             await prisma.monthOffday.create({
               data: {
-                fo_createdAt: today9,
                 fo_creatorId: loginUser.user_id,
                 fo_creatorName: loginUser.user_name,
                 fo_creatorRank: loginUser.user_rank,

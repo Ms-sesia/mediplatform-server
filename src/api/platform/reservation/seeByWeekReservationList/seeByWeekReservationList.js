@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import searchHistory from "../../../../libs/searchHistory";
 
 const prisma = new PrismaClient();
 
@@ -9,6 +10,9 @@ export default {
       const { user } = request;
       const { searchTerm, year, month, date, status, doctorRoom, resPlatform, visitConfirm, largeCategory } = args;
       try {
+        const createSearchHistory = await searchHistory(searchTerm, user.user_id);
+        if (!createSearchHistory.status) throw createSearchHistory.error;
+
         const weekResInfo = new Array();
 
         for (let i = 0; i < 7; i++) {

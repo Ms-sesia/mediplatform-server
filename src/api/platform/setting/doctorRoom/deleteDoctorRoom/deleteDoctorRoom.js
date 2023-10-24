@@ -19,7 +19,7 @@ export default {
             dr_editorRank: loginUser.user_rank,
             dr_editorId: loginUser.user_id,
             dr_isDelete: true,
-            dr_deleteDate: today9,
+            dr_deleteDate: new Date(),
           },
         });
 
@@ -28,7 +28,7 @@ export default {
           where: {
             AND: [{ ddr_doctorRoomName: { contains: doctorRoom.dr_roomName } }, { did: { hsp_id: doctorRoom.hsp_id } }],
           },
-          data: { ddr_isDelete: true, ddr_deleteDate: today9 },
+          data: { ddr_isDelete: true, ddr_deleteDate: new Date() },
         });
 
         return true;

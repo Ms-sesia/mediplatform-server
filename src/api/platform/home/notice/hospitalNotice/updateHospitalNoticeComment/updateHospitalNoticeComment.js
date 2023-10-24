@@ -22,7 +22,6 @@ export default {
             hnc_editorId: loginUser.user_id,
             hnc_editorName: loginUser.user_name,
             hnc_editorRank: loginUser.user_rank,
-            hnc_updatedAt: today9,
           },
         });
 

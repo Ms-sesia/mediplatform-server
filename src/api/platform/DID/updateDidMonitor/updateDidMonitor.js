@@ -71,7 +71,7 @@ export default {
 
             await prisma.didAttached.update({
               where: { da_id: did_deleteAttachedId[i] },
-              data: { da_isDelete: true, da_deleteDate: today9 },
+              data: { da_isDelete: true, da_deleteDate: new Date() },
             });
           }
         }

@@ -22,7 +22,6 @@ export default {
             pnc_editorId: loginUser.user_id,
             pnc_editorName: loginUser.user_name,
             pnc_editorRank: loginUser.user_rank,
-            pnc_updatedAt: today9,
           },
         });
 

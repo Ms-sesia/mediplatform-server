@@ -45,7 +45,6 @@ export default {
               where: { hm_id },
               data: {
                 hm_url: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
-                hm_createdAt: today9,
                 hm_adminName: loginAdmin.admin_name,
                 hm_adminRank: loginAdmin.admin_rank,
                 hm_adminId: loginAdmin.admin_id,
@@ -56,7 +55,6 @@ export default {
             await prisma.homepageMain.create({
               data: {
                 hm_url: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
-                hm_createdAt: today9,
                 hm_adminName: loginAdmin.admin_name,
                 hm_adminRank: loginAdmin.admin_rank,
                 hm_adminId: loginAdmin.admin_id,

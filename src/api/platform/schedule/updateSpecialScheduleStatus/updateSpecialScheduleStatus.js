@@ -15,17 +15,17 @@ export default {
         await prisma.specialSchedule.update({
           where: { ss_id },
           data: {
-            ss_updatedAt: today9,
             ss_editorId: loginUser.user_id,
             ss_editorName: loginUser.user_name,
             ss_editorRank: loginUser.user_rank,
             ss_status: status,
             specialScheduleHistory: {
               create: {
-                ssh_createdAt: today9,
                 ssh_creatorId: loginUser.user_id,
                 ssh_creatorName: loginUser.user_name,
                 ssh_creatorRank: loginUser.user_rank,
+                ssh_type: "history",
+                ssh_confirmStatus: status === "sign" ? true : false,
                 ssh_text: `${loginUser.user_name}님이 ${convSSStatus(status)}을(를) 했습니다.`,
               },
             },

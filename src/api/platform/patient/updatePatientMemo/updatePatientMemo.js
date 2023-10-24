@@ -15,7 +15,6 @@ export default {
         await prisma.patientMemo.update({
           where: { prm_id },
           data: {
-            prm_updatedAt: today9,
             prm_editorId: loginUser.user_id,
             prm_editorName: loginUser.user_name,
             prm_editorRank: loginUser.user_rank,

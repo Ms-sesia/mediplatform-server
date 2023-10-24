@@ -10,8 +10,19 @@ export default {
     updateSpecialSchedule: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { ss_id, dr_id, startDate, endDate, subDoctorUsed, startTime, endTime, memo, attached, deleteAttachedIds } =
-        args;
+      const {
+        ss_id,
+        dr_id,
+        type,
+        startDate,
+        endDate,
+        subDoctorUsed,
+        startTime,
+        endTime,
+        memo,
+        attached,
+        deleteAttachedIds,
+      } = args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const storagePath = path.join(__dirname, "../../../../../", "files");
@@ -19,17 +30,18 @@ export default {
         const doctorRoom = await prisma.doctorRoom.findUnique({ where: { dr_id } });
 
         const start = new Date(startDate);
-        const end = new Date(endDate);
+        const end = type === "offDay" ? new Date(startDate) : new Date(endDate);
+        // const end = new Date(endDate);
 
         const specialSchedule = await prisma.specialSchedule.update({
           where: { ss_id },
           data: {
-            ss_updatedAt: today9,
             ss_editorId: loginUser.user_id,
             ss_editorName: loginUser.user_name,
             ss_editorRank: loginUser.user_rank,
             ss_doctorName: doctorRoom.dr_doctorName,
             ss_doctorRoomName: doctorRoom.dr_roomName,
+            ss_type: type,
             ss_startDate: start,
             ss_endDate: end,
             ss_subDoctorUsed: subDoctorUsed,

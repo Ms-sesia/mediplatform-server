@@ -19,7 +19,7 @@ export default {
             ms_editorName: loginUser.user_name,
             ms_editorRank: loginUser.user_rank,
             ms_isDelete: true,
-            ms_deleteDate: today9,
+            ms_deleteDate: new Date(),
           },
         });
 

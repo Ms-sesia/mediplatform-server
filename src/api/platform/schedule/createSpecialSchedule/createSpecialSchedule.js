@@ -10,7 +10,7 @@ export default {
     createSpecialSchedule: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { dr_id, startDate, endDate, subDoctorUsed, startTime, endTime, memo, attached } = args;
+      const { dr_id, type, startDate, endDate, subDoctorUsed, startTime, endTime, memo, attached } = args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const storagePath = path.join(__dirname, "../../../../../", "files");
@@ -18,17 +18,16 @@ export default {
         const doctorRoom = await prisma.doctorRoom.findUnique({ where: { dr_id } });
 
         const start = new Date(startDate);
-        const end = new Date(endDate);
+        const end = type === "offDay" ? new Date(startDate) : new Date(endDate);
 
         const specialSchedule = await prisma.specialSchedule.create({
           data: {
-            ss_createdAt: today9,
-            ss_updatedAt: today9,
             ss_creatorId: loginUser.user_id,
             ss_creatorName: loginUser.user_name,
             ss_creatorRank: loginUser.user_rank,
             ss_doctorName: doctorRoom.dr_doctorName,
             ss_doctorRoomName: doctorRoom.dr_roomName,
+            ss_type: type,
             ss_startDate: start,
             ss_endDate: end,
             ss_subDoctorUsed: subDoctorUsed,
@@ -39,7 +38,6 @@ export default {
             doctorRoom: { connect: { dr_id } },
             specialScheduleHistory: {
               create: {
-                ssh_createdAt: today9,
                 ssh_creatorId: loginUser.user_id,
                 ssh_creatorName: loginUser.user_name,
                 ssh_creatorRank: loginUser.user_rank,
@@ -49,7 +47,7 @@ export default {
           },
         });
 
-        if (attached.length) {
+        if (attached && attached.length) {
           for (let i = 0; i < attached.length; i++) {
             const { createReadStream, filename, encoding, mimetype } = await attached[i];
             const stream = createReadStream();

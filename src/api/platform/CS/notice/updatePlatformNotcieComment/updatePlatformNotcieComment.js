@@ -18,7 +18,6 @@ export default {
         await prisma.pnComment.update({
           where: { pnc_id },
           data: {
-            pnc_updatedAt: today9,
             pnc_editorId: loginUser.user_id,
             pnc_editorName: loginUser.user_name,
             pnc_editorRank: loginUser.user_rank,

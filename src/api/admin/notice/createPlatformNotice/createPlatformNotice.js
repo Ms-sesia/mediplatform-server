@@ -19,7 +19,6 @@ export default {
 
         const platformNotice = await prisma.platformNotice.create({
           data: {
-            pn_createdAt: today9,
             pn_adminCreatorId: loginAdmin.admin_id,
             pn_adminCreatorName: loginAdmin.admin_name,
             pn_adminCreatorRank: loginAdmin.admin_rank,

@@ -36,8 +36,6 @@ export default {
 
         const reservation = await prisma.reservation.create({
           data: {
-            re_createdAt: today9,
-            re_updatedAt: today9,
             re_creatorId: loginUser.user_id,
             re_creatorName: loginUser.user_name,
             re_creatorRank: loginUser.user_rank,

@@ -28,6 +28,9 @@ export default {
                 ssh_creatorName: true,
                 ssh_creatorRank: true,
                 ssh_creatorId: true,
+                ssh_creatorImg: true,
+                ssh_type: true,
+                ssh_confirmStatus: true,
                 ssh_text: true,
               },
             },
@@ -43,6 +46,7 @@ export default {
 
         const specialScheduleConv = {
           ss_id: specialSchedule.ss_id,
+          ss_createdAt: new Date(specialSchedule.ss_createdAt).toISOString(),
           ss_type: specialSchedule.ss_type,
           ss_doctorRoomName: specialSchedule.ss_doctorRoomName,
           ss_doctorName: specialSchedule.ss_doctorName,

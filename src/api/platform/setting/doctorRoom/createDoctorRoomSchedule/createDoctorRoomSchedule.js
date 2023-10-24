@@ -32,8 +32,6 @@ export default {
 
         await prisma.doctorRoomSchedule.create({
           data: {
-            drs_createdAt: today9,
-            drs_updatedAt: today9,
             drs_creatorId: loginUser.user_id,
             drs_creatorName: loginUser.user_name,
             drs_creatorRank: loginUser.user_rank,

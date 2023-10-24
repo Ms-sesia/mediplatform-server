@@ -15,8 +15,6 @@ export default {
         await prisma.pnComment.create({
           data: {
             pnc_text: text,
-            pnc_createdAt: today9,
-            pnc_updatedAt: today9,
             pnc_creatorId: loginUser.user_id,
             pnc_creatorName: loginUser.user_name,
             pnc_creatorRank: loginUser.user_rank,

@@ -32,7 +32,6 @@ export default {
         await prisma.user.update({
           where: { user_id: user.user_id },
           data: {
-            user_updatedAt: today9,
             user_editorId: loginUser.user_id,
             user_editorName: loginUser.user_name,
             user_editorRank: loginUser.user_rank,

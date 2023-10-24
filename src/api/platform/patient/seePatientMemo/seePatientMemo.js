@@ -16,8 +16,11 @@ export default {
 
         if (!patientMemo.length) return [];
 
-        const memoList = patientMemo.map((memo) => {
+        const memoList = patientMemo.map(async (memo) => {
+          const creator = await prisma.user.findUnique({ where: { user_id: memo.prm_creatorId } });
           memo.prm_createdAt = new Date(memo.prm_createdAt).toISOString();
+          memo.prm_creatorImg = creator.user_img;
+
           return memo;
         });
 

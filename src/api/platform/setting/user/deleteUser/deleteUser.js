@@ -19,7 +19,7 @@ export default {
             user_editorName: loginUser.user_name,
             user_editorRank: loginUser.user_rank,
             user_isDelete: true,
-            user_deleteDate: today9,
+            user_deleteDate: new Date(),
           },
         });
 

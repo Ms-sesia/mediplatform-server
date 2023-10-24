@@ -15,12 +15,11 @@ export default {
         await prisma.doctorRoomSchedule.update({
           where: { drs_id },
           data: {
-            drs_updatedAt: today9,
             drs_editorId: loginUser.user_id,
             drs_editorName: loginUser.user_name,
             drs_editorRank: loginUser.user_rank,
             drs_isDelete: true,
-            drs_deleteDate: today9,
+            drs_deleteDate: new Date(),
           },
         });
 

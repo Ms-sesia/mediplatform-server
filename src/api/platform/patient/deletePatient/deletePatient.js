@@ -15,12 +15,11 @@ export default {
         await prisma.patient.update({
           where: { pati_id },
           data: {
-            pati_updatedAt: today9,
             pati_editorId: loginUser.user_id,
             pati_editorName: loginUser.user_name,
             pati_editorRank: loginUser.user_rank,
             pati_isDelete: true,
-            pati_deleteDate: today9,
+            pati_deleteDate: new Date(),
           },
         });
 

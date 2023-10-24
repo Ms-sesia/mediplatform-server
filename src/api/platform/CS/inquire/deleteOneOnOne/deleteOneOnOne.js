@@ -20,7 +20,7 @@ export default {
           where: { oneq_id },
           data: {
             oneq_isDelete: true,
-            oneq_deleteDate: today9,
+            oneq_deleteDate: new Date(),
           },
         });
 

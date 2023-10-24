@@ -15,12 +15,11 @@ export default {
         await prisma.resAlimTemplate.update({
           where: { rat_id },
           data: {
-            rat_updatedAt: today9,
             rat_editorId: loginUser.user_id,
             rat_editorName: loginUser.user_name,
             rat_editorRank: loginUser.user_rank,
             rat_isDelete: true,
-            rat_deleteDate: today9,
+            rat_deleteDate: new Date(),
           },
         });
 

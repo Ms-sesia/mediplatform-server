@@ -11,6 +11,12 @@ type Mutation {
     """
     dr_id: Int!
     """
+    구분 - 휴무 시간 / 일정
+    휴무 시간 : offDay
+    일정 : schedule
+    """
+    type: specialScheduleType
+    """
     일정 시작일
     """
     startDate: String

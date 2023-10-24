@@ -16,11 +16,10 @@ export default {
         await prisma.faq.update({
           where: { faq_id },
           data: {
-            faq_updatedAt: today9,
             faq_adminEditorId: loginAdmin.admin_id,
             faq_adminEditorName: loginAdmin.admin_name,
             faq_adminEditorRank: loginAdmin.admin_rank,
-            faq_deleteDate: today9,
+            faq_deleteDate: new Date(),
             faq_isDelete: true,
           },
         });

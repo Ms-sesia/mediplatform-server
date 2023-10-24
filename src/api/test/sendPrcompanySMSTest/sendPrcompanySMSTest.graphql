@@ -1,0 +1,22 @@
+type Mutation {
+  """
+  prcompnay 문자 전송 테스트
+
+  * error
+  - err_00 : 문자 전송에 실패하였습니다.
+  """
+  sendPrcompanySMSTest(
+    """
+    전송할 메세지
+    """
+    textMsg: String
+    """
+    전송할 번호
+    """
+    cellphone: String
+    """
+    수신자 이름
+    """
+    receiverName: String
+  ): Boolean
+}

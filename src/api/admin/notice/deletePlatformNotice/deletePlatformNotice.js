@@ -20,12 +20,11 @@ export default {
         const platformNotice = await prisma.platformNotice.update({
           where: { pn_id },
           data: {
-            pn_updatedAt: today9,
             pn_adminEditorId: loginAdmin.admin_id,
             pn_adminEditorName: loginAdmin.admin_name,
             pn_adminEditorRank: loginAdmin.admin_rank,
             pn_isDelete: true,
-            pn_deleteDate: today9,
+            pn_deleteDate: new Date(),
           },
         });
 
@@ -38,7 +37,7 @@ export default {
             where: { pnc_id: pnc.pnc_id },
             data: {
               pnc_isDelete: true,
-              pnc_deleteDate: today9,
+              pnc_deleteDate: new Date(),
               pnc_editorId: loginAdmin.admin_id,
               pnc_editorName: loginAdmin.admin_name,
               pnc_editorRank: loginAdmin.admin_rank,

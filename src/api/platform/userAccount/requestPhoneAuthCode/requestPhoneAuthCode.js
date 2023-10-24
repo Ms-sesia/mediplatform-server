@@ -18,7 +18,6 @@ export default {
 
         await prisma.userPhoneAuthCode.create({
           data: {
-            upac_createdAt: today9,
             upac_cellphone: cellphone,
             upac_code: authCode,
             user: { connect: { user_id: user.user_id } },

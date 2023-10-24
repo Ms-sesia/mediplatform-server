@@ -19,8 +19,7 @@ export default {
           where: { hnc_id },
           data: {
             hnc_isDelete: true,
-            hnc_deleteDate: today9,
-            hnc_updatedAt: today9,
+            hnc_deleteDate: new Date(),
             hnc_editorId: loginUser.user_id,
             hnc_editorName: loginUser.user_name,
             hnc_editorRank: loginUser.user_rank,

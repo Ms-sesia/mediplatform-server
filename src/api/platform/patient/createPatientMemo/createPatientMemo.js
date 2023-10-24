@@ -14,8 +14,6 @@ export default {
 
         await prisma.patientMemo.create({
           data: {
-            prm_createdAt: today9,
-            prm_updatedAt: today9,
             prm_creatorId: loginUser.user_id,
             prm_creatorName: loginUser.user_name,
             prm_creatorRank: loginUser.user_rank,

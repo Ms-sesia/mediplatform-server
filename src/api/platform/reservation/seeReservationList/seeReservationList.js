@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import searchHistory from "../../../../libs/searchHistory";
 
 const prisma = new PrismaClient();
 
@@ -11,6 +12,9 @@ export default {
         args;
       try {
         const searchDateConv = new Date(searchDate);
+
+        const createSearchHistory = await searchHistory(searchTerm, user.user_id);
+        if (!createSearchHistory.status) throw createSearchHistory.error;
 
         const totalRes = await prisma.reservation.findMany({
           where: {

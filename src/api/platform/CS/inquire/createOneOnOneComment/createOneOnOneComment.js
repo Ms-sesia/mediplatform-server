@@ -15,7 +15,6 @@ export default {
         await prisma.oneOnOneAnswer.create({
           data: {
             oneAn_adminAble: false,
-            oneAn_createdAt: today9,
             oneAn_creatorName: loginUser.user_name,
             oneAn_creatorRank: loginUser.user_rank,
             oneAn_creatorId: loginUser.user_id,

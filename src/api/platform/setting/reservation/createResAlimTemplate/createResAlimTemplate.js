@@ -16,8 +16,6 @@ export default {
           data: {
             rat_title: title,
             rat_text: text,
-            rat_createdAt: today9,
-            rat_updatedAt: today9,
             rat_creatorId: loginUser.user_id,
             rat_creatorName: loginUser.user_name,
             rat_creatorRank: loginUser.user_rank,

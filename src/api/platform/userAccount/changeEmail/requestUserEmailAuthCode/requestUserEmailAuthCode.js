@@ -40,7 +40,6 @@ export default {
 
         await prisma.userEmailAuthCode.create({
           data: {
-            ueac_createdAt: today9,
             ueac_code: authCode,
             ueac_email: email,
             user: { connect: { user_id: loginUser.user_id } },
