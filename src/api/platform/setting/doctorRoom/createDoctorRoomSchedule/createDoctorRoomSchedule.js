@@ -24,11 +24,11 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
-        const drSchedule = await prisma.doctorRoomSchedule.findMany({
-          where: { AND: [{ drs_day: day }, { drs_isDelete: false }] },
-        });
+        // const drSchedule = await prisma.doctorRoomSchedule.findMany({
+        //   where: { AND: [{ drs_day: day }, { drs_isDelete: false }] },
+        // });
 
-        if (drSchedule.length) throw 1;
+        // if (drSchedule.length) throw 1;
 
         await prisma.doctorRoomSchedule.create({
           data: {

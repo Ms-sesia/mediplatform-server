@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { generateSecretCode } from "../../../../generate";
 import { sendAligoSMS } from "../../../../libs/aligo/sendAligoSMS";
-import { today9 } from "../../../../libs/todayCal";
+import sendSMS from "../../../../libs/sendSMS";
 
 const prisma = new PrismaClient();
 
@@ -25,8 +25,9 @@ export default {
         });
 
         const msg = `안녕하세요. 메디플랫폼입니다.\n인증번호는 ${authCode}입니다.`;
-
-        await sendAligoSMS(cellphone, msg);
+        const today = new Date().toISOString();
+        
+        await sendSMS(today, msg, cellphone, loginUser.user_name, false);
 
         return true;
       } catch (e) {

@@ -14,7 +14,13 @@ export default {
         if (!createSearchHistory.status) throw createSearchHistory.error;
 
         const totalIh = await prisma.insuranceHistory.findMany({
-          where: { AND: [{ ih_tobePatno: { contains: searchTerm } }, { ih_companyName: { contains: company } }] },
+          where: {
+            AND: [
+              { ih_tobePatno: { contains: searchTerm } },
+              { ih_companyName: { contains: company === "total" ? "" : company } },
+              { NOT: { ih_isDelete: true } },
+            ],
+          },
           orderBy: { ih_createdAt: orderBy },
         });
 
@@ -28,7 +34,13 @@ export default {
         const cursorOpt = cursor === 0 ? { take } : { take, skip: 0, cursor: { ih_id: cursorId } };
 
         const ih = await prisma.insuranceHistory.findMany({
-          where: { AND: [{ ih_tobePatno: { contains: searchTerm } }, { ih_companyName: { contains: company } }] },
+          where: {
+            AND: [
+              { ih_tobePatno: { contains: searchTerm } },
+              { ih_companyName: { contains: company === "total" ? "" : company } },
+              { NOT: { ih_isDelete: true } },
+            ],
+          },
           ...cursorOpt,
           orderBy: { ih_createdAt: orderBy },
         });
@@ -40,7 +52,7 @@ export default {
           });
           return {
             ih_id: ihData.ih_id,
-            createdAt: ihData.ih_createdAt,
+            createdAt: new Date(ihData.ih_createdAt).toISOString(),
             companyName: ihData.ih_companyName,
             reqNumber: ihData.ih_reqNumber,
             tobePatno: ihData.ih_tobePatno,

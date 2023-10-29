@@ -1,21 +1,62 @@
 type Mutation {
   """
   병원 정보 수정
+
+  *error
+  - err_00 : 병원정보 수정에 실패하였습니다.
   """
   updateHospital(
     """
     수정할 병원 id
     """
     hsp_id: Int!
-    hsp_img: Upload # 병원 이미지
-    hsp_name: String # 병원 이름 50자
-    hsp_chief: String # 병원 대표자 명 10자
-    hsp_hospitalNumber: String # 요양기관번호  20자?
-    hsp_businessNumber: String # 사업자번호 20자
-    hsp_address: String # 주소 검색 값 50자
-    hsp_detailAddress: String # 주소 검색 후 상세주소 50자
-    hsp_medicalDepartment: String # 진료과목 20자
-    hsp_kakaoChannelId: String # 카카오 채널 Id 50자
-    hsp_kakaoChannelUrl: String # 카카오 채널 url 50자
+    """
+    병원 이미지
+    """
+    hsp_img: Upload
+    """
+    병원 이름 50자
+    """
+    hsp_name: String
+    """
+    병원 대표자 명 10자
+    """
+    hsp_chief: String
+    """
+    요양기관번호  20자?
+    """
+    hsp_hospitalNumber: String
+    """
+    사업자번호 20자
+    """
+    hsp_businessNumber: String
+    """
+    주소 검색 값 50자
+    """
+    hsp_address: String
+    """
+    주소 검색 후 상세주소 50자
+    """
+    hsp_detailAddress: String
+    """
+    진료과목 20자
+    """
+    hsp_medicalDepartment: String
+    """
+    카카오 채널 Id 50자
+    """
+    hsp_kakaoChannelId: String
+    """
+    카카오 채널 url 50자
+    """
+    hsp_kakaoChannelUrl: String
+    """
+    문자 거래처 번호
+    """
+    hsp_messageTrId: String
+    """
+    문자 발신자 번호
+    """
+    hsp_messageSendNum: String
   ): Boolean
 }

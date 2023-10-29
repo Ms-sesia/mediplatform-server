@@ -6,23 +6,23 @@ const prisma = new PrismaClient();
 
 export default {
   Mutation: {
-    createOneOnOne: async (_, args, { request, isAuthenticated }) => {
+    updateOneOnOne: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { oneq_title, oneq_text, oneq_publicPrivate, attached } = args;
+      const { oneq_id, oneq_title, oneq_text, oneq_publicPrivate, attached, deleteAttached } = args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const storagePath = path.join(__dirname, "../../../../../../", "files");
 
-        const oneInquire = await prisma.oneOnOne.create({
+        const oneInquire = await prisma.oneOnOne.update({
+          where: { oneq_id },
           data: {
-            oneq_creatorId: loginUser.user_id,
-            oneq_creatorName: loginUser.user_name,
-            oneq_creatorRank: loginUser.user_rank,
+            oneq_editorId: loginUser.user_id,
+            oneq_editorName: loginUser.user_name,
+            oneq_editorRank: loginUser.user_rank,
             oneq_title,
             oneq_text,
             oneq_publicPrivate,
-            hospital: { connect: { hsp_id: user.hospital.hsp_id } },
           },
         });
 
@@ -58,9 +58,20 @@ export default {
           }
         }
 
+        if (deleteAttached.length) {
+          for (let i = 0; i < deleteAttached.length; i++) {
+            const onefile = await prisma.oneOnOneAttached.findUnique({ where: { oneAt_id: deleteAttached[i] } });
+            const fileName = onefile.oneAt_url.split("/")[3];
+            if (fs.existsSync(`${storagePath}/${fileName}`)) {
+              fs.unlinkSync(`${storagePath}/${fileName}`);
+            }
+            await prisma.oneOnOneAttached.delete({ where: { oneAt_id: deleteAttached[i] } });
+          }
+        }
+
         return true;
       } catch (e) {
-        console.log("일대일 문의 등록하기 실패. createOneOnOne", e);
+        console.log("일대일 문의 수정하기 실패. updateOneOnOne", e);
         throw new Error("err_00");
       }
     },

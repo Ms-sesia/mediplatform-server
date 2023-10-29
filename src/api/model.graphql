@@ -745,6 +745,14 @@ type faq {
   조회수
   """
   faq_viewCount: Int
+  """
+  좋아요 수
+  """
+  faq_likeCount: Int
+  """
+  내 좋아요 상태
+  """
+  faq_myLikeStatus: Boolean
 }
 
 """

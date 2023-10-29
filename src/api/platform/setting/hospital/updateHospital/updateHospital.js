@@ -21,6 +21,8 @@ export default {
         hsp_medicalDepartment,
         hsp_kakaoChannelId,
         hsp_kakaoChannelUrl,
+        hsp_messageTrId,
+        hsp_messageSendNum,
       } = args;
       try {
         const storagePath = path.join(__dirname, "../../../../../../", "images");
@@ -76,13 +78,15 @@ export default {
             hsp_medicalDepartment,
             hsp_kakaoChannelId,
             hsp_kakaoChannelUrl,
+            hsp_messageTrId,
+            hsp_messageSendNum,
           },
         });
 
         return true;
       } catch (e) {
         console.log("병원 정보 수정 실패. updateHospital", e);
-        throw new Error("병원 정보 수정에 실패하였습니다.");
+        throw new Error("err_00");
       }
     },
   },

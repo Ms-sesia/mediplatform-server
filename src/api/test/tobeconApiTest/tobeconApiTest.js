@@ -55,10 +55,11 @@ export default {
           if (!checkInsure.length) {
             // 요청번호 증가
             reqNum = i === 0 ? ihNum + 1 : ihNum + i + 1;
+            const dateForNum = today.toISOString().split("T")[0].replaceAll("-", "");
             const createIh = await prisma.insuranceHistory.create({
               data: {
                 ih_companyName: "tobecon",
-                ih_reqNumber: `${Date.now()}-${reqNum}`,
+                ih_reqNumber: `${dateForNum}-${reqNum}`,
                 ih_tobeUnique: insHistory[i].unique,
                 ih_tobePatno: insHistory[i].patno,
                 ih_tobeDate: insHistory[i].date,

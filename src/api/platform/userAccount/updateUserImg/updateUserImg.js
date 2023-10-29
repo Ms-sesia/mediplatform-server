@@ -20,7 +20,7 @@ export default {
           const userImgName = loginUser.user_img.split("/")[3];
           if (loginUser.user_img) {
             if (fs.existsSync(`${storagePath}/${userImgName}`)) {
-              fs.unlinkSync(`${storagePath}/${hsp_fileName}`);
+              fs.unlinkSync(`${storagePath}/${userImgName}`);
             }
           }
           const { createReadStream, filename, encoding, mimetype } = await user_img;
@@ -44,9 +44,7 @@ export default {
 
           await prisma.user.update({
             where: { user_id: user.user_id },
-            data: {
-              user_img: userImgUrl,
-            },
+            data: { user_img: userImgUrl },
           });
         } else throw 1;
 

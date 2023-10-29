@@ -18,5 +18,9 @@ type Mutation {
     수신자 이름
     """
     receiverName: String
+    """
+    예약 발송 여부
+    """
+    resSend: Boolean
   ): Boolean
 }

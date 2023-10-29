@@ -14,7 +14,7 @@ export default {
             AND: [
               { hsp_id: user.hospital.hsp_id },
               { oneq_isDelete: false },
-              { oneq_status: answerStatus === "total" ? undefined : answerStatus === "public" ? true : false },
+              { oneq_status: answerStatus === "total" ? undefined : answerStatus === "answered" ? true : false },
             ],
           },
           orderBy: { oneq_createdAt: orderBy },
@@ -34,7 +34,7 @@ export default {
             AND: [
               { hsp_id: user.hospital.hsp_id },
               { oneq_isDelete: false },
-              { oneq_status: answerStatus === "total" ? undefined : answerStatus === "public" ? true : false },
+              { oneq_status: answerStatus === "total" ? undefined : answerStatus === "answered" ? true : false },
             ],
           },
           select: {
@@ -50,8 +50,10 @@ export default {
           orderBy: { oneq_createdAt: orderBy },
         });
 
-        const inquireList = inquire.map((iq) => {
+        const inquireList = inquire.map(async (iq) => {
+          const creator = await prisma.user.findUnique({ where: { user_id: iq.oneq_creatorId } });
           iq.oneq_createdAt = new Date(iq.oneq_createdAt).toISOString();
+          iq.oneq_creatorImg = creator.user_img;
           return iq;
         });
 

@@ -1,0 +1,14 @@
+type Mutation {
+  """
+  보험청구 요청 기록 삭제
+
+  * error
+  - err_00 : 보험청구 요청 기록 삭제에 실패하였습니다.
+  """
+  deleteInsuranceRequest(
+    """
+    보험청구 기록 요청 id
+    """
+    ih_id: Int!
+  ): Boolean
+}

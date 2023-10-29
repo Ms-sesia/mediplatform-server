@@ -7,10 +7,12 @@ export default {
     seeRank: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { hsp_id } = args;
       try {
+        const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const rankList = await prisma.rank.findMany({
-          where: { AND: [{ rank_isDelete: false }, { hsp_id }, { NOT: { rank_name: "대표원장" } }] },
+          where: {
+            AND: [{ rank_isDelete: false }, { hsp_id: user.hospita.hsp_id }, { NOT: { rank_name: "대표원장" } }],
+          },
           orderBy: { rank_name: "asc" },
         });
 

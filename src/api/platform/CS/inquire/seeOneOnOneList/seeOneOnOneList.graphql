@@ -10,8 +10,8 @@ type Query {
     공개 비공개 여부.
 
     - total : 전체
-    - public : 공개
-    - private : 비공개
+    - answered : 답변
+    - unanswered : 미답변
     """
     answerStatus: String
     """
@@ -46,6 +46,10 @@ type oneOnOneList {
   작성자(사용자) id
   """
   oneq_creatorId: Int
+  """
+  작성자 이미지
+  """
+  oneq_creatorImg: String
   """
   일대일 문의 질문 제목
   """

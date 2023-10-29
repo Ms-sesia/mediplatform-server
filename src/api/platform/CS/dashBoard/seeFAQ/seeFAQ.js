@@ -30,9 +30,19 @@ export default {
           orderBy: { faq_createdAt: "desc" },
         });
 
-        const faqListTimeConv = faqList.map((faq) => {
+        const faqListTimeConv = faqList.map(async (faq) => {
           faq.faq_createdAt = new Date(faq.faq_createdAt).toISOString();
           faq.faq_updatedAt = new Date(faq.faq_updatedAt).toISOString();
+
+          const faqLikeCount = await prisma.faqLike.count({
+            where: { AND: [{ faq_id: faq.faq_id }, { fl_like: true }] },
+          });
+
+          const myLikeStatus = await prisma.faqLike.findFirst({
+            where: { AND: [{ user_id: user.user_id }, { faq_id: faq.faq_id }] },
+          });
+          faq.faq_likeCount = faqLikeCount;
+          faq.faq_myLikeStatus = myLikeStatus ? myLikeStatus.fl_like : false;
 
           return faq;
         });

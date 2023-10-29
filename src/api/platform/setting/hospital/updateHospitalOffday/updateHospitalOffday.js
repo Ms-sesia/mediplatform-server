@@ -74,14 +74,14 @@ export default {
               // 월간 고정 생성
               await prisma.monthOffday.create({
                 data: {
-                  mo_creatorId: loginUser.user_id,
-                  mo_creatorName: loginUser.user_name,
-                  mo_creatorRank: loginUser.user_rank,
-                  mo_offStartDate: start,
-                  mo_offEndDate: end,
-                  mo_offStartTime: offStartTime,
-                  mo_offEndTime: offEndTime,
-                  mo_memo: memo,
+                  fo_creatorId: loginUser.user_id,
+                  fo_creatorName: loginUser.user_name,
+                  fo_creatorRank: loginUser.user_rank,
+                  fo_startDate: start,
+                  fo_endDate: end,
+                  fo_startTime: offStartTime,
+                  fo_endTime: offEndTime,
+                  fo_memo: memo,
                   hospital: { connect: { hsp_id: user.hospital.hsp_id } },
                 },
               });
@@ -146,14 +146,14 @@ export default {
               // 월간 고정 생성
               await prisma.monthOffday.create({
                 data: {
-                  mo_creatorId: loginUser.user_id,
-                  mo_creatorName: loginUser.user_name,
-                  mo_creatorRank: loginUser.user_rank,
-                  mo_offStartDate: start,
-                  mo_offEndDate: end,
-                  mo_offStartTime: offStartTime,
-                  mo_offEndTime: offEndTime,
-                  mo_memo: memo,
+                  fo_creatorId: loginUser.user_id,
+                  fo_creatorName: loginUser.user_name,
+                  fo_creatorRank: loginUser.user_rank,
+                  fo_startDate: start,
+                  fo_endDate: end,
+                  fo_startTime: offStartTime,
+                  fo_endTime: offEndTime,
+                  fo_memo: memo,
                   hospital: { connect: { hsp_id: user.hospital.hsp_id } },
                 },
               });
@@ -223,10 +223,10 @@ export default {
                   fo_editorId: loginUser.user_id,
                   fo_editorName: loginUser.user_name,
                   fo_editorRank: loginUser.user_rank,
-                  fo_offStartDate: start,
-                  fo_offEndDate: end,
-                  fo_offStartTime: offStartTime,
-                  fo_offEndTime: offEndTime,
+                  fo_startDate: start,
+                  fo_endDate: end,
+                  fo_startTime: offStartTime,
+                  fo_endTime: offEndTime,
                   fo_memo: memo,
                 },
               });

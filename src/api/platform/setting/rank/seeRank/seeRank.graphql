@@ -2,12 +2,7 @@ type Query {
   """
   직책 조회
   """
-  seeRank(
-    """
-    접속한 병원 id
-    """
-    hsp_id: Int!
-  ): seeRankInfo
+  seeRank: seeRankInfo
 }
 
 type seeRankInfo {

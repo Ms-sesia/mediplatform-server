@@ -30,6 +30,10 @@ type seeOneOnOneDetailInfo {
   """
   oneq_creatorId: Int
   """
+  작성자 이미지
+  """
+  oneq_creatorImg: String
+  """
   일대일 문의 질문 제목
   """
   oneq_title: String
@@ -52,7 +56,7 @@ type seeOneOnOneDetailInfo {
   """
   답변(댓글)
   """
-  oneOnOneAnswer: [oneOnOneAnswer]
+  oneOnOneAnswer: oneOnOneAnswer
 }
 
 """
@@ -81,8 +85,8 @@ type oneOnOneAnswer {
   oneAn_id: Int
   oneAn_createdAt: String
   """
-  관리자 답변 혹은 사용자 댓글. 
-  
+  관리자 답변 혹은 사용자 댓글.
+
   - true:관리자 -> adminCreatorName사용
   - false:사용자 -> creatorName 사용
   """

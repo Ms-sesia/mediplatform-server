@@ -8,7 +8,9 @@ export default {
     sendPrcompanySMSTest: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { textMsg, cellphone, receiverName } = args;
+      const { patientName, textMsg, cellphone, receiverName, resSend } = args;
+
+      const hospital = await prisma.hospital.findUnique({ where: { hsp_id: user.hospital.hsp_id } });
 
       const mssqlConfig = {
         user: process.env.PR_USER_ID,
@@ -23,8 +25,19 @@ export default {
           tdsVersion: "7_4", // 예: TDS 버전 7.4 사용. 필요에 따라 버전을 조정하세요.
         },
       };
+      const today = new Date();
+      const offsetTime = 1000 * 60 * 60 * 9; // 한국시간 GMT+9 에 맞추기 위한 +9
+      const calTimeMs = 1000 * 60 * 1; // 1분
+      const nowTime = new Date().getTime() + offsetTime;
+      const sendTime = new Date(nowTime + calTimeMs);
 
-      const nowTime = new Date();
+      const alimTemplate = await prisma.resAlimTemplate.findUnique({
+        where: { rat_id: 1 },
+      });
+
+      const text = alimTemplate.rat_text;
+      console.log(text);
+
       try {
         await mssql.connect(mssqlConfig);
         const result = await mssql.query`
@@ -43,7 +56,7 @@ export default {
         VALUES
           (
             ${process.env.PR_AUTH_ID},
-            ${nowTime},
+            ${sendTime},
             '0',
             '0',
             ${cellphone},
@@ -51,7 +64,8 @@ export default {
             ${textMsg},
             'N',
             ${receiverName}
-          ); `;
+            ); `;
+        // ${resSend ? "Y" : "N"},
         console.log(result);
 
         return true;

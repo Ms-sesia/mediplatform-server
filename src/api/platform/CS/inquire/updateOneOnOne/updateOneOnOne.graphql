@@ -1,0 +1,33 @@
+type Mutation {
+  """
+  일대일 문의 수정하기
+
+  * error
+  - err_00 : 일대일 문의 등록하기에 실패하였습니다.
+  """
+  updateOneOnOne(
+    """
+    일대일 문의 id
+    """
+    oneq_id: Int!
+    """
+    일대일 문의 질문 제목
+    """
+    oneq_title: String
+    """
+    일대일 문의 질문 내용
+    """
+    oneq_text: String
+    """
+    공개 비공개 여부.
+
+    false: 비공개, true: 공개
+    """
+    oneq_publicPrivate: Boolean
+    attached: [Upload]
+    """
+    삭제할 파일 ids
+    """
+    deleteAttached: [Int]
+  ): Boolean
+}

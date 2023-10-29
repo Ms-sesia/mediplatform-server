@@ -9,10 +9,10 @@ export default {
       const { user } = request;
       const { time } = args;
       try {
-        console.log("입력 값:", time);
-        console.log("입력 값:", typeof time);
-        console.log("Date객체:", new Date(time));
-        console.log("toISOStrig:", new Date(time).toISOString());
+        const today = new Date();
+        // const dateForNum = today.toISOString().split("T").replace("-", "");
+        const dateForNum = today.toISOString().split("T")[0].replaceAll("-", "");
+        console.log(dateForNum);
 
         return true;
       } catch (e) {

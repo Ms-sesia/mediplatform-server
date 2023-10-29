@@ -3,7 +3,7 @@ module.exports = {
     {
       name: "mediplatform_server",
       script: "./src/server-register.js",
-      instances: 2,
+      instances: 1,
       exec_mode: "cluster",
       watch: false,
       env: {
