@@ -67,9 +67,7 @@ export default {
         // =============================================================== 병원 휴무 구하기
         const hspOffDay = (
           await prisma.hospitalOffday.findMany({
-            where: {
-              AND: [{ hsp_id: user.hospital.hsp_id }, { ho_isDelete: false }],
-            },
+            where: { AND: [{ hsp_id: user.hospital.hsp_id }, { ho_isDelete: false }] },
             select: { ho_offStartDate: true, ho_offEndDate: true },
           })
         ).map((hspOffDay) => {
@@ -81,9 +79,7 @@ export default {
 
         const hspMonthOffDay = (
           await prisma.monthOffday.findMany({
-            where: {
-              AND: [{ hsp_id: user.hospital.hsp_id }, { fo_isDelete: false }],
-            },
+            where: { AND: [{ hsp_id: user.hospital.hsp_id }, { fo_isDelete: false }] },
             select: { fo_startDate: true, fo_endDate: true },
           })
         ).map((monthOffDay) => {
@@ -95,9 +91,7 @@ export default {
 
         const hspWeekOffDay = (
           await prisma.weekOffday.findMany({
-            where: {
-              AND: [{ hsp_id: user.hospital.hsp_id }, { wo_isDelete: false }],
-            },
+            where: { AND: [{ hsp_id: user.hospital.hsp_id }, { wo_isDelete: false }] },
             select: { wo_startDate: true, wo_endDate: true },
           })
         ).map((weekOffday) => {
@@ -263,9 +257,10 @@ const generateFixedDays = (month, year, hspOffDay, monthOffdays, weekOffdays) =>
   // weekOffday 처리
   weekOffdays.forEach((offday) => {
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(year, month - 1, day, 9).getDate();
-      if (date.getDay() >= offday.wo_startDate.getDay() && date.getDay() <= offday.wo_endDate.getDay()) {
-        fixedDays.push(date);
+      const date = new Date(year, month - 1, day, 9);
+
+      if (date.getDay() >= offday.startDate.getDay() && date.getDay() <= offday.endDate.getDay()) {
+        fixedDays.push(date.getDate());
       }
     }
   });

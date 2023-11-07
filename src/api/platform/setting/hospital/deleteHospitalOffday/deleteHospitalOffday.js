@@ -10,8 +10,8 @@ export default {
       const { user } = request;
       const { deleteId, aldyoffdayRepeat } = args;
       try {
+        console.log("deleteHospitalOffday: ", args);
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
-
         switch (aldyoffdayRepeat) {
           case "none":
             await prisma.hospitalOffday.update({
@@ -44,8 +44,8 @@ export default {
                 fo_editorId: loginUser.user_id,
                 fo_editorName: loginUser.user_name,
                 fo_editorRank: loginUser.user_rank,
-                fo_isDelete: start,
-                fo_deleteDate: end,
+                fo_isDelete: true,
+                fo_deleteDate: new Date(),
               },
             });
             break;

@@ -7,7 +7,7 @@ export default {
     createRank: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { rank_name } = args;
+      const { rank_name, home, reservation, schedule, patient, did, insurance, cs, setting } = args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
@@ -27,6 +27,14 @@ export default {
             rp_creatorId: loginUser.user_id,
             rp_creatorName: loginUser.user_name,
             rp_creatorRank: loginUser.user_rank,
+            rp_home: home,
+            rp_reservation: reservation,
+            rp_schedule: schedule,
+            rp_patient: patient,
+            rp_did: did,
+            rp_insurance: insurance,
+            rp_cs: cs,
+            rp_setting: setting,
             rank: { connect: { rank_id: rank.rank_id } },
           },
         });

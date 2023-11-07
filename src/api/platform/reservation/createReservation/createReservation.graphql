@@ -4,6 +4,8 @@ type Mutation {
 
   * error
   - err_00 : 예약자 등록에 실패하였습니다.
+  - err_01 : 문자 전송을 위한 거래처 번호가 없습니다.
+  - err_02 : 문자 전송을 위한 발신자 번호가 없습니다.
   """
   createReservation(
     """

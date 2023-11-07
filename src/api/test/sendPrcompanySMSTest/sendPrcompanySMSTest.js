@@ -36,7 +36,6 @@ export default {
       });
 
       const text = alimTemplate.rat_text;
-      console.log(text);
 
       try {
         await mssql.connect(mssqlConfig);
@@ -55,18 +54,18 @@ export default {
           )
         VALUES
           (
-            ${process.env.PR_AUTH_ID},
+            ${hospital.hsp_messageTrId},
             ${sendTime},
             '0',
             '0',
             ${cellphone},
-            ${process.env.PR_CALLBACK_PHONE},
+            ${hospital.hsp_messageSendNum},
             ${textMsg},
             'N',
             ${receiverName}
             ); `;
         // ${resSend ? "Y" : "N"},
-        console.log(result);
+        console.log("문자 테스트 전송 결과:", result);
 
         return true;
       } catch (e) {

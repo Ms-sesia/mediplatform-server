@@ -41,7 +41,7 @@ export default {
 
         if (!reservationDateList.length) return [];
 
-        let byMonthData = transformData(reservationDateList);
+        let byMonthData = transformData(month, reservationDateList);
         const byMonthDataSort = byMonthData.map((monData) => {
           const sortMonData = timeSort(monData.byDateReservationInfo);
           return sortMonData;
@@ -56,8 +56,8 @@ export default {
   },
 };
 
-const transformData = (data) => {
-  // 일자별로 데이터를 그룹화합니다.
+const transformData = (month, data) => {
+  // 일자별로 데이터를 그룹화
   let dateGrouped = data.reduce((acc, resData, idx) => {
     if (!acc[resData.re_date]) {
       acc[resData.re_date] = [];
@@ -80,6 +80,7 @@ const transformData = (data) => {
     }));
 
     result.push({
+      month,
       date: parseInt(date),
       totalResCount: dateGrouped[date].length,
       byDateReservationInfo: byDateInfo,

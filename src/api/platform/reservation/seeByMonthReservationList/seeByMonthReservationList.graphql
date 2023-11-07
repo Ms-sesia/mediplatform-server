@@ -49,6 +49,10 @@ type Query {
 type seeByMonthReservationListInfo {
   # totalLength: Int
   """
+  월 - 추가됨
+  """
+  month: Int
+  """
   일자
   """
   date: Int

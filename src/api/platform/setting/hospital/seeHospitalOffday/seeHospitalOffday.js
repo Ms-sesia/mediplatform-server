@@ -18,6 +18,9 @@ export default {
         //  cursor
       } = args;
       try {
+        const createSearchHistory = await searchHistory(searchTerm, user.user_id);
+        if (!createSearchHistory.status) throw createSearchHistory.error;
+
         const startDate = new Date(year, month - 1, 1, 9);
         const endDate = new Date(year, month, 1, 9);
 
@@ -36,7 +39,6 @@ export default {
               AND: [{ hsp_id: user.hospital.hsp_id }, { wo_isDelete: false }, { wo_memo: { contains: searchTerm } }],
             },
           });
-
           fixedDays = generateFixedDaysForMonth(month, year, aldyMonthFixed, aldyWeekFixed);
         }
 
@@ -59,16 +61,13 @@ export default {
           });
         }
 
-        const createSearchHistory = await searchHistory(searchTerm, user.user_id);
-        if (!createSearchHistory.status) throw createSearchHistory.error;
-
         const combinedDays = [
           ...fixedDays,
           ...tempHospitalOffday.map((day) => {
             const startDate = new Date(day.ho_offStartDate);
             const endDate = new Date(day.ho_offEndDate);
             return {
-              id: day.ho_id,
+              ho_id: day.ho_id,
               offType: "temp",
               startDate: startDate.toISOString(),
               startDay: weekdays[startDate.getDay()],
@@ -76,7 +75,7 @@ export default {
               endDay: weekdays[endDate.getDay()],
               // date: day.ho_offStartDate,
               // day: weekdays[date.getDay()],
-              reType: "temp",
+              reType: "none",
               startTime: day.ho_offStartTime,
               endTime: day.ho_offEndTime,
               memo: day.ho_memo,
@@ -106,30 +105,27 @@ const generateFixedDaysForMonth = (month, year, monthOffdays, weekOffdays) => {
 
   // monthOffday 처리
   monthOffdays.forEach((offday) => {
-    let startDay = offday.fo_startDate.getDate();
-    let endDay = offday.fo_endDate.getDate();
-
-    for (let day = startDay; day <= endDay; day++) {
-      const startDate = new Date(offday.fo_startDate);
-      const endDate = new Date(offday.fo_endDate);
-      const date = new Date(year, month - 1, day);
-      fixedDays.push({
-        id: offday.fo_id,
-        offType: "fix", //휴무구분 (임시, 고정)
-        startDate: startDate.toISOString(),
-        startDay: weekdays[startDate.getDay()],
-        endDate: endDate.toISOString(),
-        endDay: weekdays[endDate.getDay()],
-        // date: new Date(year, month - 1, day),
-        // day: weekdays[date.getDay()],
-        reType: "month", // 반복 구분
-        startTime: offday.fo_startTime,
-        endTime: offday.fo_endTime,
-        memo: offday.fo_memo,
-        createdAt: new Date(offday.fo_createdAt).toISOString(),
-        creatorName: offday.fo_creatorName,
-      });
-    }
+    // for (let day = startDay; day <= endDay; day++) {
+    const startDate = new Date(offday.fo_startDate);
+    const endDate = new Date(offday.fo_endDate);
+    // const date = new Date(year, month - 1, day);
+    fixedDays.push({
+      ho_id: offday.fo_id,
+      offType: "fix", //휴무구분 (임시, 고정)
+      startDate: startDate.toISOString(),
+      startDay: weekdays[startDate.getDay()],
+      endDate: endDate.toISOString(),
+      endDay: weekdays[endDate.getDay()],
+      // date: new Date(year, month - 1, day),
+      // day: weekdays[date.getDay()],
+      reType: "month", // 반복 구분
+      startTime: offday.fo_startTime,
+      endTime: offday.fo_endTime,
+      memo: offday.fo_memo,
+      createdAt: new Date(offday.fo_createdAt).toISOString(),
+      creatorName: offday.fo_creatorName,
+    });
+    // }
   });
 
   // weekOffday 처리
@@ -140,11 +136,13 @@ const generateFixedDaysForMonth = (month, year, monthOffdays, weekOffdays) => {
       const date = new Date(year, month - 1, day);
       if (date.getDay() >= offday.wo_startDate.getDay() && date.getDay() <= offday.wo_endDate.getDay()) {
         fixedDays.push({
-          id: offday.wo_id,
+          ho_id: offday.wo_id,
           offType: "fix", //휴무구분 (임시, 고정)
-          startDate: startDate.toISOString(),
+          // startDate: startDate.toISOString(),
+          startDate: date.toISOString(),
           startDay: weekdays[startDate.getDay()],
-          endDate: endDate.toISOString(),
+          // endDate: endDate.toISOString(),
+          endDate: date.toISOString(),
           endDay: weekdays[endDate.getDay()],
           // date,
           // day: weekdays[date.getDay()],

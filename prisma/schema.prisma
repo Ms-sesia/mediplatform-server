@@ -321,7 +321,7 @@ model userPhoneAuthCode {
   upac_id        Int      @id @default(autoincrement())
   upac_createdAt DateTime @default(now())
   upac_code      String   @default("") @db.VarChar(10) // 인증코드 6자리
-  upac_cellphone String   @default("") @db.VarChar(25) // 힌증받을 핸드폰번호
+  upac_cellphone String   @default("") @db.VarChar(25) // 인증받을 핸드폰번호
   user           user     @relation(fields: [user_id], references: [user_id])
   user_id        Int
 }
@@ -440,7 +440,7 @@ model reservation {
 model resAlim {
   ra_id         Int         @id @default(autoincrement())
   ra_type       resAlimType @default(sms) // 예약 문자 / 카카오톡
-  ra_time1      Boolean     @default(false) // 발송시간 - 즉시
+  ra_time1      Boolean     @default(true) // 발송시간 - 즉시
   ra_time2      Boolean     @default(false) // 발송시간 - 1일전
   ra_time3      Boolean     @default(false) // 발송시간 - 2일전
   ra_time4      Boolean     @default(false) // 발송시간 - 당일오전9시
@@ -773,6 +773,12 @@ model didLowMsg {
 // did 진료실 정보 - 설정에서 진료실 생성할 때 did가 있으면 생성, 삭제하면 삭제 // did만들 때도 진료실 있으면 생성
 model didDoctorRoom {
   ddr_id             Int       @id @default(autoincrement())
+  ddr_updatedAt      DateTime  @updatedAt // 수정일
+  ddr_editorName     String    @default("") @db.VarChar(25) // 수정자 이름
+  ddr_editorRank     String    @default("") @db.VarChar(25) // 수정자 직책
+  ddr_editorId       Int       @default(0) // 수정자 id
+  ddr_isDelete       Boolean   @default(false) // 삭제 여부
+  ddr_deleteDate     DateTime? // 삭제일
   ddr_info           String    @default("") @db.VarChar(25) // 진료실 정보
   ddr_number         Int       @default(0) // 표기 순위
   ddr_dayOff         Boolean   @default(false) // 휴진 여부
@@ -780,12 +786,6 @@ model didDoctorRoom {
   ddr_doctorRoomName String    @default("") @db.VarChar(50) // 진료실 이름
   ddr_viewSelect     Boolean   @default(true) // 선택한 진료실 보여주기. true: 보여주기, false: 안보여주기
   ddr_doctorName     String    @default("") @db.VarChar(25) // 진료의사명
-  ddr_updatedAt      DateTime  @updatedAt // 수정일
-  ddr_editorName     String    @default("") @db.VarChar(25) // 수정자 이름
-  ddr_editorRank     String    @default("") @db.VarChar(25) // 수정자 직책
-  ddr_editorId       Int       @default(0) // 수정자 id
-  ddr_isDelete       Boolean   @default(false) // 삭제 여부
-  ddr_deleteDate     DateTime? // 삭제일
   did                did       @relation(fields: [did_id], references: [did_id])
   did_id             Int
 }
@@ -794,6 +794,11 @@ model didDoctorRoom {
 model insuranceHistory {
   ih_id                 Int             @id @default(autoincrement())
   ih_createdAt          DateTime        @default(now())
+  ih_editorName         String          @default("") @db.VarChar(25) // 수정자(삭제자) 이름
+  ih_editorRank         String          @default("") @db.VarChar(25) // 수정자(삭제자) 직책
+  ih_editorId           Int             @default(0) // 수정자(삭제자) id
+  ih_isDelete           Boolean         @default(false) // 삭제 여부
+  ih_deleteDate         DateTime? // 삭제일
   ih_companyName        String          @default("") @db.VarChar(25) // 요청 업체 명 20자(투비콘 - tobecon / 하이웹넷 - hiweb)
   ih_reqNumber          String          @default("") @db.VarChar(65) // 요청번호 50자 - 자체 생성
   ih_tobeUnique         String          @default("") @db.VarChar(50) // 투비콘 - 요청 유니크 값
@@ -803,14 +808,9 @@ model insuranceHistory {
   ih_patientChartNumber String          @default("") @db.VarChar(25) // 요청환자 차트번호
   ih_patientName        String          @default("") @db.VarChar(20) // 환자 이름 
   ih_status             insuranceStatus @default(processing) // 진행상태, 진행중 / 실패 / 완료
-  ih_editorName         String          @default("") @db.VarChar(25) // 수정자(삭제자) 이름
-  ih_editorRank         String          @default("") @db.VarChar(25) // 수정자(삭제자) 직책
   ih_receipt            String          @default("") @db.VarChar(250) // 영수증 파일
   ih_prescription       String          @default("") @db.VarChar(250) // 처방전 파일
   ih_detail             String          @default("") @db.VarChar(250) // 세부내역서 파일
-  ih_editorId           Int             @default(0) // 수정자(삭제자) id
-  ih_isDelete           Boolean         @default(false) // 삭제 여부
-  ih_deleteDate         DateTime? // 삭제일
   ihText                ihText[]
   hospital              hospital        @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id                Int
@@ -945,9 +945,6 @@ model faq {
   faq_id              Int       @id @default(autoincrement())
   faq_createdAt       DateTime  @default(now())
   faq_updatedAt       DateTime  @updatedAt // 수정일
-  faq_question        String    @default("") @db.VarChar(250) // 질문
-  faq_answer          String    @default("") @db.VarChar(250) // 답변
-  faq_viewCount       Int       @default(0) // 조회수
   faq_creatorName     String    @default("") @db.VarChar(20) // 작성자 이름
   faq_creatorRank     String    @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
   faq_creatorId       Int       @default(0) // 작성자(사용자) id
@@ -956,6 +953,9 @@ model faq {
   faq_adminEditorId   Int       @default(0) // 수정자 id
   faq_isDelete        Boolean   @default(false) // 삭제 여부
   faq_deleteDate      DateTime? // 삭제일
+  faq_question        String    @default("") @db.VarChar(250) // 질문
+  faq_answer          String    @default("") @db.VarChar(250) // 답변
+  faq_viewCount       Int       @default(0) // 조회수
   faqLike             faqLike[]
 }
 

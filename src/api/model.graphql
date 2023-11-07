@@ -945,6 +945,7 @@ type rank {
   직책명
   """
   rank_name: String
+  rank_permission: rankPermission
 }
 
 """

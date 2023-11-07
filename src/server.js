@@ -51,15 +51,20 @@ const PORT = process.env.SERVER_PORT;
   app.use(express.static(path.join(__dirname, "../", "images")));
   app.use(express.static(path.join(__dirname, "../", "files")));
   app.use(express.static(path.join(__dirname, "../", "didMedia")));
-  app.use(graphqlUploadExpress()); // graphql 파일업로드
-
+  
   tobeSchedule();
-
+  
   const corsOptions = {
     // origin: ["https://mediplatform.platcube.com"],
     // optionsSuccessStatus: 200,
   };
 
+  app.use(json());
+  app.use(express.urlencoded({ extended: false }));
+  app.use("/api", apiRoute);
+  
+  app.use(graphqlUploadExpress()); // graphql 파일업로드
+  
   app.use(
     "/graphql",
     cors(corsOptions),
@@ -67,10 +72,6 @@ const PORT = process.env.SERVER_PORT;
     json(),
     expressMiddleware(server, { context: async ({ req }) => ({ request: req, isAuthenticated }) })
   );
-
-  app.use(json());
-  app.use(express.urlencoded({ extended: false }));
-  app.use("/api", apiRoute);
 
   await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
   console.log(`Server ready at http://localhost:${PORT}`);

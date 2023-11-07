@@ -12,7 +12,6 @@ export default {
         const today = new Date();
         // const dateForNum = today.toISOString().split("T").replace("-", "");
         const dateForNum = today.toISOString().split("T")[0].replaceAll("-", "");
-        console.log(dateForNum);
 
         return true;
       } catch (e) {

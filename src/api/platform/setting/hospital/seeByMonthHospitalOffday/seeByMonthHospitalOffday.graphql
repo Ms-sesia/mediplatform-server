@@ -1,0 +1,75 @@
+type Query {
+  """
+  월별 휴무일정 조회
+
+  - 정렬 및 필터에서 날짜만 선택 가능할 것 같음
+
+  * error
+  - err_01: 월별 병원 휴무일정 조회 실패하였습니다.
+  """
+  seeByMonthHospitalOffday(
+    """
+    검색어 - 메모 검색
+    """
+    searchTerm: String
+    year: Int!
+    month: Int!
+    """
+    병원 휴일 구분 - 전체(조회만) : total / 임시 : temp / 고정 : fix
+    """
+    offType: hospitalOffdayType
+  ): [byMonthOffday]
+}
+
+"""
+월별 병원 쉬는날
+"""
+type byMonthOffday {
+  """
+  월
+  """
+  month: Int
+  """
+  일
+  """
+  date: Int
+  """
+  근무 구분 - 운영: work / 휴일: offDay
+  """
+  workType: String
+  """
+  운영 시작 : 시간
+  """
+  workStartHour: Int
+  """
+  운영 시작 : 분
+  """
+  workStartMin: Int
+  """
+  운영 종료 : 시간
+  """
+  workEndHour: Int
+  """
+  운영 종료 : 분
+  """
+  workEndMin: Int
+  """
+  병원의 요일별 운영시간 설정 여부.
+
+  - 있음, 휴무일 : true
+  - 없음: false
+  """
+  scheduleCheck: Boolean
+  """
+  휴일 구분 - 임시:temp, 고정:fix
+  """
+  offType: String
+  """
+  반복
+
+  * 반복없음 : none
+  * 매월반복 : month
+  * 매주반복 : week
+  """
+  reType: String
+}

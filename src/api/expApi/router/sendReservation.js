@@ -49,7 +49,7 @@ router.post("/", async (req, res) => {
         },
       });
 
-      console.log("예약 생성:", reservations[i]);
+      console.log("route 예약 생성:", reservations[i]);
     } catch (e) {
       console.log(`예약정보 생성 에러. ${e}\n실패 예약정보 환자 차트번호: ${reservations[i].re_chartNumber}`);
       failEmrIds.push(reservations[i].re_emrId);

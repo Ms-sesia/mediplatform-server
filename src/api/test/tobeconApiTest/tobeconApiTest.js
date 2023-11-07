@@ -13,6 +13,7 @@ export default {
         const getUrl = "https://dev.tobecon.io";
         const getRoute = "/api/emr/addition";
 
+        // 투비콘 전송 정보
         const params = {
           unique: "21FA05DF-E8CF-47BD-9116-0F9E8F19A5A4",
           patno: "P000001",
@@ -33,6 +34,7 @@ export default {
         const startToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         const endToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
 
+        // 요청번호 확인(오늘 만들어진 번호 확인)
         const findIhNum = await prisma.ihNum.findFirst({
           where: { ihn_createdAt: { gte: startToday, lte: endToday } },
         });
@@ -53,27 +55,29 @@ export default {
 
           // 없으면 생성
           if (!checkInsure.length) {
+            console.log(insHistory[i]);
             // 요청번호 증가
             reqNum = i === 0 ? ihNum + 1 : ihNum + i + 1;
             const dateForNum = today.toISOString().split("T")[0].replaceAll("-", "");
-            const createIh = await prisma.insuranceHistory.create({
-              data: {
-                ih_companyName: "tobecon",
-                ih_reqNumber: `${dateForNum}-${reqNum}`,
-                ih_tobeUnique: insHistory[i].unique,
-                ih_tobePatno: insHistory[i].patno,
-                ih_tobeDate: insHistory[i].date,
-                ih_tobeClaimDate: insHistory[i].claimDate,
-                hospital: { connect: { hsp_id: hospital.hsp_id } },
-              },
-            });
+            // const createIh = await prisma.insuranceHistory.create({
+            //   data: {
+            //     ih_companyName: "tobecon",
+            //     ih_reqNumber: `${dateForNum}-${reqNum}`,
+            //     ih_tobeUnique: insHistory[i].unique,
+            //     ih_tobePatno: insHistory[i].patno,
+            //     ih_tobeDate: insHistory[i].date,
+            //     ih_tobeClaimDate: insHistory[i].claimDate,
+            //     hospital: { connect: { hsp_id: hospital.hsp_id } },
+            //   },
+            // });
 
-            await prisma.ihText.create({
-              data: {
-                iht_text: `투비콘에서 환자번호[${insHistory[i].patno}]의 실손보험요청 받았어요.`,
-                insuranceHistory: { connect: { ih_id: createIh.ih_id } },
-              },
-            });
+            // // 청구 요청 내용 기록
+            // await prisma.ihText.create({
+            //   data: {
+            //     iht_text: `투비콘에서 환자번호[${insHistory[i].patno}]의 실손보험요청 받았어요.`,
+            //     insuranceHistory: { connect: { ih_id: createIh.ih_id } },
+            //   },
+            // });
 
             const reqInsureData = {
               SendStatus: "reqInsureData",
@@ -85,35 +89,35 @@ export default {
             if (returnPub) {
               // 요청 실패
               console.log("요청 성공. unique:", insHistory[i].unique);
-              await prisma.ihText.create({
-                data: {
-                  iht_text: `플랫폼 -> EMR로 데이터를 요청하였습니다.`,
-                  insuranceHistory: { connect: { ih_id: createIh.ih_id } },
-                },
-              });
+              // await prisma.ihText.create({
+              //   data: {
+              //     iht_text: `플랫폼 -> EMR로 데이터를 요청하였습니다.`,
+              //     insuranceHistory: { connect: { ih_id: createIh.ih_id } },
+              //   },
+              // });
             } else {
               console.log("요청 실패. unique:", insHistory[i].unique);
-              await prisma.ihText.create({
-                data: {
-                  iht_text: `플랫폼 -> EMR로 데이터 요청에 실패하였습니다.`,
-                  insuranceHistory: { connect: { ih_id: createIh.ih_id } },
-                },
-              });
+              // await prisma.ihText.create({
+              //   data: {
+              //     iht_text: `플랫폼 -> EMR로 데이터 요청에 실패하였습니다.`,
+              //     insuranceHistory: { connect: { ih_id: createIh.ih_id } },
+              //   },
+              // });
 
-              await prisma.insuranceHistory.update({
-                where: { ih_id: createIh.ih_id },
-                data: { ih_status: "fail" },
-              });
+              // await prisma.insuranceHistory.update({
+              //   where: { ih_id: createIh.ih_id },
+              //   data: { ih_status: "fail" },
+              // });
             }
           }
         }
 
-        // 요청 기록을 생성했으면(0이 아니면)
-        if (reqNum !== 0) {
-          findIhNum
-            ? await prisma.ihNum.update({ where: { ihn_id: findIhNum.ihn_id }, data: { ihn_num: reqNum } })
-            : await prisma.ihNum.create({ data: { ihn_num: reqNum } });
-        }
+        // // 요청 기록을 생성했으면(0이 아니면)
+        // if (reqNum !== 0) {
+        //   findIhNum
+        //     ? await prisma.ihNum.update({ where: { ihn_id: findIhNum.ihn_id }, data: { ihn_num: reqNum } })
+        //     : await prisma.ihNum.create({ data: { ihn_num: reqNum } });
+        // }
 
         return true;
       } catch (e) {

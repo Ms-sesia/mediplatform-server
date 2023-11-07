@@ -18,7 +18,7 @@ export default {
 
         await prisma.userPhoneAuthCode.create({
           data: {
-            upac_cellphone: cellphone,
+            upac_cellphone: cellphone.replaceAll("-", ""),
             upac_code: authCode,
             user: { connect: { user_id: user.user_id } },
           },
@@ -26,7 +26,7 @@ export default {
 
         const msg = `안녕하세요. 메디플랫폼입니다.\n인증번호는 ${authCode}입니다.`;
         const today = new Date().toISOString();
-        
+
         await sendSMS(today, msg, cellphone, loginUser.user_name, false);
 
         return true;

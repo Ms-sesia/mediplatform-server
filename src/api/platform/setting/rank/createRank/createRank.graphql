@@ -7,5 +7,37 @@ type Mutation {
     직책명
     """
     rank_name: String!
+    """
+    홈
+    """
+    home: Boolean
+    """
+    예약
+    """
+    reservation: Boolean
+    """
+    일정
+    """
+    schedule: Boolean
+    """
+    환자
+    """
+    patient: Boolean
+    """
+    did
+    """
+    did: Boolean
+    """
+    보험
+    """
+    insurance: Boolean
+    """
+    고객센터
+    """
+    cs: Boolean
+    """
+    환경설정
+    """
+    setting: Boolean
   ): Boolean
 }

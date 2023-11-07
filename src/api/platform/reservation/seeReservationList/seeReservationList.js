@@ -12,7 +12,6 @@ export default {
         args;
       try {
         const searchDateConv = new Date(searchDate);
-
         const createSearchHistory = await searchHistory(searchTerm, user.user_id);
         if (!createSearchHistory.status) throw createSearchHistory.error;
 
@@ -22,6 +21,7 @@ export default {
               { hsp_id: user.hospital.hsp_id },
               { re_year: searchDateConv.getFullYear() },
               { re_month: searchDateConv.getMonth() + 1 },
+              { re_date: searchDateConv.getDate() },
               { re_isDelete: false },
               {
                 OR: [
@@ -56,6 +56,7 @@ export default {
               { hsp_id: user.hospital.hsp_id },
               { re_year: searchDateConv.getFullYear() },
               { re_month: searchDateConv.getMonth() + 1 },
+              { re_date: searchDateConv.getDate() },
               { re_isDelete: false },
               {
                 OR: [
@@ -76,7 +77,7 @@ export default {
           orderBy: [{ re_year: "desc" }, { re_month: "desc" }, { re_date: "desc" }],
         });
 
-        const reservationInfos = reservationList.map(async (res) => {
+        const reservationInfos = reservationList.map(async (res, idx) => {
           // 내원확정된 횟수
           const visitCount = await prisma.reservation.count({
             where: { AND: [{ hsp_id: res.hsp_id }, { pati_id: res.pati_id }, { re_status: "confirm" }] },
@@ -95,7 +96,11 @@ export default {
           if (res.pati_id) patientInfo = await prisma.patient.findUnique({ where: { pati_id: res.pati_id } });
 
           const alimSet = await prisma.resAlim.findUnique({ where: { re_id: res.re_id } });
-          const template = await prisma.resAlimTemplate.findUnique({ where: { rat_id: alimSet.ra_templateId } });
+          
+          let template;
+          if (alimSet) {
+            template = await prisma.resAlimTemplate.findUnique({ where: { rat_id: alimSet.ra_templateId } });
+          }
 
           return {
             re_id: res.re_id,

@@ -14,12 +14,12 @@ export default async (socket) => {
         orderBy: { ih_createdAt: "desc" },
       });
 
-      await prisma.ihText.create({
-        data: {
-          iht_text: `EMR -> 플랫폼 데이터 수신에 성공했습니다.`,
-          insuranceHistory: { connect: { ih_id: checkIh.ih_id } },
-        },
-      });
+      // await prisma.ihText.create({
+      //   data: {
+      //     iht_text: `EMR -> 플랫폼 데이터 수신에 성공했습니다.`,
+      //     insuranceHistory: { connect: { ih_id: checkIh.ih_id } },
+      //   },
+      // });
       // 없을 경우
     } else {
       console.log("데이터 수신에 실패. unique:", insureData.reqUnique);
@@ -27,17 +27,17 @@ export default async (socket) => {
         where: { ih_tobeUnique: insureData.reqUnique },
         orderBy: { ih_createdAt: "desc" },
       });
-      await prisma.ihText.create({
-        data: {
-          iht_text: `EMR -> 플랫폼 데이터 수신에 실패했습니다.`,
-          insuranceHistory: { connect: { ih_id: checkIh.ih_id } },
-        },
-      });
+      // await prisma.ihText.create({
+      //   data: {
+      //     iht_text: `EMR -> 플랫폼 데이터 수신에 실패했습니다.`,
+      //     insuranceHistory: { connect: { ih_id: checkIh.ih_id } },
+      //   },
+      // });
 
-      await prisma.insuranceHistory.update({
-        where: { ih_id: checkIh.ih_id },
-        data: { ih_status: "fail" },
-      });
+      // await prisma.insuranceHistory.update({
+      //   where: { ih_id: checkIh.ih_id },
+      //   data: { ih_status: "fail" },
+      // });
     }
   });
 };

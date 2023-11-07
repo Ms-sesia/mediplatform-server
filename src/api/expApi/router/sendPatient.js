@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
   const patients = patiData.patients;
 
   let failChatNum = new Array();
-  console.log(patiData);
+  console.log("route sendPatient - patiData:", patiData);
 
   for (let i = 0; i < patients.length; i++) {
     try {

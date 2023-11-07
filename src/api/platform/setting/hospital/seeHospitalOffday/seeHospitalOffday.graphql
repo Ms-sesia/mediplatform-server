@@ -28,7 +28,7 @@ type offday {
   """
   휴일 id
   """
-  id: Int
+  ho_id: Int
   """
   휴일 구분
   """
@@ -52,7 +52,7 @@ type offday {
   """
   반복
 
-  * 반복없음 : temp
+  * 반복없음 : none
   * 매월반복 : month
   * 매주반복 : week
   """

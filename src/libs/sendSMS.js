@@ -14,7 +14,7 @@ const mssqlConfig = {
   },
 };
 
-export default async (time, msg, cellphone, receiverName, resSelect) => {
+export default async (time, msg, cellphone, receiverName, resSelect, trId, sendNum) => {
   const sendTime = new Date(time);
   try {
     await mssql.connect(mssqlConfig);
@@ -33,17 +33,19 @@ export default async (time, msg, cellphone, receiverName, resSelect) => {
       )
     VALUES
       (
-        ${process.env.PR_AUTH_ID},
+        ${trId},
         ${sendTime},
         '0',
         '0',
         ${cellphone},
-        ${process.env.PR_CALLBACK_PHONE},
+        ${sendNum},
         ${msg},
         ${resSelect ? "Y" : "N"},
         ${receiverName}
       ); `;
-    console.log(result);
+
+    // console.log(result);
+
     return {
       status: "success",
       message: `${receiverName}님에게 문자 발송에 성공하였습니다.`,
