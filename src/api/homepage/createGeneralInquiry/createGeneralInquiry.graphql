@@ -1,0 +1,38 @@
+type Mutation {
+  """
+  홈페이지 일반 문의
+
+  * error
+  - err_00 : 일반문의 데이터 생성에 실패하였습니다.
+  """
+  createGeneralInquiry(
+    """
+    문의하기 제목 200자
+    """
+    title: String!
+    """
+    문의자 이름
+    """
+    name: String!
+    """
+    병/의원 이름
+    """
+    hospitalName: String!
+    """
+    근무지역
+    """
+    workArea: String!
+    """
+    작성자 연락처
+    """
+    cellphone: String!
+    """
+    작성자 이메일
+    """
+    email: String!
+    """
+    내용(문의사항) 500자
+    """
+    text: String
+  ): Boolean
+}

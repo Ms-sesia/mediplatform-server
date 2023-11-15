@@ -107,7 +107,7 @@ model homepageServiceContent {
   hsc_createdAt                DateTime // 등록일
   hsc_serviceType              String                         @default("") @db.VarChar(25) // 서비스 구분 - EMR 차트, CLOUD 플랫폼
   hsc_detailTabName            String                         @default("") @db.VarChar(25) // 세부 탭 내용 - EMR 차트: EMR/CHECK/IMAGE/LAB/E-SIGN/DESK/CLOUD/DID/CHECK-UP/CHART/CRM/ETC, CLOUD플랫폼: CLOUD 플랫폼
-  hsc_title                    String                         @default("") @db.VarChar(25) // 타이틀 20자
+  hsc_title                    String                         @default("") @db.VarChar(100) // 타이틀 20자
   hsc_adminName                String                         @default("") @db.VarChar(25) // 담당자 이름
   hsc_adminRank                String                         @default("") @db.VarChar(25) // 담당자 직책
   hsc_adminId                  Int                            @default(0) // 담당자 id
@@ -118,7 +118,7 @@ model homepageServiceContent {
 // 홈페이지 서비스의 상세내용 
 model homepageServiceContentDetail {
   hsd_id                 Int                    @id @default(autoincrement())
-  hsd_text               String                 @default("") @db.VarChar(250) // 세부항목 내용 200자
+  hsd_text               String                 @default("") @db.VarChar(500) // 세부항목 내용 200자
   hsd_adminName          String                 @default("") @db.VarChar(25) // 담당자 이름
   hsd_adminRank          String                 @default("") @db.VarChar(25) // 담당자 직책
   hsd_adminId            Int                    @default(0) // 담당자 id

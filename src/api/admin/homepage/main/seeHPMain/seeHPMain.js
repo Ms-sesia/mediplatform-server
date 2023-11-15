@@ -5,14 +5,14 @@ const prisma = new PrismaClient();
 export default {
   Query: {
     seeHPMain: async (_, args, { request, isAuthenticated }) => {
-      isAuthenticated(request);
-      const { user } = request;
+      // isAuthenticated(request);
+      // const { user } = request;
       try {
-        if (user.userType !== "admin") throw 1;
-        const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
+        // if (user.userType !== "admin") throw 1;
+        // const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
 
         const hm = await prisma.homepageMain.findFirst();
-        
+
         if (!hm)
           return {
             hm_id: 0,
@@ -32,7 +32,7 @@ export default {
           hm_adminId: hm.hm_adminId ? hm.hm_adminId : 0,
         };
       } catch (e) {
-        console.log("관리자 목록 조회 실패. seeHPMain ==>\n", e);
+        console.log("홈페이지 메인 이미지 조회 실패. seeHPMain ==>\n", e);
         if (e === 1) throw new Error("err_01");
         throw new Error("err_00");
       }

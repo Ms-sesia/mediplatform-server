@@ -1,0 +1,24 @@
+type Mutation {
+  """
+  홈페이지 서비스 내용 수정
+
+  * error
+  - err_00 : 홈페이지 서비스 내용 수정에 실패하였습니다.
+  - err_01 : 관리자만 이용 가능합니다.
+  - err_02 : 수정하려는 서비스 내용이 존재하지 않습니다.
+  """
+  updateServiceContent(
+    """
+    홈페이지 서비스 내용 id
+    """
+    hsc_id: Int!
+    """
+    타이틀 20자
+    """
+    title: String
+    """
+    상세 설명 목록 - 기존 내용은 삭제하고 입력한 내용으로 새로 생성
+    """
+    textList: [String]
+  ): Boolean
+}

@@ -61,8 +61,6 @@ router.post(
       detail,
     };
 
-    console.log("sendType:", sendType);
-
     return res.status(200).json({
       status: 200,
       message: "데이터 연동 성공",

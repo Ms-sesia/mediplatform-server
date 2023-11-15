@@ -1,0 +1,32 @@
+type Mutation {
+  """
+  홈페이지 견적 문의 - boolean 기본값은 전부 false
+
+  * error
+  - err_00 : 견적문의 데이터 생성에 실패하였습니다.
+  """
+  createEstimateInquiry(
+    ei_medicalSub: String! # 진료과목 100자
+    ei_pcCount: String! # pc사용 대수
+    ei_RDR: Boolean # R-DR(Digital Radiography)
+    ei_CR: Boolean # CR(Computed Radiography)
+    ei_XRAY: Boolean # X-ray
+    ei_CArm: Boolean # C-Arm
+    ei_Mammography: Boolean # Mammography
+    ei_ultrasonicWave: Boolean # 초음파
+    ei_endoscope: Boolean # 내시경
+    ei_CT: Boolean # CT
+    ei_MRI: Boolean # MRI
+    ei_arteriosclerosis: Boolean # 동맥경화
+    ei_spirometer: Boolean # 폐기능 검사기
+    ei_ECG: Boolean # ECG
+    ei_PACS: Boolean # PACS
+    ei_remoteImageReading: Boolean # 원격 영상판독
+    ei_name: String! # 문의자(요청자) 이름
+    ei_hospitalName: String! # 병/의원 이름
+    ei_workArea: String! # 근무지역
+    ei_cellphone: String! # 작성자 연락처
+    ei_email: String! # 작성자 이메일
+    ei_etc: String # 기타사항 200자
+  ): Boolean
+}

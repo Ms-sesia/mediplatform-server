@@ -1,0 +1,33 @@
+type Query {
+  """
+  홈페이지 고객지원 이미지 조회
+
+  *error
+  err_00 : 홈페이지 고객지원 이미지 조회에 실패하였습니다.
+  """
+  seeHPCs: seeHPCsInfo
+}
+
+type seeHPCsInfo {
+  hcs_id: Int
+  """
+  등록일(혹은 수정일)
+  """
+  hcs_createdAt: String
+  """
+  홈페이지 고객지원 이미지 url
+  """
+  hcs_url: String
+  """
+  홈페이지 고객지원 이미지 담당자 이름
+  """
+  hcs_adminName: String
+  """
+  홈페이지 고객지원 이미지 담당자 직책
+  """
+  hcs_adminRank: String
+  """
+  담당자 id
+  """
+  hcs_adminId: Int
+}

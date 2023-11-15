@@ -1,0 +1,20 @@
+type Mutation {
+  """
+  홈페이지 서비스 이미지 추가
+
+  * error
+  - err_00 : 홈페이지 서비스 이미지 추가 실패하였습니다.
+  - err_01 : 관리자만 이용 기능입니다.
+  - err_02 : 이미지는 최대 3개까지 등록 가능합니다.
+  """
+  createServiceImg(
+    """
+    서비스 id
+    """
+    hsc_id: Int!
+    """
+    홈페이지 서비스 이미지 - 최대 3개 제한
+    """
+    hpServiceImgs: [Upload!]
+  ): Boolean
+}

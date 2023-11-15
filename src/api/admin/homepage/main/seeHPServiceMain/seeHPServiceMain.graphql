@@ -1,0 +1,33 @@
+type Query {
+  """
+  홈페이지 서비스 메인 이미지 조회
+
+  *error
+  err_00 : 홈페이지 메인이미지 조회에 실패하였습니다.
+  """
+  seeHPServiceMain: seeHPServiceMainInfo
+}
+
+type seeHPServiceMainInfo {
+  hsm_id: Int
+  """
+  등록일(혹은 수정일)
+  """
+  hsm_createdAt: String
+  """
+  홈페이지 서비스 메인 이미지 url
+  """
+  hsm_url: String
+  """
+  홈페이지 서비스 메인 이미지 담당자 이름
+  """
+  hsm_adminName: String
+  """
+  홈페이지 서비스 메인 이미지 담당자 직책
+  """
+  hsm_adminRank: String
+  """
+  담당자 id
+  """
+  hsm_adminId: Int
+}

@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  문의하기 답변 상태 변경
+
+  * error
+  - err_00 : 문의하기 답변 상태 변경에 실패하였습니다.
+  - err_01 : 관리자만 이용 가능합니다.
+  """
+  updateGeneralInquiryAnsStatus(
+    """
+    일반 문의 id
+    """
+    gi_id: Int!
+  ): Boolean
+}

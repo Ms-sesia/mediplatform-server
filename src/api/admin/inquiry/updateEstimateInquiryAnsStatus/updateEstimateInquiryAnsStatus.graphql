@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  견적 문의하기 답변 상태 변경
+
+  * error
+  - err_00 : 견적 문의하기 답변 상태 변경에 실패하였습니다.
+  - err_01 : 관리자만 이용 가능합니다.
+  """
+  updateEstimateInquiryAnsStatus(
+    """
+    견적 문의 id
+    """
+    ei_id: Int!
+  ): Boolean
+}

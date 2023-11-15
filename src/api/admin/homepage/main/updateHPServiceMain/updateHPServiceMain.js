@@ -1,23 +1,22 @@
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
-import { today9 } from "../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 
 export default {
   Mutation: {
-    updateHPMain: async (_, args, { request, isAuthenticated }) => {
+    updateHPServiceMain: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { hm_id, mainImg } = args;
+      const { hsm_id, mainImg } = args;
       try {
         if (user.userType !== "admin") throw 1;
 
         const storagePath = path.join(__dirname, "../../../../../", "files");
         const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
-        let hpMain;
-        if (hm_id > 0) hpMain = await prisma.homepageMain.findUnique({ where: { hm_id } });
+        let hpServiceMain;
+        if (hsm_id > 0) hpServiceMain = await prisma.homepageServiceMain.findUnique({ where: { hsm_id } });
 
         if (mainImg) {
           const { createReadStream, filename, encoding, mimetype } = await mainImg;
@@ -39,25 +38,25 @@ export default {
 
           const stats = await fileWritePromise;
 
-          if (hpMain) {
+          if (hpServiceMain) {
             // 있으면 수정
-            await prisma.homepageMain.update({
-              where: { hm_id },
+            await prisma.homepageServiceMain.update({
+              where: { hsm_id },
               data: {
-                hm_url: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
-                hm_adminName: loginAdmin.admin_name,
-                hm_adminRank: loginAdmin.admin_rank,
-                hm_adminId: loginAdmin.admin_id,
+                hsm_url: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
+                hsm_adminName: loginAdmin.admin_name,
+                hsm_adminRank: loginAdmin.admin_rank,
+                hsm_adminId: loginAdmin.admin_id,
               },
             });
           } else {
             // 없으면 생성
-            await prisma.homepageMain.create({
+            await prisma.homepageServiceMain.create({
               data: {
-                hm_url: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
-                hm_adminName: loginAdmin.admin_name,
-                hm_adminRank: loginAdmin.admin_rank,
-                hm_adminId: loginAdmin.admin_id,
+                hsm_url: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
+                hsm_adminName: loginAdmin.admin_name,
+                hsm_adminRank: loginAdmin.admin_rank,
+                hsm_adminId: loginAdmin.admin_id,
               },
             });
           }
@@ -65,7 +64,7 @@ export default {
 
         return true;
       } catch (e) {
-        console.log("홈페이지 메인이미지 수정(등록) 실패. updateHPMain", e);
+        console.log("홈페이지 서비스 메인이미지 수정(등록) 실패. updateHPServiceMain", e);
         if (e === 1) throw new Error("err_01");
         throw new Error("err_00");
       }

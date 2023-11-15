@@ -1,0 +1,40 @@
+type Query {
+  """
+  홈페이지 서비스 내용 조회(emr 차트 / cloud 플랫폼)
+
+  * error
+  - err_00 : 홈페이지 서비스 내용 조회(emr 차트 / cloud 플랫폼) 실패하였습니다.
+  - err_01 : 관리자만 이용 가능합니다.
+  """
+  seeServiceContent: [seeServiceContentInfo]
+}
+
+"""
+홈페이지 서비스 내용 정보
+"""
+type seeServiceContentInfo {
+  """
+  홈페이지 서비스 내용 id
+  """
+  hsc_id: Int
+  """
+  타이틀
+  """
+  title: String
+  """
+  세부항목 수
+  """
+  detailTextCount: Int
+  """
+  등록일
+  """
+  createdAt: String
+  """
+  담당자 이름
+  """
+  creatorName: String
+  """
+  담당자 직급
+  """
+  creatorRank: String
+}

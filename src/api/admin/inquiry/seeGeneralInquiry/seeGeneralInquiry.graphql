@@ -1,0 +1,61 @@
+type Query {
+  """
+  일반 문의 내용 조회
+
+  * error
+  - err_00 : 일반문의 내용 조회에 실패하였습니다.
+  - err_01 : 관리자만 이용 가능합니다.
+  """
+  seeGeneralInquiry(take: Int!, cursor: Int!): seeGeneralInquiryInfo
+}
+
+"""
+일반 문의 내용 조회 정보
+"""
+type seeGeneralInquiryInfo {
+  totalLength: Int
+  generalInquiryList: [generalInquiry]
+}
+
+"""
+일반 문의 내용
+"""
+type generalInquiry {
+  gi_id: Int
+  """
+  등록일(문의일)
+  """
+  gi_createdAt: String
+  """
+  확인 상태 - 확인: true, 확인대기: false
+  """
+  gi_answerStatus: Boolean
+  """
+  문의하기 제목 200자
+  """
+  gi_title: String
+  """
+  내용 500자
+  """
+  gi_text: String
+  """
+  문의자 이름
+  """
+  gi_name: String
+  """
+  병/의원 이름
+  """
+  gi_hospitalName: String
+  """
+  근무지역
+  """
+  gi_workArea: String
+  """
+  작성자 연락처
+  """
+  gi_cellphone: String
+  """
+  작성자 이메일
+  """
+  gi_email: String
+}

@@ -5,11 +5,11 @@ const prisma = new PrismaClient();
 export default {
   Query: {
     seeCompanyInfo: async (_, args, { request, isAuthenticated }) => {
-      isAuthenticated(request);
-      const { user } = request;
+      // isAuthenticated(request);
+      // const { user } = request;
       try {
-        if (user.userType !== "admin") throw 1;
-        const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
+        // if (user.userType !== "admin") throw 1;
+        // const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
         
         const hi = await prisma.homepageIntroduce.findFirst();
 

@@ -1,0 +1,33 @@
+type Mutation {
+  """
+  홈페이지 서비스 내용 추가(emr 차트 / cloud 플랫폼)
+
+  * error
+  - err_00 : 홈페이지 서비스 내용 추가(emr 차트 / cloud 플랫폼) 실패하였습니다.
+  - err_01 : 관리자만 이용 가능합니다.
+  - err_02 : 이미 생성된 타이틀은 수정만 가능합니다.
+  """
+  createServiceContent(
+    """
+    서비스 구분
+
+    - EMR, CLOUD
+    """
+    serviceType: String!
+    """
+    세부 탭 내용
+
+    - EMR : EMR/CHECK/IMAGE/LAB/E-SIGN/DESK/CLOUD/DID/CHECK-UP/CHART/CRM/ETC
+    - CLOUD : CLOUD
+    """
+    detailTabName: String!
+    """
+    타이틀 20자
+    """
+    title: String
+    """
+    상세 설명 목록
+    """
+    textList: [String]
+  ): Boolean
+}

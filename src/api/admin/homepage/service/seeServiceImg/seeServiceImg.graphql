@@ -1,0 +1,29 @@
+type Query {
+  """
+  홈페이지 서비스 이미지 조회
+
+  * error
+  - err_00 : 홈페이지 서비스 이미지 조회에 실패하였습니다.
+  - err_01 : 관리자만 이용 가능합니다.
+  """
+  seeServiceImg(
+    """
+    홈페이지 서비스 id
+    """
+    hsc_id: Int!
+  ): [seeServiceImgInfo]
+}
+
+"""
+홈페이지 서비스 이미지 목록
+"""
+type seeServiceImgInfo {
+  hsi_id: Int
+  hsi_createdAt: String # 동록일
+  hsi_img: String # 홈페이지 서비스 이미지 url
+  hsi_imgType: String # 이미지 타입
+  hsi_imgSize: Int # 이미지 사이즈
+  hsi_adminName: String # 담당자 이름
+  hsi_adminRank: String # 담당자 직책
+  hsi_adminId: Int # 담당자 id
+}
