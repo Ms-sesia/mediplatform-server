@@ -35,7 +35,7 @@ export default {
 
         const hashedInfo = await hashPassword(tempPw);
 
-        await prisma.admin.create({
+        const admin = await prisma.admin.create({
           data: {
             admin_name,
             admin_email,
@@ -44,6 +44,10 @@ export default {
             admin_salt: hashedInfo.salt,
             admin_password: hashedInfo.password,
           },
+        });
+
+        await prisma.adminPermission.create({
+          data: { admin: { connect: { admin_id: admin.admin_id } } },
         });
 
         return true;

@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  관리자 삭제
+
+  * error
+  - err_00 : 관리자 삭제에 실패하였습니다.
+  - err_01 : 마스터관리자만 사용할 수 있는 기능입니다.
+  """
+  deleteAdmin(
+    """
+    관리자 id
+    """
+    admin_id: Int!
+  ): Boolean
+}

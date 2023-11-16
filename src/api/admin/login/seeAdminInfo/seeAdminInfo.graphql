@@ -1,0 +1,43 @@
+type Query {
+  """
+  로그인 관리자 정보 조회
+
+  * error
+  - err_00 : 로그인 관리자 정보 조회에 실패하였습니다.
+  - err_01 : 관리자만 사용할 수 있는 기능입니다.
+  """
+  seeAdminInfo: adminInfo
+}
+
+"""
+관리자
+"""
+type adminInfo {
+  """
+  등록일
+  """
+  admin_createdAt: String
+  """
+  이름 10자
+  """
+  admin_name: String
+  """
+  관리자 이메일(계정)
+  """
+  admin_email: String
+  """
+  직책(직급)
+  """
+  admin_rank: String
+  """
+  관리자 휴드폰번호
+  """
+  admin_cellphone: String
+  """
+  비밀번호 초기화 상태
+
+  - true일 때 비밀번호 변경 모달 오픈.
+  """
+  admin_passwordInit: Boolean
+  admin_permission: admin_permission
+}

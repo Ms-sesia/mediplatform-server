@@ -9,9 +9,21 @@ type Mutation {
   - err_02 : 해당 이메일로 이미 가입된 관리자가 있습니다. 이메일을 확인해주세요.
   """
   createAdmin(
-    admin_name: String! # 이름 10자
-    admin_email: String! # 관리자 이메일
-    admin_rank: String # 직책(직급)
-    admin_cellphone: String # 관리자 휴드폰번호
+    """
+    이름 10자
+    """
+    admin_name: String!
+    """
+    관리자 이메일
+    """
+    admin_email: String!
+    """
+    직책(직급)
+    """
+    admin_rank: String
+    """
+    관리자 휴드폰번호
+    """
+    admin_cellphone: String
   ): Boolean
 }

@@ -1,0 +1,101 @@
+type Query {
+  """
+  병원 목록 조회
+
+  * error
+  - err_00 : 병원목록 조회에 실패하였습니다.
+  - err_01 : 관리자만 이용 가능합니다.
+  """
+  seeHospitalList(
+    """
+    검색어
+    """
+    searchTerm: String
+    """
+    병원명 정렬. 내림차순 : desc, 오름차순: asc
+    """
+    orderBy: String
+    take: Int
+    cursor: Int
+  ): seeHospitalListInfo
+}
+
+type seeHospitalListInfo {
+  """
+  이번달 매출액
+  """
+  thisMonthSales: Int
+  """
+  누적 매출액
+  """
+  cumulativeSales: Int
+  """
+  현재 가입 병원 수
+  """
+  hospitalNumber: Int
+  """
+  사용자 수
+  """
+  userNumber: Int
+  """
+  이번달 가입 병원 수
+  """
+  thisMonthHospitalNumber: Int
+  """
+  지난달 가입 병원 수 - 지난달 대비 표시에 이용
+  """
+  lastMonthHospitalNumber: Int
+  """
+  지난달 대비 비유 -  "-1"일 경우 지난달 가입자가 없는 것
+  """
+  lastMonthRatio: Float
+  totalLength: Int
+  hospitalList: [hospitalInfo]
+}
+
+"""
+병원 정보
+"""
+type hospitalInfo {
+  hsp_id: Int
+  """
+  병원 이름 50자
+  """
+  hsp_name: String
+  """
+  병원 대표자 명 10자
+  """
+  hsp_chief: String
+  """
+  요양기관번호  20자
+  """
+  hsp_hospitalNumber: String
+  """
+  사업자번호 20자
+  """
+  hsp_businessNumber: String
+  """
+  등록일(가입일)
+  """
+  hsp_createdAt: String
+  """
+  계약 종료일(만료일)
+  """
+  hsp_useEndDate: String
+  """
+  주소 검색 값 50자
+  """
+  hsp_address: String
+  """
+  주소 검색 후 상세주소 50자
+  """
+  hsp_detailAddress: String
+  """
+  이번달 결제액
+  """
+  hsp_thisMonthPaymentAmount: Int
+  """
+  누적 결제액
+  """
+  hsp_cumulativePaymentAmount: Int
+}

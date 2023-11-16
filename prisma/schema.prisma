@@ -13,10 +13,10 @@ model admin {
   admin_createdAt     DateTime            @default(now())
   admin_master        Boolean             @default(false) // 마스터 여부
   userType            userType            @default(admin) // 사용자, 관리자 구분
-  admin_name          String              @default("") @db.VarChar(20) // 이름 10자
+  admin_name          String              @default("") @db.VarChar(50) // 이름 10자
   admin_email         String              @unique @default("") @db.VarChar(50) // 관리자 이메일(계정)
-  admin_rank          String              @default("") @db.VarChar(20) // 직책(직급)
-  admin_cellphone     String              @default("") @db.VarChar(20) // 관리자 휴드폰번호
+  admin_rank          String              @default("") @db.VarChar(50) // 직책(직급)
+  admin_cellphone     String              @default("") @db.VarChar(50) // 관리자 휴드폰번호
   admin_salt          String              @default("") @db.VarChar(50) // 암호화 salt
   admin_password      String              @default("") @db.VarChar(250) // 계정 비밀번호 20자
   admin_passwordInit  Boolean             @default(true) // 비밀번호 초기화 상태 - 첫 생성시 초기화 상태. 로그인하면서 비번 설정 
@@ -187,55 +187,57 @@ model estimateInquiry {
 
 // 가입 병원 정보
 model hospital {
-  hsp_id                Int                @id @default(autoincrement())
-  hsp_createdAt         DateTime           @default(now()) // 등록일(가입일)
-  hsp_updatedAt         DateTime           @updatedAt
-  hsp_adminCreatorName  String             @default("") @db.VarChar(25) // 등록자 이름(플랫폼 관리자)
-  hsp_adminCreatorRank  String             @default("") @db.VarChar(25) // 등록자 직책(플랫폼 관리자)
-  hsp_adminCreatorId    Int                @default(0) // 등록자 id(플랫폼 관리자)
-  hsp_editorName        String             @default("") @db.VarChar(25) // 수정자 이름
-  hsp_editorRank        String             @default("") @db.VarChar(25) // 수정자 직책
-  hsp_editorId          Int                @default(0) // 수정자 id
-  hsp_isDelete          Boolean            @default(false) // 삭제여부
-  hsp_deleteDate        DateTime? // 삭제일
-  hsp_email             String             @unique @default("") @db.VarChar(55) // 대표 이메일
-  hsp_img               String             @default("") @db.VarChar(250) // 병원 이미지
-  hsp_name              String             @default("") @db.VarChar(65) // 병원 이름 50자
-  hsp_chief             String             @default("") @db.VarChar(20) // 병원 대표자 명 10자
-  hsp_hospitalNumber    String             @default("") @db.VarChar(25) // 요양기관번호  20자?
-  hsp_businessNumber    String             @default("") @db.VarChar(25) // 사업자번호 20자
-  hsp_phone             String             @default("") @db.VarChar(20) // 병원 전화번호 "-"없이 10자
-  hsp_country           String             @default("") @db.VarChar(50) // 국가명 
-  hsp_address           String             @default("") @db.VarChar(55) // 주소 검색 값 50자
-  hsp_detailAddress     String             @default("") @db.VarChar(55) // 주소 검색 후 상세주소 50자
-  hsp_medicalDepartment String             @default("") @db.VarChar(25) // 진료과목 20자
-  hsp_kakaoChannelId    String             @default("") @db.VarChar(55) // 카카오 채널 Id 50자
-  hsp_kakaoChannelUrl   String             @default("") @db.VarChar(55) // 카카오 채널 url 50자
-  hsp_messageTrId       String             @default("") @db.VarChar(100) // 문자 거래처 번호
-  hsp_messageSendNum    String             @default("") @db.VarChar(100) // 문자 발신자 번호
-  hsp_useStartDate      DateTime? // 계약 시작일 
-  hsp_useEndDate        DateTime? // 계약 종료일 
-  hsp_useEnded          Boolean            @default(false) // 이용 완료 여부(만료여부) 
-  user                  user[]
-  patient               patient[]
-  reservation           reservation[]
-  resAlimTemplate       resAlimTemplate[]
-  defaultSchedule       defaultSchedule[]
-  hospitalOffday        hospitalOffday[]
-  specialSchedule       specialSchedule[]
-  insuranceHistory      insuranceHistory[]
-  hospitalNotice        hospitalNotice[]
-  oneOnOne              oneOnOne[]
-  userUpdateLog         userUpdateLog[]
-  did                   did[]
-  hospitalPayment       hospitalPayment[]
-  doctorRoom            doctorRoom[]
-  org                   org[]
-  rank                  rank[]
-  medicalSubject        medicalSubject[]
-  alimSet               alimSet?
-  monthOffday           monthOffday[]
-  weekOffday            weekOffday[]
+  hsp_id                      Int                @id @default(autoincrement())
+  hsp_createdAt               DateTime           @default(now()) // 등록일(가입일)
+  hsp_updatedAt               DateTime           @updatedAt
+  hsp_adminCreatorName        String             @default("") @db.VarChar(25) // 등록자 이름(플랫폼 관리자)
+  hsp_adminCreatorRank        String             @default("") @db.VarChar(25) // 등록자 직책(플랫폼 관리자)
+  hsp_adminCreatorId          Int                @default(0) // 등록자 id(플랫폼 관리자)
+  hsp_editorName              String             @default("") @db.VarChar(25) // 수정자 이름
+  hsp_editorRank              String             @default("") @db.VarChar(25) // 수정자 직책
+  hsp_editorId                Int                @default(0) // 수정자 id
+  hsp_isDelete                Boolean            @default(false) // 삭제여부
+  hsp_deleteDate              DateTime? // 삭제일
+  hsp_email                   String             @unique @default("") @db.VarChar(55) // 대표 이메일
+  hsp_img                     String             @default("") @db.VarChar(250) // 병원 이미지
+  hsp_name                    String             @default("") @db.VarChar(65) // 병원 이름 50자
+  hsp_chief                   String             @default("") @db.VarChar(20) // 병원 대표자 명 10자
+  hsp_hospitalNumber          String             @default("") @db.VarChar(25) // 요양기관번호  20자?
+  hsp_businessNumber          String             @default("") @db.VarChar(25) // 사업자번호 20자
+  hsp_phone                   String             @default("") @db.VarChar(20) // 병원 전화번호 "-"없이 10자
+  hsp_country                 String             @default("") @db.VarChar(50) // 국가명 
+  hsp_address                 String             @default("") @db.VarChar(55) // 주소 검색 값 50자
+  hsp_detailAddress           String             @default("") @db.VarChar(55) // 주소 검색 후 상세주소 50자
+  hsp_medicalDepartment       String             @default("") @db.VarChar(25) // 진료과목 20자
+  hsp_kakaoChannelId          String             @default("") @db.VarChar(55) // 카카오 채널 Id 50자
+  hsp_kakaoChannelUrl         String             @default("") @db.VarChar(55) // 카카오 채널 url 50자
+  hsp_messageTrId             String             @default("") @db.VarChar(100) // 문자 거래처 번호
+  hsp_messageSendNum          String             @default("") @db.VarChar(100) // 문자 발신자 번호
+  hsp_thisMonthPaymentAmount  Int                @default(0) // 이번달 결제액
+  hsp_cumulativePaymentAmount Int                @default(0) // 누적 결제액
+  hsp_useStartDate            DateTime? // 계약 시작일 
+  hsp_useEndDate              DateTime? // 계약 종료일 
+  hsp_useEnded                Boolean            @default(false) // 이용 완료 여부(만료여부) 
+  user                        user[]
+  patient                     patient[]
+  reservation                 reservation[]
+  resAlimTemplate             resAlimTemplate[]
+  defaultSchedule             defaultSchedule[]
+  hospitalOffday              hospitalOffday[]
+  specialSchedule             specialSchedule[]
+  insuranceHistory            insuranceHistory[]
+  hospitalNotice              hospitalNotice[]
+  oneOnOne                    oneOnOne[]
+  userUpdateLog               userUpdateLog[]
+  did                         did[]
+  hospitalPayment             hospitalPayment[]
+  doctorRoom                  doctorRoom[]
+  org                         org[]
+  rank                        rank[]
+  medicalSubject              medicalSubject[]
+  alimSet                     alimSet?
+  monthOffday                 monthOffday[]
+  weekOffday                  weekOffday[]
 }
 
 // 병원 결제정보 ====

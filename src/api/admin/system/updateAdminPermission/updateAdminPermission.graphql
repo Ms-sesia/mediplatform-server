@@ -1,0 +1,31 @@
+type Mutation {
+  """
+  관리자 권한 수정
+
+  * error
+  - err_00 : 관리자 권한 수정에 실패하였습니다.
+  - err_01 : 마스터관리자만 사용할 수 있는 기능입니다.
+  """
+  updateAdminPermission(
+    """
+    관리자 id
+    """
+    admin_id: Int!
+    """
+    대시보드
+    """
+    ap_dash: Boolean
+    """
+    홈페이지
+    """
+    ap_homepage: Boolean
+    """
+    고객센터(문의사항)
+    """
+    ap_CS: Boolean
+    """
+    시스템관리
+    """
+    ap_system: Boolean
+  ): Boolean
+}

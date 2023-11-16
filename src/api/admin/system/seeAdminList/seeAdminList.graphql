@@ -1,0 +1,75 @@
+type Query {
+  """
+  관리자 계정 목록 조회
+
+  * error
+  - err_00 : 관리자 계정 목록 조회에 실패하였습니다.
+  - err_01 : 마스터 관리자만 사용할 수 있는 기능입니다.
+  """
+  seeAdminList(
+    """
+    정렬 - Id(email) 정렬
+
+    오름차순: asc
+    내림차순: desc
+    """
+    orderBy: String
+    take: Int
+    cursor: Int
+  ): seeAdminListInfo
+}
+
+type seeAdminListInfo {
+  totalLength: Int
+  adminList: [admin]
+}
+
+"""
+관리자
+"""
+type admin {
+  """
+  이름 10자
+  """
+  admin_name: String
+  """
+  관리자 이메일(계정)
+  """
+  admin_email: String
+  """
+  직책(직급)
+  """
+  admin_rank: String
+  """
+  관리자 휴드폰번호
+  """
+  admin_cellphone: String
+  """
+  등록일
+  """
+  admin_createdAt: String
+  admin_permission: admin_permission
+}
+
+"""
+관리자 계정 권한
+"""
+type admin_permission {
+  ap_id: Int
+  """
+  대시보드
+  """
+  ap_dash: Boolean
+  """
+  홈페이지
+  """
+  ap_homepage: Boolean
+  """
+  고객센터(문의사항)
+  """
+  ap_CS: Boolean
+  """
+  시스템관리
+  """
+  ap_system: Boolean
+}
