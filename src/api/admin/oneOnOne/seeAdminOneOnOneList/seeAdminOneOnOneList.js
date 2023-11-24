@@ -6,12 +6,19 @@ export default {
   Query: {
     seeAdminOneOnOneList: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
-      const { orderBy, take, cursor } = args;
+      const { user } = request;
+      const { publicPrivate, answerStatus, orderBy, take, cursor } = args;
       try {
         if (user.userType !== "admin") throw 1;
-        
+
         const totalOneList = await prisma.oneOnOne.findMany({
-          where: { oneq_isDelete: false },
+          where: {
+            AND: [
+              { oneq_publicPrivate: !publicPrivate ? false : true },
+              { oneq_status: answerStatus === "total" ? undefined : answerStatus === "ans" ? true : false },
+              { oneq_isDelete: false },
+            ],
+          },
           orderBy: { oneq_createdAt: orderBy },
         });
 
@@ -25,7 +32,13 @@ export default {
         const cursorOpt = cursor === 0 ? { take } : { take, skip: 0, cursor: { oneq_id: cursorId } };
 
         const oneList = await prisma.oneOnOne.findMany({
-          where: { oneq_isDelete: false },
+          where: {
+            AND: [
+              { oneq_publicPrivate: !publicPrivate ? false : true },
+              { oneq_status: answerStatus === "total" ? undefined : answerStatus === "ans" ? true : false },
+              { oneq_isDelete: false },
+            ],
+          },
           ...cursorOpt,
           orderBy: { oneq_createdAt: orderBy },
         });

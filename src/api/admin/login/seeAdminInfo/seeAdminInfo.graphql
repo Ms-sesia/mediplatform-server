@@ -18,7 +18,7 @@ type adminInfo {
   """
   admin_createdAt: String
   """
-  이름 10자
+  이름
   """
   admin_name: String
   """
@@ -40,4 +40,8 @@ type adminInfo {
   """
   admin_passwordInit: Boolean
   admin_permission: admin_permission
+  """
+  최근 로그인
+  """
+  admin_lastLogin: String
 }

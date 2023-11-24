@@ -13,7 +13,8 @@ export default {
       try {
         if (user.userType !== "admin") throw 1;
 
-        const storagePath = path.join(__dirname, "../../../../../", "files");
+        const storagePath = path.join(__dirname, "../../../../../../", "files");
+
         const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
         let hpMain;
         if (hm_id > 0) hpMain = await prisma.homepageMain.findUnique({ where: { hm_id } });
@@ -43,6 +44,7 @@ export default {
             await prisma.homepageMain.update({
               where: { hm_id },
               data: {
+                hm_createdAt: new Date(),
                 hm_url: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
                 hm_adminName: loginAdmin.admin_name,
                 hm_adminRank: loginAdmin.admin_rank,

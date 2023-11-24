@@ -13,7 +13,7 @@ export default {
       try {
         if (user.userType !== "admin") throw 1;
 
-        const storagePath = path.join(__dirname, "../../../../../", "files");
+        const storagePath = path.join(__dirname, "../../../../../../", "files");
         const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
         let hpServiceMain;
         if (hsm_id > 0) hpServiceMain = await prisma.homepageServiceMain.findUnique({ where: { hsm_id } });

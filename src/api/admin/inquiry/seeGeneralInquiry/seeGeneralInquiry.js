@@ -7,12 +7,16 @@ export default {
     seeGeneralInquiry: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { take, cursor } = args;
+      const { answerStatus, take, cursor } = args;
       try {
         if (user.userType !== "admin") throw 1;
         const admin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
 
-        const totalGeneralInquiry = await prisma.generalInquiry.findMany();
+        const totalGeneralInquiry = await prisma.generalInquiry.findMany({
+          where: {
+            gi_answerStatus: answerStatus === "total" ? undefined : answerStatus === "ans" ? true : false,
+          },
+        });
 
         if (!totalGeneralInquiry.length)
           return {
@@ -24,6 +28,9 @@ export default {
         const cursorOpt = cursor === 0 ? { take } : { take, skip: 0, cursor: { gi_id: cursorId } };
 
         const generalInquiryList = await prisma.generalInquiry.findMany({
+          where: {
+            gi_answerStatus: answerStatus === "total" ? undefined : answerStatus === "ans" ? true : false,
+          },
           ...cursorOpt,
           orderBy: { gi_createdAt: "desc" },
         });

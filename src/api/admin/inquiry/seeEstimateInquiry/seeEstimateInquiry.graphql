@@ -6,7 +6,18 @@ type Query {
   - err_00 : 견적문의 내용 조회에 실패하였습니다.
   - err_01 : 관리자만 이용 가능합니다.
   """
-  seeEstimateInquiry(take: Int!, cursor: Int!): seeEstimateInquiryInfo
+  seeEstimateInquiry(
+    """
+    답변 상태
+
+    - 전체 : total
+    - 답변 : ans
+    - 미답변 : unAns
+    """
+    answerStatus: answerStatus
+    take: Int!
+    cursor: Int!
+  ): seeEstimateInquiryInfo
 }
 
 """
@@ -22,28 +33,100 @@ type seeEstimateInquiryInfo {
 """
 type estimateInquiry {
   ei_id: Int
-  ei_createdAt: String #등록일(문의일)
-  ei_answerStatus: Boolean # 확인 상태 - 확인: true, 확인대기: false
-  ei_medicalSub: String # 진료과목 100자
-  ei_pcCount: String # pc사용 대수
-  ei_RDR: Boolean # R-DR(Digital Radiography)
-  ei_CR: Boolean # CR(Computed Radiography)
-  ei_XRAY: Boolean # X-ray
-  ei_CArm: Boolean # C-Arm
-  ei_Mammography: Boolean # Mammography
-  ei_ultrasonicWave: Boolean # 초음파
-  ei_endoscope: Boolean # 내시경
-  ei_CT: Boolean # CT
-  ei_MRI: Boolean # MRI
-  ei_arteriosclerosis: Boolean # 동맥경화
-  ei_spirometer: Boolean # 폐기능 검사기
-  ei_ECG: Boolean # ECG
-  ei_PACS: Boolean # PACS
-  ei_remoteImageReading: Boolean # 원격 영상판독
-  ei_name: String # 문의자(요청자) 이름
-  ei_hospitalName: String # 병/의원 이름
-  ei_workArea: String # 근무지역
-  ei_cellphone: String # 작성자 연락처
-  ei_email: String # 작성자 이메일
-  ei_etc: String # 기타사항 200자
+  """
+  등록일(문의일)
+  """
+  ei_createdAt: String
+  """
+  확인 상태 - 확인(답변): true, 확인대기(미답변): false
+  """
+  ei_answerStatus: Boolean
+  """
+  진료과목 100자
+  """
+  ei_medicalSub: String
+  """
+  pc사용 대수
+  """
+  ei_pcCount: String
+  """
+  R-DR(Digital Radiography)
+  """
+  ei_RDR: Boolean
+  """
+  CR(Computed Radiography)
+  """
+  ei_CR: Boolean
+  """
+  X-ray
+  """
+  ei_XRAY: Boolean
+  """
+  C-Arm
+  """
+  ei_CArm: Boolean
+  """
+  Mammography
+  """
+  ei_Mammography: Boolean
+  """
+  초음파
+  """
+  ei_ultrasonicWave: Boolean
+  """
+  내시경
+  """
+  ei_endoscope: Boolean
+  """
+  CT
+  """
+  ei_CT: Boolean
+  """
+  MRI
+  """
+  ei_MRI: Boolean
+  """
+  동맥경화
+  """
+  ei_arteriosclerosis: Boolean
+  """
+  폐기능 검사기
+  """
+  ei_spirometer: Boolean
+  """
+  ECG
+  """
+  ei_ECG: Boolean
+  """
+  PACS
+  """
+  ei_PACS: Boolean
+  """
+  원격 영상판독
+  """
+  ei_remoteImageReading: Boolean
+  """
+  문의자(요청자) 이름
+  """
+  ei_name: String
+  """
+  병/의원 이름
+  """
+  ei_hospitalName: String
+  """
+  근무지역
+  """
+  ei_workArea: String
+  """
+  작성자 연락처
+  """
+  ei_cellphone: String
+  """
+  작성자 이메일
+  """
+  ei_email: String
+  """
+  기타사항 200자
+  """
+  ei_etc: String
 }

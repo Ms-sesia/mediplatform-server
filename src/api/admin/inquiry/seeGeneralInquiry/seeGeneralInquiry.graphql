@@ -6,7 +6,18 @@ type Query {
   - err_00 : 일반문의 내용 조회에 실패하였습니다.
   - err_01 : 관리자만 이용 가능합니다.
   """
-  seeGeneralInquiry(take: Int!, cursor: Int!): seeGeneralInquiryInfo
+  seeGeneralInquiry(
+    """
+    답변 상태
+
+    - 전체 : total
+    - 답변 : ans
+    - 미답변 : unAns
+    """
+    answerStatus: answerStatus
+    take: Int!
+    cursor: Int!
+  ): seeGeneralInquiryInfo
 }
 
 """

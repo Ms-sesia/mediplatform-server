@@ -5,7 +5,7 @@ type Query {
   *error
   err_00 : 홈페이지 메인이미지 조회에 실패하였습니다.
   """
-  seeHPMain: seeHPMainInfo
+  seeHPMain: [seeHPMainInfo]
 }
 
 type seeHPMainInfo {

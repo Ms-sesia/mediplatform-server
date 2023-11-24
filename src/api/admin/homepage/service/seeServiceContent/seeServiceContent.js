@@ -1,6 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import fs from "fs";
-import path from "path";
 
 const prisma = new PrismaClient();
 
@@ -9,11 +7,13 @@ export default {
     seeServiceContent: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
+      const { serviceType, detailTabName } = args;
       try {
         if (user.userType !== "admin") throw 1;
         const admin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
 
         const hsc = await prisma.homepageServiceContent.findMany({
+          where: { AND: [{ hsc_serviceType: serviceType }, { hsc_detailTabName: detailTabName }] },
           orderBy: { hsc_createdAt: "desc" },
         });
 

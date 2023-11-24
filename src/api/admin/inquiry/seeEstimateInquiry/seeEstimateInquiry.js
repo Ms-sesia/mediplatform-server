@@ -7,12 +7,16 @@ export default {
     seeEstimateInquiry: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { take, cursor } = args;
+      const { answerStatus, take, cursor } = args;
       try {
         if (user.userType !== "admin") throw 1;
         const admin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
 
-        const totalEstimateInquiry = await prisma.estimateInquiry.findMany();
+        const totalEstimateInquiry = await prisma.estimateInquiry.findMany({
+          where: {
+            ei_answerStatus: answerStatus === "total" ? undefined : answerStatus === "ans" ? true : false,
+          },
+        });
 
         if (!totalEstimateInquiry.length)
           return {
@@ -24,6 +28,9 @@ export default {
         const cursorOpt = cursor === 0 ? { take } : { take, skip: 0, cursor: { ei_id: cursorId } };
 
         const estimateInquiryList = await prisma.estimateInquiry.findMany({
+          where: {
+            ei_answerStatus: answerStatus === "total" ? undefined : answerStatus === "ans" ? true : false,
+          },
           ...cursorOpt,
           orderBy: { ei_createdAt: "desc" },
         });

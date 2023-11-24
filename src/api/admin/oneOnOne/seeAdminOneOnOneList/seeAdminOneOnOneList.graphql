@@ -8,6 +8,21 @@ type Query {
   """
   seeAdminOneOnOneList(
     """
+    공개 / 비공개
+
+    - 공개 : true
+    - 비공개 : false
+    """
+    publicPrivate: Boolean
+    """
+    답변 상태
+
+    - 전체 : total
+    - 답변 : ans
+    - 미답변 : unAns
+    """
+    answerStatus: answerStatus
+    """
     정렬
 
     오름차순: asc

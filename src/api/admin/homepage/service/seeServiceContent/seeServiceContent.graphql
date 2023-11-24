@@ -6,7 +6,21 @@ type Query {
   - err_00 : 홈페이지 서비스 내용 조회(emr 차트 / cloud 플랫폼) 실패하였습니다.
   - err_01 : 관리자만 이용 가능합니다.
   """
-  seeServiceContent: [seeServiceContentInfo]
+  seeServiceContent(
+    """
+    서비스 구분
+
+    - EMR, CLOUD
+    """
+    serviceType: String!
+    """
+    세부 탭 내용
+
+    - EMR : EMR/CHECK/IMAGE/LAB/E-SIGN/DESK/CLOUD/DID/CHECK-UP/CHART/CRM/ETC
+    - CLOUD : CLOUD
+    """
+    detailTabName: String!
+  ): [seeServiceContentInfo]
 }
 
 """

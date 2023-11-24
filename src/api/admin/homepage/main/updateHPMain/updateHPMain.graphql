@@ -8,7 +8,7 @@ type Mutation {
   """
   updateHPMain(
     """
-    수정할 메인 이미지 id, 없으면 0
+    수정할 메인 이미지 id
     """
     hm_id: Int!
     """

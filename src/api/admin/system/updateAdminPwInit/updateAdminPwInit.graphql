@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  관리자계정 비밀번호 초기화
+
+  * error
+  - err_00 : 관리자계정 비밀번호 초기화 실패
+  - err_01 : 마스터관리자만 사용할 수 있는 기능입니다.
+  """
+  updateAdminPwInit(
+    """
+    관리자계정 id
+    """
+    admin_id: Int!
+  ): Boolean
+}

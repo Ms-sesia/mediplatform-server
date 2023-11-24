@@ -18,6 +18,7 @@ import { authenticateJwt } from "./passport";
 import webSocket from "./libs/webSocket/webSocket";
 import tobeSchedule from "./libs/scheduler/tobeSchedule";
 import apiRoute from "./api/expApi/router";
+import { hpMainCheck } from "./libs/1stTimeCreate";
 
 /* subscription libs */
 // import { WebSocketServer } from "ws";
@@ -51,9 +52,10 @@ const PORT = process.env.SERVER_PORT;
   app.use(express.static(path.join(__dirname, "../", "images")));
   app.use(express.static(path.join(__dirname, "../", "files")));
   app.use(express.static(path.join(__dirname, "../", "didMedia")));
-  
+
   tobeSchedule();
-  
+  await hpMainCheck();
+
   const corsOptions = {
     // origin: ["https://mediplatform.platcube.com"],
     // optionsSuccessStatus: 200,
@@ -62,9 +64,9 @@ const PORT = process.env.SERVER_PORT;
   app.use(json());
   app.use(express.urlencoded({ extended: false }));
   app.use("/api", apiRoute);
-  
+
   app.use(graphqlUploadExpress()); // graphql 파일업로드
-  
+
   app.use(
     "/graphql",
     cors(corsOptions),

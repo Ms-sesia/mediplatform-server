@@ -26,7 +26,13 @@ export default {
           },
         });
 
+        const lastLogin = await prisma.adminLoginHistory.findFirst({
+          where: { admin_id: admin.admin_id },
+          orderBy: { alh_createdAt: "desc" },
+        });
+
         admin.admin_createdAt = new Date(admin.admin_createdAt).toISOString();
+        admin.admin_lastLogin = new Date(lastLogin.alh_createdAt).toISOString();
 
         return admin;
       } catch (e) {

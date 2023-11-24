@@ -28,6 +28,7 @@ type seeAdminListInfo {
 관리자
 """
 type admin {
+  admin_id: Int
   """
   이름 10자
   """

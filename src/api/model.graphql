@@ -1304,3 +1304,18 @@ enum insuranceStatus {
   """
   processing
 }
+
+enum answerStatus {
+  """
+  전체
+  """
+  total
+  """
+  답변
+  """
+  ans
+  """
+  미답변
+  """
+  unAns
+}
