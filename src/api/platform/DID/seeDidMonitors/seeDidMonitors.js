@@ -65,7 +65,7 @@ export default {
           didList: didList.length ? didList : [],
         };
       } catch (e) {
-        console.log("관리자 목록 조회 실패. seeDidMonitors ==>\n", e);
+        console.log("did 목록 조회 실패. seeDidMonitors ==>\n", e);
         throw new Error("err_00");
       }
     },

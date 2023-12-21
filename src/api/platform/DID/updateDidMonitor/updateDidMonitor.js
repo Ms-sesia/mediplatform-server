@@ -8,6 +8,14 @@ import webSocket from "../../../../libs/webSocket/webSocket";
 
 const prisma = new PrismaClient();
 
+/** 수정 - 첨부파일 로직
+ * 처음 파일들이 있어서 da_id가 [1, 2, 3]이라고 가정.
+ * 1. 순서만 변경할 경우 did_attached의 da_id를 이용해서 da_number만 업데이트
+ * 2. 파일을 삭제할 경우 did_deleteAttachedId를 이용해서 삭제
+ * 3. 파일삭제 후 다른 파일로 추가할 경우 did_deleteAttachedId를 이용해서 삭제하고 추가할 파일의 da_id는 0으로 입력해서 전달
+ * 4. 순서변경 + 파일삭제할 경우 did_attached의 da_id를 이용해서 da_number를 순서대로 (1, 2, 3)업데이트 하고 did_deleteAttachedId를 이용해서 삭제하고 추가할 파일의 da_id는 0으로 입력해서 전달
+ */
+
 export default {
   Mutation: {
     updateDidMonitor: async (_, args, { request, isAuthenticated }) => {
@@ -57,7 +65,9 @@ export default {
 
         const did = await prisma.did.findUnique({ where: { did_id } });
 
+        // 삭제할 id가 있으면 삭제
         if (did_deleteAttachedId.length) {
+          console.log("did_deleteAttachedId:", did_deleteAttachedId, did_deleteAttachedId.length);
           for (let i = 0; i < did_deleteAttachedId.length; i++) {
             const deleteDa = await prisma.didAttached.findUnique({
               where: { da_id: did_deleteAttachedId[i] },
@@ -69,9 +79,13 @@ export default {
               fs.unlinkSync(`${storagePath}/${urlFileName}`);
             }
 
-            await prisma.didAttached.update({
+            // await prisma.didAttached.update({
+            //   where: { da_id: did_deleteAttachedId[i] },
+            //   data: { da_isDelete: true, da_deleteDate: new Date() },
+            // });
+            await prisma.didAttached.delete({
               where: { da_id: did_deleteAttachedId[i] },
-              data: { da_isDelete: true, da_deleteDate: new Date() },
+              // data: { da_isDelete: true, da_deleteDate: new Date() },
             });
           }
         }
@@ -125,6 +139,7 @@ export default {
 
         if (did_attached.length) {
           for (let i = 0; i < did_attached.length; i++) {
+            // da_id가 0일경우에는 첨부파일 생성
             if (did_attached[i].da_id === 0) {
               const { createReadStream, filename, encoding, mimetype } = await did_attached[i].da_file;
               const stream = createReadStream();
@@ -157,6 +172,7 @@ export default {
                   did: { connect: { did_id: did.did_id } },
                 },
               });
+              // da_id가 0이 아닐경우에는 순서 업데이트
             } else {
               await prisma.didAttached.update({
                 where: { da_id: did_attached[i].da_id },

@@ -51,4 +51,8 @@ type seeServiceContentInfo {
   담당자 직급
   """
   creatorRank: String
+  """
+  서비스 세부항목 내용
+  """
+  serviceDetail: [String]
 }

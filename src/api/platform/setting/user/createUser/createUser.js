@@ -44,6 +44,7 @@ export default {
           where: { AND: [{ hsp_id: user.hospital.hsp_id }, { rank_name: rank }] },
         });
 
+        console.log("findRank:", findRank);
         const rankPermission = await prisma.rankPermission.findUnique({
           where: { rank_id: findRank[0].rank_id },
         });

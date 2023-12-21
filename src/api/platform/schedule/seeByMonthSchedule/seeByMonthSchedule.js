@@ -118,6 +118,8 @@ export default {
                       { ss_endDate: { gte: startDate, lte: endDate } },
                     ],
                   },
+                  { ss_isDelete: false },
+                  { ss_status: "sign" },
                 ],
               },
               select: {

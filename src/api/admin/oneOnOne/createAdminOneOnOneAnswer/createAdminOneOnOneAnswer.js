@@ -25,6 +25,11 @@ export default {
           },
         });
 
+        await prisma.oneOnOne.update({
+          where: { oneq_id },
+          data: { oneq_status: true },
+        });
+
         return true;
       } catch (e) {
         console.log("일대일 문의 답변 실패. createAdminOneOnOneAnswer", e);

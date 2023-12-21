@@ -148,6 +148,7 @@ export default {
                   { hsp_id: user.hospital.hsp_id },
                   { dr_id: dr.dr_id },
                   { ss_isDelete: false },
+                  { ss_status: "sign" },
                   { ss_startDate: { lte: schDate } },
                   { ss_endDate: { gte: schDate } },
                 ],

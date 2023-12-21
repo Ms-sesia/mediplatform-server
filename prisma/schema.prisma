@@ -312,7 +312,7 @@ model userPermission {
 // 이메일 인증코드
 model userEmailAuthCode {
   ueac_id        Int      @id @default(autoincrement())
-  ueac_createdAt DateTime
+  ueac_createdAt DateTime @default(now())
   ueac_code      String   @default("") @db.VarChar(10) // 인증코드 8자리
   ueac_email     String   @default("") @db.VarChar(125) // 변경할 이메일 
   user           user     @relation(fields: [user_id], references: [user_id])
@@ -367,6 +367,7 @@ model patient {
   pati_name        String        @default("") @db.VarChar(50) // 환자 이름
   pati_rrn         String        @default("") @db.VarChar(25) // 환자 주민번호. (resident registration number)
   pati_cellphone   String        @default("") @db.VarChar(25) // 환자 휴대폰번호
+  pati_cellphone2  String        @default("") @db.VarChar(25) // 환자 휴대폰번호2번
   pati_chartNumber String        @default("") @db.VarChar(25) // 환자 차트번호 20자
   pati_gender      Boolean       @default(false) // false : 남자, true: 여자
   patientMemo      patientMemo[]
@@ -429,6 +430,7 @@ model reservation {
   re_LCategory        String     @default("") @db.VarChar(65) // 예약구분 - 대분류 50자
   re_SCategory        String     @default("") @db.VarChar(65) // 예약구분 - 소분류 50자
   re_doctorRoomName   String     @default("") @db.VarChar(25) // 진료실 이름
+  re_doctorRoomId     Int        @default(0) // 진료실 id
   resAlim             resAlim?
   patient             patient?   @relation(fields: [pati_id], references: [pati_id])
   pati_id             Int?
@@ -1148,24 +1150,6 @@ model alimSet {
   hospital      hospital    @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id        Int         @unique
 }
-
-// // 의료법 내용
-// model medicalLaw {
-//   ml_id          Int         @id @default(autoincrement())
-//   ml_proposeDate DateTime // 제안 날짜
-//   ml_title       String      @default("") @db.VarChar(150) // 제목
-//   ml_text        String      @default("") @db.VarChar(250) // 내용
-//   ml_proposer    String      @default("") @db.VarChar(250) // 제안자
-//   mlKeyword      mlKeyword[]
-// }
-
-// // 의료법 내용 키워드
-// model mlKeyword {
-//   mlk_id     Int        @id @default(autoincrement())
-//   mlk_word   String     @default("") @db.VarChar(60) // 키워드 50자
-//   medicalLaw medicalLaw @relation(fields: [ml_id], references: [ml_id])
-//   ml_id      Int
-// }
 
 // 사용자 구분 - 사용자, 관리자
 enum userType {

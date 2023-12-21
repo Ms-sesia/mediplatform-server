@@ -25,7 +25,7 @@ export default {
                 ssh_creatorName: loginUser.user_name,
                 ssh_creatorRank: loginUser.user_rank,
                 ssh_type: "history",
-                ssh_confirmStatus: status === "sign" ? true : false,
+                ssh_confirmStatus: status,
                 ssh_text: `${loginUser.user_name}님이 ${convSSStatus(status)}을(를) 했습니다.`,
               },
             },

@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { genRandomCode } from "../../../../../generate";
 import sendEmail from "../../../../../libs/sendEmail";
-import { today9 } from "../../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 

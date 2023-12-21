@@ -1,6 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import fs from "fs";
-import path from "path";
 
 const prisma = new PrismaClient();
 
@@ -14,6 +12,7 @@ export default {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
         const deleteIh = await prisma.insuranceHistory.update({
+          where: { ih_id },
           data: {
             ih_editorId: loginUser.user_id,
             ih_editorName: loginUser.user_name,

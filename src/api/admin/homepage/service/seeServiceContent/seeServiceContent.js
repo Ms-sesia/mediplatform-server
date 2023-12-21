@@ -22,6 +22,10 @@ export default {
             where: { hsc_id: hscTitle.hsc_id },
           });
 
+          const detailTexts = hscd.map((detail) => {
+            return detail.hsd_text;
+          });
+
           return {
             hsc_id: hscTitle.hsc_id,
             title: hscTitle.hsc_title,
@@ -29,6 +33,7 @@ export default {
             createdAt: new Date(hscTitle.hsc_createdAt).toISOString(),
             creatorName: hscTitle.hsc_adminName,
             creatorRank: hscTitle.hsc_adminRank,
+            serviceDetail: detailTexts,
           };
         });
 

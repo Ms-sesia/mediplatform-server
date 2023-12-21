@@ -15,7 +15,7 @@ export default {
             AND: [
               { hsp_id: user.hospital.hsp_id },
               { user_isDelete: false },
-              { rank: filter === "" ? undefined : filter },
+              { user_rank: filter === "" ? undefined : filter },
               { user_name: { contains: searchTerm } },
               { user_cellphone: { contains: searchTerm } },
             ],
@@ -39,7 +39,7 @@ export default {
             AND: [
               { hsp_id: user.hospital.hsp_id },
               { user_isDelete: false },
-              { rank: filter === "" ? undefined : filter },
+              { user_rank: filter === "" ? undefined : filter },
               { user_name: { contains: searchTerm } },
               { user_cellphone: { contains: searchTerm } },
             ],
@@ -85,8 +85,8 @@ export default {
           userList: userList.length ? userList : [],
         };
       } catch (e) {
-        console.log("관리자 목록 조회 실패. seeDidMonitors ==>\n", e);
-        throw new Error("관리자 목록 조회에 실패하였습니다.");
+        console.log("사용자 목록 조회 실패. seeUserList ==>\n", e);
+        throw new Error("사용자 목록 조회에 실패하였습니다.");
       }
     },
   },

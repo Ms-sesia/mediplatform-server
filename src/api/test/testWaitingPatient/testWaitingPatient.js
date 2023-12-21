@@ -19,7 +19,7 @@ export default {
           Email: "admin@platcube.com",
           WaitingList: [
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "1",
               DeptName: "제1진료실",
               WaitingStatus: "대 기",
@@ -33,7 +33,7 @@ export default {
               Memo: "접수메모1",
             },
             {
-              DeptCode: "2",
+              DeptCode: "5",
               WaitingSeq: "2",
               DeptName: "제2진료실",
               WaitingStatus: "대 기",
@@ -47,7 +47,7 @@ export default {
               Memo: "접수메모2",
             },
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "3",
               DeptName: "제1진료실",
               WaitingStatus: "대 기",
@@ -61,7 +61,7 @@ export default {
               Memo: "접수메모3",
             },
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "1",
               DeptName: "제1진료실",
               WaitingStatus: "보류중",
@@ -75,7 +75,7 @@ export default {
               Memo: "접수메모4",
             },
             {
-              DeptCode: "2",
+              DeptCode: "5",
               WaitingSeq: "2",
               DeptName: "제2진료실",
               WaitingStatus: "대 기",
@@ -89,7 +89,7 @@ export default {
               Memo: "접수메모5",
             },
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "3",
               DeptName: "제1진료실",
               WaitingStatus: "진료중",
@@ -103,7 +103,7 @@ export default {
               Memo: "접수메모6",
             },
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "1",
               DeptName: "제1진료실",
               WaitingStatus: "대 기",
@@ -117,7 +117,7 @@ export default {
               Memo: "접수메모1",
             },
             {
-              DeptCode: "2",
+              DeptCode: "5",
               WaitingSeq: "2",
               DeptName: "제2진료실",
               WaitingStatus: "진료중",
@@ -131,7 +131,7 @@ export default {
               Memo: "접수메모2",
             },
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "3",
               DeptName: "제1진료실",
               WaitingStatus: "대 기",
@@ -145,7 +145,7 @@ export default {
               Memo: "접수메모3 응급",
             },
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "1",
               DeptName: "제1진료실",
               WaitingStatus: "대 기",
@@ -159,7 +159,7 @@ export default {
               Memo: "접수메모4",
             },
             {
-              DeptCode: "2",
+              DeptCode: "5",
               WaitingSeq: "2",
               DeptName: "제2진료실",
               WaitingStatus: "대 기",
@@ -173,7 +173,7 @@ export default {
               Memo: "접수메모5",
             },
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "3",
               DeptName: "제1진료실",
               WaitingStatus: "대 기",
@@ -187,7 +187,7 @@ export default {
               Memo: "접수메모6",
             },
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "1",
               DeptName: "제1진료실",
               WaitingStatus: "대 기",
@@ -201,7 +201,7 @@ export default {
               Memo: "접수메모1",
             },
             {
-              DeptCode: "2",
+              DeptCode: "6",
               WaitingSeq: "2",
               DeptName: "제2진료실",
               WaitingStatus: "대 기",
@@ -215,7 +215,7 @@ export default {
               Memo: "접수메모2 응급",
             },
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "3",
               DeptName: "제1진료실",
               WaitingStatus: "대 기",
@@ -229,7 +229,7 @@ export default {
               Memo: "접수메모3",
             },
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "1",
               DeptName: "제1진료실",
               WaitingStatus: "대 기",
@@ -243,7 +243,7 @@ export default {
               Memo: "접수메모4",
             },
             {
-              DeptCode: "2",
+              DeptCode: "5",
               WaitingSeq: "2",
               DeptName: "제2진료실",
               WaitingStatus: "보류중",
@@ -257,7 +257,7 @@ export default {
               Memo: "접수메모5",
             },
             {
-              DeptCode: "1",
+              DeptCode: "6",
               WaitingSeq: "3",
               DeptName: "제1진료실",
               WaitingStatus: "대 기",
@@ -294,7 +294,7 @@ export default {
             WaitingDate: "20230828",
             Email: "admin@platcube.com",
             DeptName: "제1진료실",
-            DeptCode: "1",
+            DeptCode: "6",
             PatientName: "이영광",
           },
           {
@@ -302,7 +302,7 @@ export default {
             WaitingDate: "20230828",
             Email: "admin@platcube.com",
             DeptName: "제2진료실",
-            DeptCode: "2",
+            DeptCode: "5",
             PatientName: "박동현",
           },
           {
@@ -310,7 +310,7 @@ export default {
             WaitingDate: "20230828",
             Email: "admin@platcube.com",
             DeptName: "제1진료실",
-            DeptCode: "1",
+            DeptCode: "6",
             PatientName: "박동한",
           },
           {
@@ -318,7 +318,7 @@ export default {
             WaitingDate: "20230828",
             Email: "admin@platcube.com",
             DeptName: "제2진료실",
-            DeptCode: "2",
+            DeptCode: "5",
             PatientName: "테스트",
           },
         ];

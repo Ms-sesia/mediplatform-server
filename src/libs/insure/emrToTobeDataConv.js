@@ -127,11 +127,11 @@ export const convEmrToTobeData = (emrData) => {
     };
   });
 
-  tobeInsureData.tobeReceiptList = tobeReceiptList;
-  tobeInsureData.tobeReceiptItemList = tobeReceiptItemList;
-  tobeInsureData.tobeReceiptDetailList = tobeReceiptDetailList;
-  tobeInsureData.tobeDiagsList = tobeDiagsList;
-  tobeInsureData.tobePhamList = tobePhamList;
+  tobeInsureData.receiptList = tobeReceiptList;
+  tobeInsureData.receiptItemList = tobeReceiptItemList;
+  tobeInsureData.receiptDetailList = tobeReceiptDetailList;
+  tobeInsureData.diagsList = tobeDiagsList;
+  tobeInsureData.phamList = tobePhamList;
 
   console.log();
 

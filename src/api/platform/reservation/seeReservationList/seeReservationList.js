@@ -96,7 +96,7 @@ export default {
           if (res.pati_id) patientInfo = await prisma.patient.findUnique({ where: { pati_id: res.pati_id } });
 
           const alimSet = await prisma.resAlim.findUnique({ where: { re_id: res.re_id } });
-          
+
           let template;
           if (alimSet) {
             template = await prisma.resAlimTemplate.findUnique({ where: { rat_id: alimSet.ra_templateId } });
@@ -120,11 +120,11 @@ export default {
             patientChartNumber: patientInfo ? patientInfo.pati_chartNumber : "",
             largeCategory: res.re_LCategory,
             smallCategory: res.re_SCategory,
-            alimType: alimSet.ra_type,
-            alimTime1: alimSet.ra_time1,
-            alimTime2: alimSet.ra_time2,
-            alimTime3: alimSet.ra_time3,
-            alimTime4: alimSet.ra_time4,
+            alimType: alimSet ? alimSet.ra_type : "sms",
+            alimTime1: alimSet ? alimSet.ra_time1 : false,
+            alimTime2: alimSet ? alimSet.ra_time2 : false,
+            alimTime3: alimSet ? alimSet.ra_time3 : false,
+            alimTime4: alimSet ? alimSet.ra_time4 : false,
             template: template ? template.rat_text : "",
           };
         });

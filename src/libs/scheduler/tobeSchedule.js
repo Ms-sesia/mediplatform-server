@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import axios from "axios";
 import schedule from "node-schedule";
-import { today9 } from "../todayCal";
 
 const prisma = new PrismaClient();
 

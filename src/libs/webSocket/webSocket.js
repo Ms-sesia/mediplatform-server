@@ -154,7 +154,7 @@ const webSocket = async (httpServer) => {
     // did - 대기환자
     socket.on("getWaitingPatiInfo", async (data) => {
       const getPatient = JSON.parse(data);
-      // console.log("getPatient:", getPatient);
+      console.log("getPatient:", getPatient);
 
       if (getPatient) {
         const sendChannel = `h-${getPatient.Email}`;

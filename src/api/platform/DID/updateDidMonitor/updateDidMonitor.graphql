@@ -165,6 +165,9 @@ input doctorRoomInfo {
 수정할 첨부파일 정보
 """
 input updateAttachedInfo {
+  """
+  새로 추가하는 경우는 da_id값 0 입력
+  """
   da_id: Int
   da_file: Upload
 }
