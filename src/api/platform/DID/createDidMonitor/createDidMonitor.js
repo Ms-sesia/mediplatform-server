@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { genRandomCode } from "../../../../generate";
+import { genDidUnique, genRandomCode } from "../../../../generate";
 import fs from "fs";
 import path from "path";
 
@@ -25,19 +25,14 @@ export default {
 
         const storagePath = path.join(__dirname, "../../../../../", "didMedia");
 
-        let uuid10, monitorUniqueKey;
-        const today = new Date().getTime();
+        let uuid5;
 
         let unique = false;
         while (!unique) {
-          uuid10 = genRandomCode(8);
-
-          // 병원id + 오늘날짜 + uuid 10자리
-          monitorUniqueKey = `${user.hospital.hsp_id}${today}${uuid10}`;
+          const latestDid = await prisma.did.findFirst({ orderBy: { did_id: "desc" } });
+          uuid5 = genDidUnique(latestDid.did_id);
           // uniqueId 중복 체크
-          const checkDidUnique = await prisma.did.findUnique({
-            where: { did_uniqueId: monitorUniqueKey },
-          });
+          const checkDidUnique = await prisma.did.findUnique({ where: { did_uniqueId: uuid5 } });
 
           // 중복이 없으면
           if (!checkDidUnique) {
@@ -69,7 +64,7 @@ export default {
             did_patExpRatio4: 0,
             did_resInfoTime: 10,
             did_resInfoCycle: 30,
-            did_uniqueId: monitorUniqueKey,
+            did_uniqueId: uuid5,
             hospital: { connect: { hsp_id: user.hospital.hsp_id } },
           },
         });
@@ -81,7 +76,6 @@ export default {
 
             const fileRename = `${Date.now()}-${filename}`;
 
-            // await stream.pipe(fs.createWriteStream(`${storagePath}/${fileRename}`));
             const writeStream = fs.createWriteStream(`${storagePath}/${fileRename}`);
 
             stream.pipe(writeStream);

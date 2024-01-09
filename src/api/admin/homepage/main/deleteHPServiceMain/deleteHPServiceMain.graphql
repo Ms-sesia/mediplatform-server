@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  서비스 메인 삭제
+
+  * error
+  - err_00 : 서비스 메인 삭제에 실패하였습니다.
+  - err_01 : 관리자만 삭제 가능합니다.
+  """
+  deleteHPServiceMain(
+    """
+    서비스 메인 id
+    """
+    hsm_id: Int!
+  ): Boolean
+}

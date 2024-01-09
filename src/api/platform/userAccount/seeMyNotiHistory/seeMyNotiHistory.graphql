@@ -1,0 +1,21 @@
+type Query {
+  """
+  사용자 알림 내역 조회
+  """
+  seeMyNotiHistory: [notiHistries]
+}
+
+type notiHistries {
+  """
+  noti id
+  """
+  ng_id: Int
+  """
+  알림 내역
+  """
+  text: String
+  """
+  알림 확인여부. true: 읽음, false: 안읽음
+  """
+  check: Boolean
+}

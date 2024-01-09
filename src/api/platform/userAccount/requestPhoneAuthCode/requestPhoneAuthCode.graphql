@@ -4,6 +4,7 @@ type Mutation {
 
   * error
   - err_00 : 휴대폰 인증번호 전송에 실패하였습니다.
+  - err_01 : 문자 거래처(발신자) 번호를 추가해주세요.
   """
   requestPhoneAuthCode(
     """

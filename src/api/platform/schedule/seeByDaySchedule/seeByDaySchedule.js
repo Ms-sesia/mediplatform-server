@@ -11,7 +11,8 @@ export default {
       const { user } = request;
       const { searchDate, searchTerm, orderBy } = args;
       try {
-        const schDate = new Date(searchDate);
+        const inputDate = searchDate.split("T")[0].split("-");
+        const schDate = new Date(inputDate[0], inputDate[1] - 1, inputDate[2]);
         const DayofWeek = weekdays_eng[schDate.getDay()];
 
         let operSchedule = new Array();

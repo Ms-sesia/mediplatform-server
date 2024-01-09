@@ -1,7 +1,7 @@
 type Query {
   """
   알림 설정 정보 내용 조회
-  
+
   * error
   - err_00 : 알림 설정 정보 내용 조회에 실패하였습니다.
   """
@@ -9,11 +9,36 @@ type Query {
 }
 
 type seeReservationAlimSetInfo {
-  exist: Boolean # 데이터 존재 여부. false면 전부 빈값
-  type: String # 문자 : sms / 카카오 : kakao
-  time1: Boolean # 발송시간 - 즉시
-  time2: Boolean # 발송시간 - 1일전
-  time3: Boolean # 발송시간 - 2일전
-  time4: Boolean # 발송시간 - 당일오전9시
-  template: String # 문자발송 템픞릿
+  """
+  데이터 존재 여부. false면 전부 빈값
+  """
+  exist: Boolean
+  """
+  문자 : sms / 카카오 : kakao
+  """
+  type: String
+  """
+  발송시간 - 즉시
+  """
+  time1: Boolean
+  """
+  발송시간 - 1일전
+  """
+  time2: Boolean
+  """
+  발송시간 - 2일전
+  """
+  time3: Boolean
+  """
+  발송시간 - 당일오전9시
+  """
+  time4: Boolean
+  """
+  설정된 템플릿 id
+  """
+  templateId: Int
+  """
+  문자발송 템픞릿
+  """
+  template: String
 }

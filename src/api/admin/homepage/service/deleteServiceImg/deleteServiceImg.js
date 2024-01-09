@@ -26,6 +26,10 @@ export default {
           }
         }
 
+        await prisma.homepageServiceImg.delete({
+          where: { hsi_id },
+        });
+
         return true;
       } catch (e) {
         console.log("홈페이지 서비스 이미지 삭제 실패. deleteServiceImg ==>\n", e);

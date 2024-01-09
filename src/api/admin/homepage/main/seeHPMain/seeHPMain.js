@@ -12,7 +12,7 @@ export default {
         // const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
 
         const hm = await prisma.homepageMain.findMany({
-          orderBy: { hm_createdAt: "desc" },
+          orderBy: { hm_id: "asc" },
         });
 
         if (!hm.length) return [];

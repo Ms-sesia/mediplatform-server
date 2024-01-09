@@ -16,8 +16,7 @@ export default {
               { hsp_id: user.hospital.hsp_id },
               { user_isDelete: false },
               { user_rank: filter === "" ? undefined : filter },
-              { user_name: { contains: searchTerm } },
-              { user_cellphone: { contains: searchTerm } },
+              { OR: [{ user_name: { contains: searchTerm } }, { user_cellphone: { contains: searchTerm } }] },
             ],
           },
         });
@@ -40,8 +39,7 @@ export default {
               { hsp_id: user.hospital.hsp_id },
               { user_isDelete: false },
               { user_rank: filter === "" ? undefined : filter },
-              { user_name: { contains: searchTerm } },
-              { user_cellphone: { contains: searchTerm } },
+              { OR: [{ user_name: { contains: searchTerm } }, { user_cellphone: { contains: searchTerm } }] },
             ],
           },
           ...cursorOpt,
@@ -49,32 +47,17 @@ export default {
         });
 
         const userList = findUserList.map(async (userInfo) => {
-          const rank = await prisma.rank.findFirst({
-            where: { AND: [{ rank_name: userInfo.user_rank }, { hsp_id: userInfo.hsp_id }] },
-          });
-          const rankPermission = await prisma.rankPermission.findUnique({
-            where: { rank_id: rank.rank_id },
-            select: {
-              rp_home: true,
-              rp_reservation: true,
-              rp_schedule: true,
-              rp_patient: true,
-              rp_did: true,
-              rp_insurance: true,
-              rp_cs: true,
-              rp_setting: true,
-            },
-          });
-
+          const userPermission = await prisma.userPermission.findUnique({ where: { user_id: userInfo.user_id } });
+          
           userInfo.user_rankPermission = {
-            home: rankPermission.rp_home,
-            reservation: rankPermission.rp_reservation,
-            schedule: rankPermission.rp_schedule,
-            patient: rankPermission.rp_patient,
-            did: rankPermission.rp_did,
-            insurance: rankPermission.rp_insurance,
-            cs: rankPermission.rp_cs,
-            setting: rankPermission.rp_setting,
+            home: userPermission.up_home,
+            reservation: userPermission.up_reservation,
+            schedule: userPermission.up_schedule,
+            patient: userPermission.up_patient,
+            did: userPermission.up_did,
+            insurance: userPermission.up_insurance,
+            cs: userPermission.up_cs,
+            setting: userPermission.up_setting,
           };
 
           return userInfo;

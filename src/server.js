@@ -20,10 +20,6 @@ import tobeSchedule from "./libs/scheduler/tobeSchedule";
 import apiRoute from "./api/expApi/router";
 import { hpMainCheck } from "./libs/1stTimeCreate";
 
-/* subscription libs */
-// import { WebSocketServer } from "ws";
-// import { useServer } from "graphql-ws/lib/use/ws";
-
 const PORT = process.env.SERVER_PORT;
 
 (async () => {

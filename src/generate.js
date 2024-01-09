@@ -26,3 +26,15 @@ export const genRandomCode = (stringLength) => {
   }
   return randomstring;
 };
+
+// did unique id 생성
+export const genDidUnique = (didId) => {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXTZ";
+
+  const setNum = didId % 100000; // 숫자 부분(나머지)
+  const charIndex = Math.floor((didId - 1) / 100000) % chars.length; // 알파벳 인덱스
+  const setChar = chars[charIndex]; // 알파벳 문자
+  const convNum = String(setNum).padStart(5, "0"); // 5자리 숫자 포맷
+
+  return setChar + convNum;
+};

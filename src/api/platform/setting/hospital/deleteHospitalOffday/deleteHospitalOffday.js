@@ -10,7 +10,6 @@ export default {
       const { user } = request;
       const { deleteId, aldyoffdayRepeat } = args;
       try {
-        console.log("deleteHospitalOffday: ", args);
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         switch (aldyoffdayRepeat) {
           case "none":

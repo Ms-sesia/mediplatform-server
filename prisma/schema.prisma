@@ -112,7 +112,6 @@ model homepageServiceContent {
   hsc_adminRank                String                         @default("") @db.VarChar(25) // 담당자 직책
   hsc_adminId                  Int                            @default(0) // 담당자 id
   homepageServiceContentDetail homepageServiceContentDetail[]
-  homepageServiceImg           homepageServiceImg[]
 }
 
 // 홈페이지 서비스의 상세내용 
@@ -128,16 +127,16 @@ model homepageServiceContentDetail {
 
 // 홈페이지 서비스의 이미지 
 model homepageServiceImg {
-  hsi_id                 Int                    @id @default(autoincrement())
-  hsi_createdAt          DateTime               @default(now()) // 동록일
-  hsi_img                String                 @default("") @db.VarChar(250) // 홈페이지 서비스 이미지 url
-  hsi_imgType            String                 @default("") @db.VarChar(250) // 이미지 타입
-  hsi_imgSize            Int                    @default(0) // 이미지 사이즈
-  hsi_adminName          String                 @default("") @db.VarChar(25) // 담당자 이름
-  hsi_adminRank          String                 @default("") @db.VarChar(25) // 담당자 직책
-  hsi_adminId            Int                    @default(0) // 담당자 id
-  homepageServiceContent homepageServiceContent @relation(fields: [hsc_id], references: [hsc_id])
-  hsc_id                 Int
+  hsi_id            Int      @id @default(autoincrement())
+  hsi_createdAt     DateTime @default(now()) // 동록일
+  hsi_serviceType   String   @default("") @db.VarChar(25) // 서비스 구분 - EMR 차트, CLOUD 플랫폼
+  hsi_detailTabName String   @default("") @db.VarChar(25) // 세부 탭 내용 - EMR 차트: EMR/CHECK/IMAGE/LAB/E-SIGN/DESK/CLOUD/DID/CHECK-UP/CHART/CRM/ETC, CLOUD플랫폼: CLOUD 플랫폼
+  hsi_img           String   @default("") @db.VarChar(250) // 홈페이지 서비스 이미지 url
+  hsi_imgType       String   @default("") @db.VarChar(250) // 이미지 타입
+  hsi_imgSize       Int      @default(0) // 이미지 사이즈
+  hsi_adminName     String   @default("") @db.VarChar(25) // 담당자 이름
+  hsi_adminRank     String   @default("") @db.VarChar(25) // 담당자 직책
+  hsi_adminId       Int      @default(0) // 담당자 id
 }
 
 // 일반 문의 
@@ -291,6 +290,7 @@ model user {
   hospital            hospital              @relation(fields: [hsp_id], references: [hsp_id])
   hsp_id              Int
   userPhoneAuthCode   userPhoneAuthCode[]
+  notiHistory         notiHistory[] // 알리 발송 내역 
 
   @@index([user_name, user_cellphone])
 }
@@ -333,6 +333,16 @@ model searchHistory {
   sh_id        Int      @id @default(autoincrement())
   sh_createdAt DateTime @default(now()) // 검색일
   sh_text      String   @default("") @db.VarChar(65) // 검색어 
+  user         user     @relation(fields: [user_id], references: [user_id])
+  user_id      Int
+}
+
+// 알림 기록(내역)
+model notiHistory {
+  ng_id        Int      @id @default(autoincrement())
+  ng_createdAt DateTime @default(now())
+  ng_text      String   @default("") @db.VarChar(125) // 알림 내역 | 100자
+  ng_check     Boolean  @default(false) // 읽음 확인. true: 읽음, false: 안읽음
   user         user     @relation(fields: [user_id], references: [user_id])
   user_id      Int
 }
@@ -431,6 +441,7 @@ model reservation {
   re_SCategory        String     @default("") @db.VarChar(65) // 예약구분 - 소분류 50자
   re_doctorRoomName   String     @default("") @db.VarChar(25) // 진료실 이름
   re_doctorRoomId     Int        @default(0) // 진료실 id
+  re_appUserId        String     @default("") @db.VarChar(250) // 예약정보 id - 인포뱅크 요청
   resAlim             resAlim?
   patient             patient?   @relation(fields: [pati_id], references: [pati_id])
   pati_id             Int?
@@ -957,8 +968,8 @@ model faq {
   faq_adminEditorId   Int       @default(0) // 수정자 id
   faq_isDelete        Boolean   @default(false) // 삭제 여부
   faq_deleteDate      DateTime? // 삭제일
-  faq_question        String    @default("") @db.VarChar(250) // 질문
-  faq_answer          String    @default("") @db.VarChar(250) // 답변
+  faq_question        String    @default("") @db.VarChar(250) // 질문 | 200자
+  faq_answer          String    @default("") @db.VarChar(1250) // 답변 | 1000자
   faq_viewCount       Int       @default(0) // 조회수
   faqLike             faqLike[]
 }
@@ -987,8 +998,8 @@ model oneOnOne {
   oneq_editorRank    String             @default("") @db.VarChar(25) // 수정자 직책
   oneq_isDelete      Boolean            @default(false) // 삭제 여부
   oneq_deleteDate    DateTime? // 삭제일
-  oneq_title         String             @default("") @db.VarChar(125) // 일대일 문의 질문 제목
-  oneq_text          String             @default("") @db.VarChar(900) // 일대일 문의 질문 내용
+  oneq_title         String             @default("") @db.VarChar(250) // 일대일 문의 질문 제목 | 200자
+  oneq_text          String             @default("") @db.VarChar(1250) // 일대일 문의 질문 내용 | 1000자
   oneq_status        Boolean            @default(false) // 답변 상태. false: 답변대기, true: 답변완료
   oneq_publicPrivate Boolean            @default(false) // 공개 비공개 여부. false: 비공개, true: 공개
   oneOnOneAttached   oneOnOneAttached[]

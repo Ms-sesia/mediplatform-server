@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
-import { today9 } from "../../../../../../libs/todayCal";
+import sendEmail from "../../../../../../libs/sendEmail";
+import webSocket from "../../../../../../libs/webSocket/webSocket";
 
 const prisma = new PrismaClient();
 
@@ -14,6 +15,9 @@ export default {
       try {
         const storagePath = path.join(__dirname, "../../../../../../../", "files");
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
+        const hospital = await prisma.hospital.findUnique({
+          where: { hsp_id: user.hospital.hsp_id },
+        });
 
         const hospitalNotice = await prisma.hospitalNotice.create({
           data: {
@@ -59,6 +63,48 @@ export default {
           }
         }
 
+        // 알림 발송 할 병원, 삭제되지 않은 사용자, 알림을 켜둔 사용자
+        const sendUsers = await prisma.user.findMany({
+          where: { AND: [{ hsp_id: user.hospital.hsp_id }, { NOT: { user_isDelete: true } }, { user_hnAlim: true }] },
+        });
+
+        const sendTitle = `[메디플랫폼] 사내 공지사항 등록 안내`;
+        const sendText = `안녕하세요. 메디플랫폼입니다.<br>
+        사내공지사항 "${title}"이 등록되었으니 확인바랍니다.<br>
+        `;
+
+        for (const sendUser of sendUsers) {
+          try {
+            const email = sendUser.user_email;
+            await prisma.notiHistory.create({
+              data: {
+                ng_text: `새로운 사내공지사항 "${title}"이(가) 등록되었습니다.`,
+                user: { connect: { user_id: sendUser.user_id } },
+              },
+            });
+            // await sendEmail("yglee@platcube.com", sendTitle, sendText);
+            await sendEmail(email, sendTitle, sendText);
+          } catch (error) {
+            console.error(`사내공지 등록 알림 메일 발송 에러. createHospitalNotice ==> ${error}`);
+            throw 1;
+          }
+          // await delay(0.1); // 1ms (0.0001초) 지연
+        }
+
+        // Noti 알림 설정
+        const alimInfo = {
+          SendStatus: "alim",
+          alimType: "hospitalNotice",
+        };
+
+        // 병원(channel)에 접속한 클라이언트(socket)에게만 did수정 정보 전달
+        const socketIo = await webSocket();
+        const pub = socketIo.pub;
+
+        const channelName = `h-${hospital.hsp_email}`;
+
+        await pub.publish(channelName, JSON.stringify(alimInfo));
+
         return true;
       } catch (e) {
         console.log("사내공지 작성 실패. createHospitalNotice", e);
@@ -67,3 +113,5 @@ export default {
     },
   },
 };
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

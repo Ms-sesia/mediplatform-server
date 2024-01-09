@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { today9 } from "../../../../libs/todayCal";
 import fs from "fs";
 import path from "path";
+import sendEmail from "../../../../libs/sendEmail";
+import webSocket from "../../../../libs/webSocket/webSocket";
 
 const prisma = new PrismaClient();
 
@@ -14,6 +15,7 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const storagePath = path.join(__dirname, "../../../../../", "files");
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: user.hospital.hsp_id } });
 
         const doctorRoom = await prisma.doctorRoom.findUnique({ where: { dr_id } });
 
@@ -54,7 +56,6 @@ export default {
 
             const fileRename = `${Date.now()}-${filename}`;
 
-            // await stream.pipe(fs.createWriteStream(`${storagePath}/${fileRename}`));
             const writeStream = fs.createWriteStream(`${storagePath}/${fileRename}`);
 
             stream.pipe(writeStream);
@@ -80,6 +81,45 @@ export default {
           }
         }
 
+        const sendUsers = await prisma.user.findMany({ where: { hsp_id: user.hospital.hsp_id } });
+
+        const sendTitle = `[메디플랫폼] 특별일정 등록 안내`;
+        const sendText = `안녕하세요. 메디플랫폼입니다.<br>
+        병원에 새로운 특별일정이 등록되었습니다. 확인바랍니다.<br>
+        `;
+
+        for (const sendUser of sendUsers) {
+          try {
+            const email = sendUser.user_email;
+            await prisma.notiHistory.create({
+              data: {
+                ng_text: `병원에 새로운 특별일정이 등록되었습니다.`,
+                user: { connect: { user_id: sendUser.user_id } },
+              },
+            });
+            // await sendEmail("yglee@platcube.com", sendTitle, sendText);
+            await sendEmail(email, sendTitle, sendText);
+          } catch (error) {
+            console.error(`사내공지 등록 알림 메일 발송 에러. createSpecialSchedule ==> ${error}`);
+            throw 1;
+          }
+          // await delay(0.1); // 1ms (0.0001초) 지연
+        }
+
+        // Noti 알림 설정
+        const alimInfo = {
+          SendStatus: "alim",
+          alimType: "specialSchedule",
+        };
+
+        // 병원(channel)에 접속한 클라이언트(socket)에게만 did수정 정보 전달
+        const socketIo = await webSocket();
+        const pub = socketIo.pub;
+
+        const channelName = `h-${hospital.hsp_email}`;
+
+        await pub.publish(channelName, JSON.stringify(alimInfo));
+
         return true;
       } catch (e) {
         console.log("진료실 특별일정 추가 실패. createSpecialSchedule", e);
@@ -88,3 +128,5 @@ export default {
     },
   },
 };
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

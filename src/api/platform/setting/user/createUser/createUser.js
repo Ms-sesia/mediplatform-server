@@ -19,6 +19,9 @@ export default {
         // 10자리 랜덤 문자열(임시 비밀번호)
         const tempPw = genRandomCode(8);
 
+        const birth = new Date(birthday);
+        const convBirth = new Date(birth.getFullYear(), birth.getMonth(), birth.getDate());
+
         const title = "메디플랫폼 가입 안내 메일";
         const text = `안녕하세요. 메디플랫폼 계정생성 안내 메일입니다.<br>생성된 계정의 정보는 아래와 같습니다.<br><br>ID(email) : ${email}<br>password : ${tempPw}<br><br>로그인 후 비밀번호를 변경하고 사용해주세요.<br>감사합니다.`;
         await sendEmail(email, title, text);
@@ -28,7 +31,7 @@ export default {
         const createUser = await prisma.user.create({
           data: {
             user_name: name,
-            user_birthday: birthday,
+            user_birthday: convBirth.toISOString(),
             user_cellphone: cellphone,
             user_email: email,
             user_org: org,
@@ -37,35 +40,41 @@ export default {
             user_salt: hashedInfo.salt,
             user_password: hashedInfo.password,
             hospital: { connect: { hsp_id: user.hospital.hsp_id } },
+            userPermission: {
+              create: {},
+            },
           },
         });
 
-        const findRank = await prisma.rank.findMany({
-          where: { AND: [{ hsp_id: user.hospital.hsp_id }, { rank_name: rank }] },
-        });
+        if (rank) {
+          const findRank = await prisma.rank.findFirst({
+            where: { AND: [{ hsp_id: user.hospital.hsp_id }, { rank_name: rank }] },
+          });
 
-        console.log("findRank:", findRank);
-        const rankPermission = await prisma.rankPermission.findUnique({
-          where: { rank_id: findRank[0].rank_id },
-        });
+          const rankPermission = await prisma.rankPermission.findUnique({
+            where: { rank_id: findRank.rank_id },
+          });
 
-        await prisma.userPermission.update({
-          where: { user_id: createUser.user_id },
-          data: {
-            up_reservation: rankPermission.rp_reservation,
-            up_schedule: rankPermission.rp_schedule,
-            up_patient: rankPermission.rp_patient,
-            up_did: rankPermission.rp_did,
-            up_insurance: rankPermission.rp_insurance,
-            up_cs: rankPermission.rp_cs,
-            up_setting: rankPermission.rp_setting,
-          },
-        });
+          await prisma.userPermission.update({
+            where: { user_id: createUser.user_id },
+            data: {
+              up_reservation: rankPermission.rp_reservation,
+              up_schedule: rankPermission.rp_schedule,
+              up_patient: rankPermission.rp_patient,
+              up_did: rankPermission.rp_did,
+              up_insurance: rankPermission.rp_insurance,
+              up_cs: rankPermission.rp_cs,
+              up_setting: rankPermission.rp_setting,
+            },
+          });
+        }
 
         return true;
       } catch (e) {
         console.log("사용자 추가 실패. createUser", e);
-        if (e === 1) throw new Error("해당 이메일로 이미 가입된 사용자가 있습니다. 이메일을 확인해주세요.");
+        // if (e === 1) throw new Error("해당 이메일로 이미 가입된 사용자가 있습니다. 이메일을 확인해주세요.");
+        if (e === 1) throw new Error("err_01");
+        throw new Error("err_00"); // 기본에러
       }
     },
   },

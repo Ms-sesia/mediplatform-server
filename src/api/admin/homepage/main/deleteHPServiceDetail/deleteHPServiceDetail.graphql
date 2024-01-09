@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  서비스 상세 삭제
+
+  * error
+  - err_00 : 서비스 상세 삭제에 실패하였습니다.
+  - err_01 : 관리자만 삭제 가능합니다.
+  """
+  deleteHPServiceDetail(
+    """
+    서비스 상세 id
+    """
+    hsd_id: Int!
+  ): Boolean
+}

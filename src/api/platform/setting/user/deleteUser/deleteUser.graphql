@@ -1,6 +1,10 @@
 type Mutation {
   """
   사용자 삭제
+
+  * error
+  - err_00 : 사용자 삭제에 실패하였습니다.
+  - err_01 : 로그인한 계정은 삭제할 수 없습니다.
   """
   deleteUser(
     """

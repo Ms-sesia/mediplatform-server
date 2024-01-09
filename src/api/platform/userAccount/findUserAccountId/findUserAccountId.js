@@ -1,26 +1,36 @@
 import { PrismaClient } from "@prisma/client";
+import { maskEmail } from "../../../../libs/masking";
 
 const prisma = new PrismaClient();
 
 export default {
   Mutation: {
     findUserAccountId: async (_, args, __) => {
-      const { name, cellphone } = args;
+      const { hospitalName, cellphone } = args;
       try {
         const user = await prisma.user.findMany({
-          where: { AND: [{ user_name: name }, { user_cellphone: cellphone }, { user_isDelete: false }] },
+          where: {
+            AND: [
+              { hospital: { hsp_name: { contains: hospitalName } } },
+              { user_cellphone: cellphone },
+              { user_isDelete: false },
+            ],
+          },
         });
 
         if (!user.length) throw 1;
 
-        return {
-          result: true,
-          user_email: user[0].user_email,
-        };
+        const userMails = user.map((userInfo) => {
+          return maskEmail(userInfo.user_email);
+        });
+
+        console.log("userMailes:", userMails);
+
+        return userMails.length ? userMails : [];
       } catch (e) {
         console.log("사용자 아이디 찾기 실패. findUserAccountId", e);
-        if (e === 1) throw new Error("가입되지 않은 정보입니다. 다시 확인하고 입력해주세요.");
-        throw new Error("사용자 아이디 찾기에 실패하였습니다.");
+        if (e === 1) throw new Error("err_01"); // 가입되지 않았거나 탈퇴된 정보입니다.
+        throw new Error("err_00"); // 사용자 아이디 찾기에 실패하였습니다.
       }
     },
   },

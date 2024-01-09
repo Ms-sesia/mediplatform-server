@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  고객지원 삭제
+
+  * error
+  - err_00 : 고객지원 삭제에 실패하였습니다.
+  - err_01 : 관리자만 삭제 가능합니다.
+  """
+  deleteHPCs(
+    """
+    고객지원 id
+    """
+    hcs_id: Int!
+  ): Boolean
+}

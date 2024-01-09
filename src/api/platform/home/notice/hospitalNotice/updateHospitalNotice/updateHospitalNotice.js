@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
-import { today9 } from "../../../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 
@@ -12,7 +11,7 @@ export default {
       const { user } = request;
       const { hn_id, title, text, updateAttached, deleteAttached } = args;
       try {
-        const storagePath = path.join(__dirname, "../../../../../../", "files");
+        const storagePath = path.join(__dirname, "../../../../../../../", "files");
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const hospitalNotice = await prisma.hospitalNotice.findUnique({ where: { hn_id } });
 

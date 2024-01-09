@@ -2,9 +2,19 @@ import nodemailer from "nodemailer";
 
 export default async (to, subject, html) => {
   // 테스트 메일(내거)임. 추후 변경 필요
+  // const transporter = nodemailer.createTransport({
+  //   service: "gmail",
+  //   host: "smtp.gmail.com",
+  //   port: 465,
+  //   auth: {
+  //     user: process.env.MAIL_ID,
+  //     pass: process.env.MAIL_PW,
+  //   },
+  //   secure: true,
+  // });
   const transporter = nodemailer.createTransport({
-    service: "gmail",
-    host: "smtp.gmail.com",
+    service: "worksmobile",
+    host: "smtp.worksmobile.com",
     port: 465,
     auth: {
       user: process.env.MAIL_ID,

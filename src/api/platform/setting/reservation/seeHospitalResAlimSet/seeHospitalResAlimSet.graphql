@@ -1,0 +1,59 @@
+type Query {
+  """
+  병원의 예약 알림 발송 설정 조회
+
+  * error
+  - err_00 : 예약 알림 발송 설정 조회에 실패하였습니다.
+  """
+  seeHospitalResAlimSet: seeHospitalResAlimSetInfo
+}
+
+type seeHospitalResAlimSetInfo {
+  """
+  알림 발송 설정 id
+  """
+  as_id: Int
+  """
+  문자 / 카카오 둘 중 하나만 선택
+  """
+  as_type: resAlimType
+  """
+  발송시간 - 즉시
+  """
+  as_time1: Boolean
+  """
+  발송시간 - 1일전
+  """
+  as_time2: Boolean
+  """
+  발송시간 - 2일전
+  """
+  as_time3: Boolean
+  """
+  발송시간 - 당일오전9시
+  """
+  as_time4: Boolean
+  """
+  문자발송 템픞릿. 없으면 0
+  """
+  as_templateId: Int
+  templateList: [templateList]
+}
+
+"""
+템플릿 목록
+"""
+type templateList {
+  """
+  템플릿 id
+  """
+  rat_id: Int
+  """
+  템플릿 제목
+  """
+  rat_title: String
+  """
+  템플릿 내용
+  """
+  rat_text: String
+}

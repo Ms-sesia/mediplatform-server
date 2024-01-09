@@ -8,9 +8,18 @@ type Query {
   """
   seeServiceImg(
     """
-    홈페이지 서비스 id
+    서비스 구분
+
+    - EMR 차트, CLOUD 플랫폼
     """
-    hsc_id: Int!
+    hsi_serviceType: String!
+    """
+    세부 탭 내용
+
+    - EMR 차트: EMR/CHECK/IMAGE/LAB/E-SIGN/DESK/CLOUD/DID/CHECK-UP/CHART/CRM/ETC
+    - CLOUD플랫폼: CLOUD 플랫폼
+    """
+    hsi_detailTabName: String!
   ): [seeServiceImgInfo]
 }
 
@@ -19,11 +28,45 @@ type Query {
 """
 type seeServiceImgInfo {
   hsi_id: Int
-  hsi_createdAt: String # 동록일
-  hsi_img: String # 홈페이지 서비스 이미지 url
-  hsi_imgType: String # 이미지 타입
-  hsi_imgSize: Int # 이미지 사이즈
-  hsi_adminName: String # 담당자 이름
-  hsi_adminRank: String # 담당자 직책
-  hsi_adminId: Int # 담당자 id
+  """
+  동록일
+  """
+  hsi_createdAt: String
+  """
+  서비스 구분
+
+  - EMR 차트, CLOUD 플랫폼
+  """
+  hsi_serviceType: String
+  """
+  세부 탭 내용
+
+  - EMR 차트: EMR/CHECK/IMAGE/LAB/E-SIGN/DESK/CLOUD/DID/CHECK-UP/CHART/CRM/ETC
+  - CLOUD플랫폼: CLOUD 플랫폼
+  """
+  hsi_detailTabName: String
+  """
+  홈페이지 서비스 이미지 url
+  """
+  hsi_img: String
+  """
+  이미지 타입
+  """
+  hsi_imgType: String
+  """
+  이미지 사이즈
+  """
+  hsi_imgSize: Int
+  """
+  담당자 이름
+  """
+  hsi_adminName: String
+  """
+  담당자 직책
+  """
+  hsi_adminRank: String
+  """
+  담당자 id
+  """
+  hsi_adminId: Int
 }

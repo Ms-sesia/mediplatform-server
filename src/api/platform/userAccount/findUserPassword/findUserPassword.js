@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export default {
   Mutation: {
     findUserPassword: async (_, args, { request, isAuthenticated }) => {
-      const { email, name, cellphone } = args;
+      const { email } = args;
       try {
         const findUser = await prisma.user.findUnique({ where: { user_email: email } });
 

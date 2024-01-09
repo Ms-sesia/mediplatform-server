@@ -40,7 +40,6 @@ const webSocket = async (httpServer) => {
 
     // 프론트가 받을 구독 채널이름
     const hospitalChannel = `h-${socket.handshake.query.hospitalEmail}`;
-
     if (socket.handshake.query.hospitalEmail) {
       clients[hospitalChannel] = clients[hospitalChannel] || {};
       clients[hospitalChannel][socket.id] = socket;
@@ -85,6 +84,16 @@ const webSocket = async (httpServer) => {
             break;
           case "reqInsureData":
             clients[channel][socket.id].emit("reqInsureData", message);
+            break;
+          case "alim":
+            /**
+             * alimType:
+             *  "hospitalNotice" // 사내공지 알림
+             *  "platformNotice" // 플랫폼 공지 알림
+             *  "reservation" // 예약대기 등록 알림
+             *  "specialSchedule" // 특별일정 등록 알림
+             */
+            clients[channel][socket.id].emit("notiAlim", message);
             break;
         }
       }
@@ -176,11 +185,6 @@ const webSocket = async (httpServer) => {
 
     // insure(실손보험) - 진료 정보 데이터
     await getInsureData(socket);
-    // socket.on("getInsureData", await getInsureData(data));
-    // socket.on("getInsureData", async (data) => {
-    //   const insureData = JSON.parse(data);
-    //   console.log(insureData);
-    // });
 
     socket.on("disconnect", async () => {
       // console.log("user disconnected.", socket.id);

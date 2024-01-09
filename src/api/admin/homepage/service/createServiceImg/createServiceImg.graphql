@@ -9,9 +9,18 @@ type Mutation {
   """
   createServiceImg(
     """
-    서비스 id
+    서비스 구분
+
+    - EMR 차트, CLOUD 플랫폼
     """
-    hsc_id: Int!
+    hsi_serviceType: String!
+    """
+    세부 탭 내용
+
+    - EMR 차트: EMR/CHECK/IMAGE/LAB/E-SIGN/DESK/CLOUD/DID/CHECK-UP/CHART/CRM/ETC
+    - CLOUD플랫폼: CLOUD 플랫폼
+    """
+    hsi_detailTabName: String!
     """
     홈페이지 서비스 이미지 - 최대 3개 제한
     """

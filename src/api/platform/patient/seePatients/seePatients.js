@@ -16,7 +16,26 @@ export default {
         const searchStart = new Date(searchStartDate);
         const searchEnd = new Date(searchEndDate);
 
+        // const totalPatientInfo = await prisma.reservation.findMany({
+        //   where: {
+        //     AND: [
+        //       { hsp_id: user.hospital.hsp_id },
+        //       { re_isDelete: false },
+        //       { re_resDate: { gte: searchStart, lte: searchEnd } },
+        //       {
+        //         OR: [
+        //           { re_patientName: { contains: searchTerm } },
+        //           { re_patientCellphone: { contains: searchTerm } },
+        //           { patient: { pati_chartNumber: { contains: searchTerm } } },
+        //         ],
+        //       },
+        //     ],
+        //   },
+        //   orderBy: { re_resDate: orderBy },
+        // });
+
         const totalPatientInfo = await prisma.reservation.findMany({
+          distinct: ["pati_id"],
           where: {
             AND: [
               { hsp_id: user.hospital.hsp_id },
@@ -29,6 +48,7 @@ export default {
                   { patient: { pati_chartNumber: { contains: searchTerm } } },
                 ],
               },
+              { pati_id: { not: null } },
             ],
           },
           orderBy: { re_resDate: orderBy },
@@ -44,6 +64,7 @@ export default {
         const cursorOpt = cursor === 0 ? { take } : { take, skip: 0, cursor: { re_id: cursorId } };
 
         const resPatientInfo = await prisma.reservation.findMany({
+          distinct: ["pati_id"],
           where: {
             AND: [
               { hsp_id: user.hospital.hsp_id },
@@ -57,6 +78,7 @@ export default {
                   { patient: { pati_chartNumber: { contains: searchTerm } } },
                 ],
               },
+              { pati_id: { not: null } },
             ],
           },
           select: {

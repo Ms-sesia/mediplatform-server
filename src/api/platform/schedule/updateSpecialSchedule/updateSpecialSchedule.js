@@ -32,6 +32,9 @@ export default {
         const end = type === "offDay" ? new Date(startDate) : new Date(endDate);
         // const end = new Date(endDate);
 
+        // 기존 특별일정
+        const findss = await prisma.specialSchedule.findUnique({ where: { ss_id } });
+
         const specialSchedule = await prisma.specialSchedule.update({
           where: { ss_id },
           data: {
@@ -47,6 +50,16 @@ export default {
             ss_startTime: startTime,
             ss_endTime: endTime,
             ss_memo: memo,
+            specialScheduleHistory: {
+              create: {
+                ssh_creatorId: loginUser.user_id,
+                ssh_creatorName: loginUser.user_name,
+                ssh_creatorRank: loginUser.user_rank,
+                ssh_type: "history",
+                ssh_confirmStatus: findss.ss_status,
+                ssh_text: `${loginUser.user_name}님이 특별일정을 수정했습니다.`,
+              },
+            },
           },
         });
 

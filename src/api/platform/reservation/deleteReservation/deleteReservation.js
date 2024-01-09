@@ -18,6 +18,7 @@ export default {
             re_editorId: loginUser.user_id,
             re_editorName: loginUser.user_name,
             re_editorRank: loginUser.user_rank,
+            re_status: "cancel",
             re_isDelete: true,
             re_deleteDate: new Date(),
           },

@@ -9,7 +9,7 @@ export default {
     createServiceImg: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { hsc_id, hpServiceImgs } = args;
+      const { hsi_serviceType, hsi_detailTabName, hpServiceImgs } = args;
       try {
         if (user.userType !== "admin") throw 1;
         const admin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
@@ -41,12 +41,13 @@ export default {
             await prisma.homepageServiceImg.create({
               data: {
                 hsi_img: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
+                hsi_serviceType,
+                hsi_detailTabName,
                 hsi_imgSize: stats.size ? stats.size : 0,
                 hsi_imgType: mimetype,
                 hsi_adminName: admin.admin_name,
                 hsi_adminRank: admin.admin_rank,
                 hsi_adminId: admin.admin_id,
-                homepageServiceContent: { connect: { hsc_id } },
               },
             });
           }

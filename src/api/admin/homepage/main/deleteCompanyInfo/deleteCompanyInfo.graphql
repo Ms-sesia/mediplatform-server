@@ -1,0 +1,15 @@
+type Mutation {
+  """
+  홈페이지 회사소개 삭제
+
+  *error
+  - err_00 : 홈페이지 회사소개 삭제에 실패하였습니다.
+  - err_01 : 관리자만 삭제 가능합니다.
+  """
+  deleteCompanyInfo(
+    """
+    회사소개 Id
+    """
+    hi_id: Int!
+  ): Boolean
+}

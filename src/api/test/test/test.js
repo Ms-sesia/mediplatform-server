@@ -1,17 +1,17 @@
 import { PrismaClient } from "@prisma/client";
+import { genDidUnique } from "../../../generate";
 
 const prisma = new PrismaClient();
 
 export default {
   Mutation: {
     test: async (_, args, { request, isAuthenticated }) => {
-      isAuthenticated(request);
-      const { user } = request;
-      const { time } = args;
+      // isAuthenticated(request);
+      // const { user } = request;
+      const { term } = args;
       try {
-        const today = new Date();
-        // const dateForNum = today.toISOString().split("T").replace("-", "");
-        const dateForNum = today.toISOString().split("T")[0].replaceAll("-", "");
+        const didUniqueId = genDidUnique(term);
+        console.log("didUniqueId:", didUniqueId);
 
         return true;
       } catch (e) {

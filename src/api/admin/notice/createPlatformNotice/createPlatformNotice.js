@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
-import { today9 } from "../../../../libs/todayCal";
+import webSocket from "../../../../libs/webSocket/webSocket";
+import sendEmail from "../../../../libs/sendEmail";
 
 const prisma = new PrismaClient();
 
@@ -61,6 +62,54 @@ export default {
           }
         }
 
+        // 삭제되지 않은 사용자, 알림을 켜둔 사용자
+        const sendUsers = await prisma.user.findMany({
+          where: { AND: [{ user_isDelete: false }, { user_hnAlim: true }] },
+        });
+
+        const sendTitle = `[메디플랫폼] 플랫폼 공지사항 등록 안내`;
+        const sendText = `안녕하세요. 메디플랫폼입니다.<br>
+        플랫폼 공지사항 "${title}"이 등록되었으니 확인바랍니다.<br>
+        `;
+
+        for (const sendUser of sendUsers) {
+          try {
+            const email = sendUser.user_email;
+            await prisma.notiHistory.create({
+              data: {
+                ng_text: `새로운 플랫폼 공지사항 "${title}"이(가) 등록되었습니다.`,
+                user: { connect: { user_id: sendUser.user_id } },
+              },
+            });
+            // await sendEmail("yglee@platcube.com", sendTitle, sendText);
+            await sendEmail(email, sendTitle, sendText);
+          } catch (error) {
+            console.error(`사내공지 등록 알림 메일 발송 에러. createHospitalNotice ==> ${error}`);
+            throw 1;
+          }
+          // await delay(0.1); // 1ms (0.0001초) 지연
+        }
+
+        // Noti 알림 설정
+        const alimInfo = {
+          SendStatus: "alim",
+          alimType: "platformNotice",
+        };
+
+        // 병원(channel)에 접속한 클라이언트(socket)에게만 did수정 정보 전달
+        const socketIo = await webSocket();
+        const pub = socketIo.pub;
+
+        const hospitals = await prisma.hospital.findMany({
+          where: { NOT: { hsp_isDelete: true } },
+        });
+
+        hospitals.forEach(async (hospital) => {
+          const channelName = `h-${hospital.hsp_email}`;
+
+          await pub.publish(channelName, JSON.stringify(alimInfo));
+        });
+
         return true;
       } catch (e) {
         console.log("플랫폼 공지 작성 실패. createPlatformNotice", e);
@@ -70,3 +119,5 @@ export default {
     },
   },
 };
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

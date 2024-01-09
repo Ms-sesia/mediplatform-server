@@ -12,6 +12,8 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
+        if (user_id === loginUser.user_id) throw 1;
+
         await prisma.user.update({
           where: { user_id },
           data: {
@@ -26,7 +28,8 @@ export default {
         return true;
       } catch (e) {
         console.log("사용자 삭제 실패. deleteUser", e);
-        throw new Error("사용자 삭제에 실패하였습니다.");
+        if (e === 1) throw new Error("err_01"); // 로그인한 계정은 삭제할 수 없습니다.
+        throw new Error("err_00");
       }
     },
   },
