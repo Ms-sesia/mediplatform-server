@@ -903,7 +903,7 @@ model platformNotice {
   pn_updatedAt        DateTime              @updatedAt // 수정일
   pn_type             platformNoticeType    @default(normal) // 플랫폼 공지 구분 - 플랫폼, 긴급, 업데이트
   pn_title            String                @default("") @db.VarChar(125) // 플랫폼 공지사항 100자
-  pn_text             String                @default("") @db.VarChar(600) // 플랫폼 공지사항 내용 500자
+  pn_text             String                @default("") @db.VarChar(1250) // 플랫폼 공지사항 내용 1000자
   pn_adminCreatorName String                @default("") @db.VarChar(20) // 작성자 이름
   pn_adminCreatorRank String                @default("") @db.VarChar(20) // 작성자 직책(원장, 간호사, 의사)
   pn_adminCreatorId   Int                   @default(0) // 작성자(사용자) id

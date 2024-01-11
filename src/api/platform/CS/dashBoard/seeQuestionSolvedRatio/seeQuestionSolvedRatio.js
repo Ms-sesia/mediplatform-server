@@ -15,12 +15,13 @@ export default {
           },
         });
 
-        const ansCount = await prisma.oneOnOneAnswer.count({
+        // 답변으로 등록이 여러개 달려도 하나로 확인
+        const ansCount = await prisma.oneOnOne.count({
           where: {
             AND: [
-              { oneOnOne: { hospital: { hsp_id: user.hospital.hsp_id } } },
-              { oneAn_isDelete: false },
-              { oneAn_adminAble: true },
+              { hsp_id: user.hospital.hsp_id },
+              { oneOnOneAnswer: { some: { oneAn_adminAble: true } } },
+              { oneq_isDelete: false },
             ],
           },
         });
