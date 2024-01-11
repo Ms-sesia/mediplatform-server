@@ -1,6 +1,10 @@
 type Mutation {
   """
   소분류 진료항목 추가
+
+  * error
+  - err_00: 소분류 진료항목 등록에 실패하였습니다.
+  - err_01: 이미 등록된 이름입니다.
   """
   createMedicalSubjectDetail(
     """

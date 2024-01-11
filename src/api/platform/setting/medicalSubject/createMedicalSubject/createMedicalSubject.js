@@ -11,6 +11,12 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
+        const findMedicalSub = await prisma.medicalSubject.findMany({
+          where: { AND: [{ hsp_id: user.hospital.hsp_id }, { ms_name }] },
+        });
+
+        if (findMedicalSub.length) throw 1;
+
         await prisma.medicalSubject.create({
           data: {
             ms_creatorId: loginUser.user_id,
@@ -24,6 +30,7 @@ export default {
         return true;
       } catch (e) {
         console.log("진료항목 대분류 등록 실패. createMedicalSubject", e);
+        if (e === 1) throw new Error("err_01"); // 이미 등록된 이름입니다.
         throw new Error("진료항목 대분류 등록에 실패하였습니다.");
       }
     },

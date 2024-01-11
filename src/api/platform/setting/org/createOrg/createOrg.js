@@ -12,7 +12,7 @@ export default {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
         const findOrg = await prisma.org.findMany({
-          where: { AND: [{ hsp_id: user.hospital.hsp_id }, { org_name: { contains: org_name } }] },
+          where: { AND: [{ hsp_id: user.hospital.hsp_id }, { org_name }] },
         });
 
         if (findOrg.length) throw 1;

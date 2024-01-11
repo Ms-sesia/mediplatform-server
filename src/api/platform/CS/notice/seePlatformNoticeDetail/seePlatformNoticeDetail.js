@@ -5,11 +5,11 @@ const prisma = new PrismaClient();
 export default {
   Query: {
     seePlatformNoticeDetail: async (_, args, { request, isAuthenticated }) => {
-      isAuthenticated(request);
-      const { user } = request;
+      // isAuthenticated(request);
+      // const { user } = request;
       const { pn_id } = args;
       try {
-        const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
+        // const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
         const platformNotice = await prisma.platformNotice.findUnique({
           where: { pn_id },

@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { today9 } from "../../../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 
@@ -10,19 +9,25 @@ export default {
       const { user } = request;
       const { pnc_id } = args;
       try {
-        const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const pnc = await prisma.pnComment.findUnique({ where: { pnc_id } });
 
-        if (loginUser.user_id !== pnc.pnc_creatorId) throw 1;
+        let loginUser;
+        // 관리자는 삭제 가능
+        if (user.userType !== "admin") {
+          loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
+          if (loginUser.user_id !== pnc.pnc_creatorId) throw 1; // 작성자만 삭제
+        } else {
+          loginUser = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
+        }
 
         await prisma.pnComment.update({
           where: { pnc_id },
           data: {
             pnc_isDelete: true,
             pnc_deleteDate: new Date(),
-            pnc_editorId: loginUser.user_id,
-            pnc_editorName: loginUser.user_name,
-            pnc_editorRank: loginUser.user_rank,
+            pnc_editorId: user.userType === "admin" ? loginUser.admin_id : loginUser.user_id,
+            pnc_editorName: user.userType === "admin" ? loginUser.admin_name : loginUser.user_name,
+            pnc_editorRank: user.userType === "admin" ? loginUser.admin_rank : loginUser.user_rank,
           },
         });
 

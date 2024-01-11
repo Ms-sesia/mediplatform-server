@@ -5,12 +5,12 @@ const prisma = new PrismaClient();
 export default {
   Query: {
     seeServiceImg: async (_, args, { request, isAuthenticated }) => {
-      isAuthenticated(request);
-      const { user } = request;
+      // isAuthenticated(request);
+      // const { user } = request;
       const { hsi_serviceType, hsi_detailTabName } = args;
       try {
-        if (user.userType !== "admin") throw 1;
-        const admin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
+        // if (user.userType !== "admin") throw 1;
+        // const admin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
 
         const hscImg = await prisma.homepageServiceImg.findMany({
           where: { AND: [{ hsi_serviceType }, { hsi_detailTabName }] },

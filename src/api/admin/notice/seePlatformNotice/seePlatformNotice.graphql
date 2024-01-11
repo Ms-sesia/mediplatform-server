@@ -3,7 +3,7 @@ type Query {
   관리자 - 플랫폼 공지사항 조회
   *error
   err_00 : 플랫폼 공지 조회에 실패하였습니다.
-  # err_01 : 관리자만 사용할 수 있는 기능입니다.
+  err_01 : 관리자만 사용할 수 있는 기능입니다.
   """
   seePlatformNotice(
     """
@@ -14,6 +14,10 @@ type Query {
     필터 - 전체 / 플랫폼(일반) / 긴급 / 업데이트
     """
     filter: platformNoticeType
+    """
+    정렬 - 내림차순 : "desc", 오름차순: "asc", 없으면 빈값
+    """
+    orderBy: String
     """
     검색 연도 - 홈탭 이외의 곳에서는 0 입력
     """

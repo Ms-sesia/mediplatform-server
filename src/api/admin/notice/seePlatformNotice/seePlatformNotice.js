@@ -6,9 +6,9 @@ const prisma = new PrismaClient();
 export default {
   Query: {
     seePlatformNotice: async (_, args, { request, isAuthenticated }) => {
-      isAuthenticated(request);
+      // isAuthenticated(request);
       const { user } = request;
-      const { searchTerm, filter, year, take, cursor } = args;
+      const { searchTerm, filter, orderBy, year, take, cursor } = args;
       try {
         // if (user.userType !== "admin") throw 1;
 
@@ -20,8 +20,10 @@ export default {
           end = new Date(year + 1, 0, 1, 9);
         }
 
-        const createSearchHistory = await searchHistory(searchTerm, user.user_id);
-        if (!createSearchHistory.status) throw createSearchHistory.error;
+        if (user?.userType === "user") {
+          const createSearchHistory = await searchHistory(searchTerm, user.user_id);
+          if (!createSearchHistory.status) throw createSearchHistory.error;
+        }
 
         const totalPlatformNotice = await prisma.platformNotice.findMany({
           where: {
@@ -32,7 +34,7 @@ export default {
               { pn_isDelete: false },
             ],
           },
-          orderBy: { pn_createdAt: "desc" },
+          orderBy: orderBy ? { pn_createdAt: orderBy } : { pn_createdAt: "desc" },
         });
 
         if (!totalPlatformNotice.length)
@@ -76,7 +78,7 @@ export default {
             },
           },
           ...cursorOpt,
-          orderBy: { pn_createdAt: "desc" },
+          orderBy: orderBy ? { pn_createdAt: orderBy } : { pn_createdAt: "desc" },
         });
 
         const convNotice = platformNoticeList.map(async (pn) => {
@@ -103,7 +105,6 @@ export default {
         };
       } catch (e) {
         console.log("관리자 목록 조회 실패. seePlatformNotice ==>\n", e);
-        // if (e === 1) throw new Error("err_01");
         throw new Error("err_00");
       }
     },

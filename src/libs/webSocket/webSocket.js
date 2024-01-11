@@ -183,8 +183,8 @@ const webSocket = async (httpServer) => {
       socket.emit("resCallWaitingPatient", resCallWaitingPatient);
     });
 
-    // insure(실손보험) - 진료 정보 데이터
-    await getInsureData(socket);
+    // insure(실손보험) - 진료 정보 데이터 => api로 변경됨.
+    // await getInsureData(socket);
 
     socket.on("disconnect", async () => {
       // console.log("user disconnected.", socket.id);
