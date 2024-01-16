@@ -14,8 +14,12 @@ export default {
 
         const makeHash = await makeHashPassword(loginUser.user_salt, currentPassword);
 
+        // 변경할 비밀번호 미입력
+        if (!newPassword) throw 3;
         // 현재 비밀번호가 틀릴경우
         if (makeHash.password !== loginUser.user_password) throw 1;
+        // 현재 비밀번호와 변경하려는 비밀번호가 같을 경우
+        if (currentPassword === newPassword) throw 2;
 
         const hashedInfo = await hashPassword(newPassword);
 
@@ -42,6 +46,8 @@ export default {
       } catch (e) {
         console.log("사용자 비밀번호 변경 실패. updateUserPassword", e);
         if (e === 1) throw new Error("현재 비밀번호가 틀립니다. 다시 입력해주세요.");
+        if (e === 2) throw new Error("현재 비밀번호와 새 비밀번호가 동일합니다. 다시 입력해주세요.");
+        if (e === 3) throw new Error("변경할 비밀번호를 입력해주세요.");
         throw new Error("사용자 비밀번호 변경에 실패하였습니다.");
       }
     },

@@ -192,7 +192,7 @@ export default {
                 새로운 예약이 아래와 같이 등록되었습니다. 확인바랍니다.<br>
                 예약일 : ${rsDate.toISOString().split("T")[0]}<br>
                 예약시간 : ${time}<br>
-                환자명 : ${patientName}<br>
+                환자명 : ${patientNameConv}<br>
                 진료실명 : ${doctorRoomName}<br>
                 <br>
                 `;
@@ -203,7 +203,7 @@ export default {
             // if (email === "yglee@platcube.com") {
             await prisma.notiHistory.create({
               data: {
-                ng_text: `"환자명 : ${patientName}"님의 새로운 예약이 등록되었습니다.`,
+                ng_text: `"환자명 : ${patientNameConv}"님의 새로운 예약이 등록되었습니다.`,
                 user: { connect: { user_id: sendUser.user_id } },
               },
             });

@@ -33,7 +33,9 @@ export default {
             rp_setting: true,
           },
         });
-        
+
+        loginUser.user_birthday = loginUser.user_birthday.split("T")[0];
+
         loginUser.user_rankPermission = {
           home: rankPermission.rp_home,
           reservation: rankPermission.rp_reservation,

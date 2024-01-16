@@ -120,11 +120,7 @@ export default {
         // ================================================================== 진료실 스케쥴
         const doctorRoomList = await prisma.doctorRoom.findMany({
           where: {
-            AND: [
-              { hsp_id: user.hospital.hsp_id },
-              { dr_isDelete: false },
-              { dr_doctorName: { contains: searchTerm } },
-            ],
+            AND: [{ hsp_id: user.hospital.hsp_id }, { dr_isDelete: false }, { dr_roomName: { contains: searchTerm } }],
           },
           select: {
             dr_id: true,
