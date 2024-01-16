@@ -66,6 +66,7 @@ export default {
                 pnc_creatorId: true,
                 pnc_creatorName: true,
                 pnc_creatorRank: true,
+                pnc_admin: true,
               },
             },
             pnAttached: {
@@ -89,9 +90,9 @@ export default {
             pnc.pnc_createdAt = new Date(pnc.pnc_createdAt).toISOString();
             pnc.pnc_updatedAt = new Date(pnc.pnc_updatedAt).toISOString();
 
-            const pncCreator = await prisma.user.findUnique({ where: { user_id: pnc.pnc_creatorId } });
-
-            pnc.pnc_creatorImg = pncCreator.user_img;
+            pnc.pnc_creatorImg = pnc.pnc_admin
+              ? ""
+              : (await prisma.user.findUnique({ where: { user_id: pnc.pnc_creatorId } })).user_img;
 
             return pnc;
           });

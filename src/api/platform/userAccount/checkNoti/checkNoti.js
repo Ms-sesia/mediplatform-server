@@ -7,11 +7,15 @@ export default {
     checkNoti: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { ng_id } = args;
+      // const { ng_id } = args;
       try {
-        await prisma.notiHistory.update({
-          where: { ng_id },
-          data: { ng_check: true },
+        // await prisma.notiHistory.updateMany({
+        //   where: { user: { user_id: user.user_id } },
+        //   data: { ng_check: true },
+        // });
+        await prisma.notiHistory.deleteMany({
+          where: { user: { user_id: user.user_id } },
+          // data: { ng_check: true },
         });
 
         return true;

@@ -19,6 +19,7 @@ import webSocket from "./libs/webSocket/webSocket";
 import tobeSchedule from "./libs/scheduler/tobeSchedule";
 import apiRoute from "./api/expApi/router";
 import { hpMainCheck } from "./libs/1stTimeCreate";
+import hspExpiredSchedule from "./libs/scheduler/hspExpiredSchedule";
 
 const PORT = process.env.SERVER_PORT;
 
@@ -50,6 +51,7 @@ const PORT = process.env.SERVER_PORT;
   app.use(express.static(path.join(__dirname, "../", "didMedia")));
 
   tobeSchedule();
+  await hspExpiredSchedule();
   await hpMainCheck();
 
   const corsOptions = {

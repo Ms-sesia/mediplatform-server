@@ -1,0 +1,14 @@
+type Query {
+  """
+  플랫폼 공지(긴급/업데이트)_관리자 상세보기
+
+  * error
+  - err_00 : 플랫폼 공지(긴급/업데이트)_관리자 상세보기 조회에 실패하였습니다.
+  """
+  seePlatformNoticeDetailAdmin(
+    """
+    조회할 플랫폼 공지 id
+    """
+    pn_id: Int!
+  ): platformNotice
+}

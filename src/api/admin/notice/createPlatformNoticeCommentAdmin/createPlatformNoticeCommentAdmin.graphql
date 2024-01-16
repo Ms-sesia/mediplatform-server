@@ -1,0 +1,19 @@
+type Mutation {
+  """
+  플랫폼 공지 댓글 등록_관리자
+
+  * error
+  - err_00 : 플랫폼 공지 댓글 등록에 실패하였습니다.
+  - err_01 : 관리자만 이용할 수 있습니다.
+  """
+  createPlatformNoticeCommentAdmin(
+    """
+    플랫폼 공지 id
+    """
+    pn_id: Int!
+    """
+    댓글 내용
+    """
+    text: String
+  ): Boolean
+}

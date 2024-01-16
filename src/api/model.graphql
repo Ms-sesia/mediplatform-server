@@ -923,6 +923,10 @@ type pnComment {
   작성자 이미지
   """
   pnc_creatorImg: String
+  """
+  관리자 댓글인지 여부
+  """
+  pnc_admin: Boolean
 }
 
 """

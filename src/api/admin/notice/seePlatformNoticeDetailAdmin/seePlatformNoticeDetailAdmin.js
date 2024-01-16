@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 export default {
   Query: {
-    seePlatformNoticeDetail: async (_, args, { request, isAuthenticated }) => {
+    seePlatformNoticeDetailAdmin: async (_, args, { request, isAuthenticated }) => {
       // isAuthenticated(request);
       // const { user } = request;
       const { pn_id } = args;
@@ -54,7 +54,7 @@ export default {
 
         return platformNotice;
       } catch (e) {
-        console.log("플랫폼 공지(긴급/업데이트) 상세보기 실패. seePlatformNoticeDetail ==>\n", e);
+        console.log("플랫폼 공지(긴급/업데이트)_관리자 상세보기 실패. seePlatformNoticeDetailAdmin ==>\n", e);
         if (e === 1) throw new Error("err_01");
         throw new Error("err_00");
       }

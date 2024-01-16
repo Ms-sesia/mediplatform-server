@@ -25,16 +25,6 @@ export default {
       } catch (e) {
         console.log("사용자 알림 내역 조회 실패. seeMyNotiHistory ==>\n", e);
         throw new Error("사용자 알림내역 조회에 실패하였습니다.");
-      } finally {
-        if (notiHistories.length) {
-          notiHistories.forEach(async (hstry) => {
-            console.log("hstry:", hstry);
-            await prisma.notiHistory.update({
-              where: { ng_id: hstry.ng_id },
-              data: { ng_check: true },
-            });
-          });
-        }
       }
     },
   },

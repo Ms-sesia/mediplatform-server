@@ -951,6 +951,7 @@ model pnComment {
   pnc_editorId    Int            @default(0) // 수정자 id
   pnc_isDelete    Boolean        @default(false) // 삭제 여부
   pnc_deleteDate  DateTime? // 삭제일
+  pnc_admin       Boolean        @default(false) // 관리자 등록 댓글 여부. true: 관리자, false: 사용자
   platformNotice  platformNotice @relation(fields: [pn_id], references: [pn_id])
   pn_id           Int
 }

@@ -1,0 +1,25 @@
+type Mutation {
+  """
+  관리자 계정 정보 수정
+
+  * error
+  - err_00 : 관리자 추가에 실패하였습니다.
+  - err_01 : 마스터관리자만 사용할 수 있는 기능입니다.
+  - err_02 : 해당 이메일로 이미 가입된 관리자가 있습니다. 이메일을 확인해주세요.
+  """
+  updateAdminInfo(
+    admin_id: Int!
+    """
+    이름 10자
+    """
+    admin_name: String
+    """
+    직책(직급)
+    """
+    admin_rank: String
+    """
+    관리자 휴드폰번호
+    """
+    admin_cellphone: String
+  ): Boolean
+}

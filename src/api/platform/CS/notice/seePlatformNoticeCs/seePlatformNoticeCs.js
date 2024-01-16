@@ -36,18 +36,25 @@ export default {
                 pnc_creatorName: true,
                 pnc_creatorRank: true,
                 pnc_creatorId: true,
+                pnc_admin: true,
               },
             },
           },
           orderBy: { pn_createdAt: orderby },
         });
 
+        // let cmtUser;
         const pnList = totalPlatformNotice.map((pn) => {
           pn.pn_createdAt = new Date(pn.pn_createdAt).toISOString();
           pn.pn_updatedAt = new Date(pn.pn_updatedAt).toISOString();
-          pn.pnComment = pn.pnComment.map((pnc) => {
+          pn.pnComment = pn.pnComment.map(async (pnc) => {
             pnc.pnc_createdAt = new Date(pnc.pnc_createdAt).toISOString();
             pnc.pnc_updatedAt = new Date(pnc.pnc_updatedAt).toISOString();
+
+            pnc.pnc_creatorImg = pnc.pnc_admin
+              ? ""
+              : (await prisma.user.findUnique({ where: { user_id: pnc.pnc_creatorId } })).user_img;
+
             return pnc;
           });
           return pn;

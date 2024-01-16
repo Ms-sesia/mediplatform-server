@@ -37,6 +37,9 @@ export default {
           },
         });
 
+        const exprdHsp = await prisma.hospital.findUnique({ where: { hsp_id: user.hospital.hsp_id } });
+        if (exprdHsp.hsp_useEnded) throw 3;
+
         const loginToken = generateToken(user);
 
         return loginToken;
@@ -45,6 +48,7 @@ export default {
         if (e === 0) throw new Error("존재하지 않거나 삭제된 사용자입니다.");
         if (e === 1) throw new Error("로그인에 실패하였습니다.");
         if (e === 2) throw new Error("로그인 시도회수가 10번이 넘었습니다. 10분 후 다시 시도해주세요.");
+        if (e === 3) throw new Error("병원 사용기간 만료, 플랫폼관리자에게 문의하세요.");
         throw new Error("사용자 로그인에 실패하였습니다.");
       }
     },
