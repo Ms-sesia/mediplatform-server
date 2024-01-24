@@ -81,13 +81,12 @@ export default {
                 user: { connect: { user_id: sendUser.user_id } },
               },
             });
-            // await sendEmail("yglee@platcube.com", sendTitle, sendText);
             await sendEmail(email, sendTitle, sendText);
           } catch (error) {
             console.error(`사내공지 등록 알림 메일 발송 에러. createHospitalNotice ==> ${error}`);
             throw 1;
           }
-          // await delay(0.1); // 1ms (0.0001초) 지연
+          await delay(0.1); // 1ms (0.0001초) 지연
         }
 
         // Noti 알림 설정
@@ -99,6 +98,18 @@ export default {
         // 병원(channel)에 접속한 클라이언트(socket)에게만 did수정 정보 전달
         const socketIo = await webSocket();
         const pub = socketIo.pub;
+
+        const findUsers = await prisma.user.findMany({ where: { NOT: { user_isDelete: true } } });
+        const convType = convPNType(type);
+
+        for (let i = 0; i < findUsers.length; i++) {
+          await prisma.notiHistory.create({
+            data: {
+              ng_text: `플랫폼 공지 '[${convType}]${title}'이(가) 등록되었습니다.`,
+              user: { connect: { user_id: findUsers[i].user_id } },
+            },
+          });
+        }
 
         const hospitals = await prisma.hospital.findMany({
           where: { NOT: { hsp_isDelete: true } },
@@ -121,3 +132,15 @@ export default {
 };
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// 플랫폼 공지 타입 한글 변환
+const convPNType = (type) => {
+  switch (type) {
+    case "normal":
+      return "플랫폼 일반공지";
+    case "emergency":
+      return "긴급";
+    case "update":
+      return "업데이트";
+  }
+};

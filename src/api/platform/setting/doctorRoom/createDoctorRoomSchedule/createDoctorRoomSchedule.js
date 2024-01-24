@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { today9 } from "../../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 
@@ -24,11 +23,11 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
-        // const drSchedule = await prisma.doctorRoomSchedule.findMany({
-        //   where: { AND: [{ drs_day: day }, { drs_isDelete: false }] },
-        // });
+        const drSchedule = await prisma.doctorRoomSchedule.findMany({
+          where: { AND: [{ dr_id }, { drs_day: day }, { drs_isDelete: false }] },
+        });
 
-        // if (drSchedule.length) throw 1;
+        if (drSchedule.length) throw 1;
 
         await prisma.doctorRoomSchedule.create({
           data: {
@@ -52,7 +51,7 @@ export default {
         return true;
       } catch (e) {
         console.log("진료실 기본 일정 추가 실패. createDoctorRoomSchedule", e);
-        if (e === 1) throw new Error("err_01");
+        if (e === 1) throw new Error("err_01"); //
         throw new Error("err_00");
       }
     },

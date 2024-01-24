@@ -46,7 +46,6 @@ const webSocket = async (httpServer) => {
 
       // 연결되면 환자 정보 요청
       // socket.on("reqWaitingPati", )
-      
     }
 
     // did모니터용 채널

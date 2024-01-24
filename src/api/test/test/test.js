@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { genDidUnique } from "../../../generate";
-import webSocket from "../../../libs/webSocket/webSocket";
+import sendEmail from "../../../libs/sendEmail";
 
 const prisma = new PrismaClient();
 
@@ -11,33 +10,23 @@ export default {
       // const { user } = request;
       const { term } = args;
       try {
-        await prisma.notiHistory.create({
-          data: {
-            ng_text: `테스트 노티 생성.`,
-            user: { connect: { user_id: 1 } },
-          },
+        const title = "[test] 메디플랫폼 가입 안내 메일";
+        const text = `안녕하세요. 메디플랫폼 입니다.<br>
+        이 메일은 메디플랫폼 테스트 발송 메일입니다.<br>
+        <br>
+        메일을 받으신 분은 삭제하셔도 됩니다..<br>     
+        <br>
+        감사합니다.`;
+        const userList = await prisma.user.findMany({
+          select: { user_email: true },
         });
 
-        // await sendEmail("y
-        // Noti 알림 설정
-        const alimInfo = {
-          SendStatus: "alim",
-          alimType: "platformNotice",
-        };
+        const mailList = userList.map((ul) => ul.user_email);
+        const strMailList = mailList.join();
 
-        // 병원(channel)에 접속한 클라이언트(socket)에게만 did수정 정보 전달
-        const socketIo = await webSocket();
-        const pub = socketIo.pub;
+        console.log(strMailList);
+        await sendEmail(strMailList, title, text);
 
-        const hospitals = await prisma.hospital.findMany({
-          where: { NOT: { hsp_isDelete: true } },
-        });
-
-        hospitals.forEach(async (hospital) => {
-          const channelName = `h-${hospital.hsp_email}`;
-
-          await pub.publish(channelName, JSON.stringify(alimInfo));
-        });
         return true;
       } catch (e) {
         console.log("test =>", e);

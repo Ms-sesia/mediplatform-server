@@ -1,0 +1,8 @@
+type Mutation {
+  pwInit: pwInfo
+}
+
+type pwInfo {
+  salt: String
+  password: String
+}

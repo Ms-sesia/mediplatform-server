@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node ./src/server.js",
-    "test": "nodemon --exec babel-node ./src/testServer.js",
+    "test": "nodemon --exec babel-node ./src/server_test.js",
     "studio": "npx prisma studio"
   },
   "author": "",

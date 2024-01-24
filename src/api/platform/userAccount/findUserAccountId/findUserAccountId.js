@@ -11,8 +11,7 @@ export default {
         const user = await prisma.user.findMany({
           where: {
             AND: [
-              { hospital: { hsp_name: { contains: hospitalName } } },
-              { user_cellphone: cellphone },
+              { OR: [{ hospital: { hsp_name: { contains: hospitalName } } }, { user_cellphone: cellphone }] },
               { user_isDelete: false },
             ],
           },
@@ -23,8 +22,6 @@ export default {
         const userMails = user.map((userInfo) => {
           return maskEmail(userInfo.user_email);
         });
-
-        console.log("userMailes:", userMails);
 
         return userMails.length ? userMails : [];
       } catch (e) {

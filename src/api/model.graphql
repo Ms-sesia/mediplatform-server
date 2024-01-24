@@ -124,6 +124,10 @@ type user {
   사용자 권한(직책 권한)
   """
   user_rankPermission: rankPermission
+  """
+  사용자 소속 병원명
+  """
+  user_hospitalName: String
 }
 
 """

@@ -26,7 +26,6 @@ export default {
         const endDate = new Date(useEndDate);
         const contractStartDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 9);
         const contractEndDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 9);
-        console.log(contractStartDate, " | ", contractEndDate);
 
         const title = "메디플랫폼 가입 안내 메일";
         const text = `안녕하세요. 메디플랫폼 입니다.<br>
@@ -68,6 +67,9 @@ export default {
             hsp_country: country,
             hsp_businessNumber: businessNumber,
             hsp_hospitalNumber: hospitalNumber,
+            alimSet: {
+              create: {},
+            },
           },
         });
 

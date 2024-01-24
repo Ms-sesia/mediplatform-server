@@ -82,14 +82,18 @@ export default {
                 user: { connect: { user_id: sendUser.user_id } },
               },
             });
-            // await sendEmail("yglee@platcube.com", sendTitle, sendText);
-            await sendEmail(email, sendTitle, sendText);
+            // await sendEmail(email, sendTitle, sendText);
           } catch (error) {
             console.error(`사내공지 등록 알림 메일 발송 에러. createHospitalNotice ==> ${error}`);
             throw 1;
           }
           // await delay(0.1); // 1ms (0.0001초) 지연
         }
+
+        const sendEmails = sendUsers.map((su) => su.user_email);
+        const joinEmails = sendEmails.join();
+
+        await sendEmail(joinEmails, sendTitle, sendText);
 
         // Noti 알림 설정
         const alimInfo = {

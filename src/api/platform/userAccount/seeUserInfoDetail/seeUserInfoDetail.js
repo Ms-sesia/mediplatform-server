@@ -17,6 +17,10 @@ export default {
           where: { user_id: user.user_id },
         });
 
+        const hospital = await prisma.hospital.findUnique({
+          where: { hsp_id: loginUser.hsp_id },
+        });
+
         const rank = await prisma.rank.findFirst({
           where: { AND: [{ rank_name: loginUser.user_rank }, { hsp_id: loginUser.hsp_id }] },
         });
@@ -35,6 +39,7 @@ export default {
         });
 
         loginUser.user_birthday = loginUser.user_birthday.split("T")[0];
+        loginUser.user_hospitalName = hospital.hsp_name;
 
         loginUser.user_rankPermission = {
           home: rankPermission.rp_home,

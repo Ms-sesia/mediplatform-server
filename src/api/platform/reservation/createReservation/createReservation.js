@@ -207,14 +207,13 @@ export default {
                 user: { connect: { user_id: sendUser.user_id } },
               },
             });
-            // await sendEmail("yglee@platcube.com", sendTitle, sendText);
             await sendEmail(email, sendTitle, sendText);
             // }
           } catch (error) {
             console.error(`예약등록 알림 메일 발송 에러. createReservation ==> ${error}`);
             throw 1;
           }
-          // await delay(0.1); // 1ms (0.0001초) 지연
+          await delay(0.1); // 1ms (0.0001초) 지연
         }
 
         // Noti 알림 설정

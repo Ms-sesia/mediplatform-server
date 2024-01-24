@@ -15,7 +15,7 @@ export default {
         });
 
         const templateList = await prisma.resAlimTemplate.findMany({
-          where: { hospital: { hsp_id: user.hospital.hsp_id } },
+          where: { AND: [{ hospital: { hsp_id: user.hospital.hsp_id } }, { rat_isDelete: false }] },
           orderBy: { rat_title: "asc" },
         });
 
