@@ -56,7 +56,6 @@ export default {
 
           // 없으면 생성
           if (!checkInsure.length) {
-            console.log(insHistory[i]);
             // 요청번호 증가
             reqNum = i === 0 ? ihNum + 1 : ihNum + i + 1;
             const dateForNum = today.toISOString().split("T")[0].replaceAll("-", "");

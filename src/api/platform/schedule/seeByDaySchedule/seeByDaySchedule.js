@@ -12,7 +12,7 @@ export default {
       const { searchDate, searchTerm, orderBy } = args;
       try {
         const inputDate = searchDate.split("T")[0].split("-");
-        const schDate = new Date(inputDate[0], inputDate[1] - 1, inputDate[2]);
+        const schDate = new Date(inputDate[0], inputDate[1] - 1, inputDate[2], 9);
         const DayofWeek = weekdays_eng[schDate.getDay()];
 
         let operSchedule = new Array();
@@ -178,7 +178,6 @@ export default {
             const spOffTotalOperTime = calSpOfferTime !== -1 ? drsTotalOperTime - calSpOfferTime : drsTotalOperTime;
 
             return {
-              // title: `${dr.dr_roomName}(${dr.dr_doctorName})`,
               title: dr.dr_roomName,
               isOffDay: spSchedule ? Boolean(spSchedule) : false,
               offStartHour: spSchedule ? parseInt(spSchedule.ss_startTime.split(":")[0]) : -1,
@@ -191,9 +190,6 @@ export default {
                     ? ""
                     : `${Math.floor(spOffTotalOperTime / 60)}h ${spOffTotalOperTime % 60}m`
                   : `${Math.floor((drsTotalOperTime - drsLunchTime) / 60)}h ${(drsTotalOperTime - drsLunchTime) % 60}m`,
-              // totalOperTime: `${Math.floor((drsTotalOperTime - drsLunchTime) / 60)}h ${
-              //   (drsTotalOperTime - drsLunchTime) % 60
-              // }m`,
               startHour: drSchedule.length ? drSchedule[0].drs_startHour : 0,
               startMin: drSchedule.length ? drSchedule[0].drs_startMin : 0,
               endHour: drSchedule.length ? drSchedule[0].drs_endHour : 0,

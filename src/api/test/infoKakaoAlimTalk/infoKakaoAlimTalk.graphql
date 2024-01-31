@@ -1,0 +1,3 @@
+type Mutation {
+  infoKakaoAlimTalk(term: Int): Boolean
+}

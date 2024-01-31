@@ -84,6 +84,7 @@ export default {
           select: {
             re_id: true,
             re_date: true,
+            re_status: true,
             patient: {
               select: {
                 pati_id: true,
@@ -117,6 +118,16 @@ export default {
 
         for (let i = 0; i < resPatientInfo.length; i++) {
           if (!resPatientInfo[i].patient) continue;
+          const recentlyVisitDate = await prisma.reservation.findFirst({
+            where: {
+              AND: [
+                { hsp_id: user.hospital.hsp_id },
+                { pati_id: resPatientInfo[i].patient.pati_id },
+                { re_status: "confirm" },
+              ],
+            },
+            orderBy: { re_resDate: "desc" },
+          });
           patientList.push({
             pati_id: resPatientInfo[i].patient.pati_id,
             visitCount: resPatientInfo[i].patient._count.reservation,

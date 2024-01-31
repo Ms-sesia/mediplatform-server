@@ -11,13 +11,14 @@ export default {
         const user = await prisma.user.findMany({
           where: {
             AND: [
-              { OR: [{ hospital: { hsp_name: { contains: hospitalName } } }, { user_cellphone: cellphone }] },
+              { hospital: { hsp_name: { contains: hospitalName } } },
+              { user_cellphone: cellphone ? cellphone : undefined },
               { user_isDelete: false },
             ],
           },
         });
 
-        if (!user.length) throw 1;
+        if (!user.length) return [];
 
         const userMails = user.map((userInfo) => {
           return maskEmail(userInfo.user_email);

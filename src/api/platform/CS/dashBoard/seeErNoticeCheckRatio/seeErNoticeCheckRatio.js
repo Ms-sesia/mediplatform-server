@@ -8,13 +8,17 @@ export default {
       isAuthenticated(request);
       const { user } = request;
       try {
+        const hspUserCount = await prisma.user.count({
+          where: { hospital: { hsp_id: user.hospital.hsp_id } },
+        });
+
         const platformNotice = await prisma.platformNotice.count({
           where: { pn_isDelete: { not: true } },
         });
 
         const pnCheck = await prisma.platformNoticeCheck.count();
 
-        const ratio = Math.floor((pnCheck / platformNotice) * 100);
+        const ratio = Math.floor((pnCheck / (platformNotice * hspUserCount)) * 100);
 
         return ratio;
       } catch (e) {

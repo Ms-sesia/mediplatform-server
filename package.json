@@ -55,6 +55,8 @@
     "redis": "^4.6.8",
     "socket.io": "^4.7.2",
     "useragent": "^2.3.0",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1",
     "ws": "^8.13.0",
     "xlsx": "^0.18.5",
     "xlsx-populate": "^1.21.0"

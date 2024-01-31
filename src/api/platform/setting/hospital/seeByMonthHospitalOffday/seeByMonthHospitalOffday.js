@@ -59,8 +59,6 @@ export default {
 
         const offDays = combineOffDays(year, month, aldyMonthFixed, aldyWeekFixed, tempHospitalOffday);
 
-        // console.log("month offday:", offDays);
-
         const hospitalWorkSchedule = await prisma.defaultSchedule.findMany({
           where: { AND: [{ hsp_id: user.hospital.hsp_id }, { ds_isDelete: false }] },
         });

@@ -116,6 +116,10 @@ type Mutation {
     """
     did_lowMsgUsed: Boolean
     """
+    환자 이름 마스킹 여부. 마스킹: true, 마스킹해제: false
+    """
+    did_nameMasking: Boolean
+    """
     예약정보 노출 시간
     """
     did_resInfoTime: Int

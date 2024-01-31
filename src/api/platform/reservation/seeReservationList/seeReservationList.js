@@ -11,6 +11,7 @@ export default {
       const { searchTerm, searchDate, status, doctorRoom, resPlatform, visitConfirm, largeCategory, take, cursor } =
         args;
       try {
+        const today = new Date();
         const searchDateConv = new Date(searchDate);
         const createSearchHistory = await searchHistory(searchTerm, user.user_id);
         if (!createSearchHistory.status) throw createSearchHistory.error;
@@ -83,14 +84,21 @@ export default {
             where: { AND: [{ hsp_id: res.hsp_id }, { pati_id: res.pati_id }, { re_status: "confirm" }] },
           });
 
-          const recentlyVisit = await prisma.reservation.findMany({
-            where: { AND: [{ hsp_id: res.hsp_id }, { pati_id: res.pati_id }, { re_status: "confirm" }] },
+          const recentlyVisit = await prisma.reservation.findFirst({
+            where: {
+              AND: [
+                { hsp_id: res.hsp_id },
+                { pati_id: res.pati_id },
+                { re_status: "confirm" },
+                { re_resDate: { lte: today.toISOString() } },
+              ],
+            },
             orderBy: [{ re_year: "desc" }, { re_month: "desc" }, { re_date: "desc" }],
           });
 
           let recentlyVisitDate;
-          if (recentlyVisit.length)
-            recentlyVisitDate = new Date(recentlyVisit[0].re_year, recentlyVisit[0].re_month, recentlyVisit[0].re_date);
+          if (recentlyVisit)
+            recentlyVisitDate = new Date(recentlyVisit.re_year, recentlyVisit.re_month - 1, recentlyVisit.re_date);
 
           let patientInfo;
           if (res.pati_id) patientInfo = await prisma.patient.findUnique({ where: { pati_id: res.pati_id } });

@@ -482,6 +482,10 @@ type did {
   """
   did_patExpRatio4: Int
   """
+  환자 이름 마스킹 여부
+  """
+  did_nameMasking: Boolean
+  """
   하단메세지 사용여부
   """
   did_lowMsgUsed: Boolean

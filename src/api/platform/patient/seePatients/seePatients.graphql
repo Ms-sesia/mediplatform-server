@@ -43,11 +43,32 @@ type patientInfo {
   환자 id
   """
   pati_id: Int
-  visitCount: Int # 방문 수
-  pati_name: String # 환자 이름
-  pati_rrn: String # 환자 주민번호(생년월일)
-  pati_cellphone: String # 환자 휴대폰번호
-  recentlyVisitDate: String # 최근 내원일
-  pati_chartNumber: String # 환자 차트번호
-  recentlyVisitMemo: String # 최근 내원 메모
+  """
+  방문 수
+  """
+  visitCount: Int
+  """
+  환자 이름
+  """
+  pati_name: String
+  """
+  환자 주민번호(생년월일)
+  """
+  pati_rrn: String
+  """
+  환자 휴대폰번호
+  """
+  pati_cellphone: String
+  """
+  최근 내원일
+  """
+  recentlyVisitDate: String
+  """
+  환자 차트번호
+  """
+  pati_chartNumber: String
+  """
+  최근 내원 메모
+  """
+  recentlyVisitMemo: String
 }

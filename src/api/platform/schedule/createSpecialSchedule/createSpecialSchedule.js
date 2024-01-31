@@ -19,8 +19,18 @@ export default {
 
         const doctorRoom = await prisma.doctorRoom.findUnique({ where: { dr_id } });
 
-        const start = new Date(startDate);
-        const end = type === "offDay" ? new Date(startDate) : new Date(endDate);
+        const startConv = new Date(startDate);
+
+        const start =
+          type === "offDay"
+            ? new Date(startConv.getFullYear(), startConv.getMonth(), startConv.getDate(), 9)
+            : new Date(new Date(startDate).setHours(new Date(startDate).getHours() + 9));
+        const end =
+          type === "offDay"
+            ? new Date(startConv.getFullYear(), startConv.getMonth(), startConv.getDate(), 9)
+            : new Date(new Date(endDate).setHours(new Date(endDate).getHours() + 9)); // 휴무시간이면 동일날짜 startdate | 일정이면 종료일 endDate
+        // console.log("입력:", startDate, endDate);
+        // console.log("변환:", start, end);
 
         const specialSchedule = await prisma.specialSchedule.create({
           data: {
@@ -89,21 +99,20 @@ export default {
         `;
 
         for (const sendUser of sendUsers) {
-          try {
-            const email = sendUser.user_email;
-            await prisma.notiHistory.create({
-              data: {
-                ng_text: `병원에 새로운 특별일정이 등록되었습니다.`,
-                user: { connect: { user_id: sendUser.user_id } },
-              },
-            });
-            await sendEmail(email, sendTitle, sendText);
-          } catch (error) {
-            console.error(`사내공지 등록 알림 메일 발송 에러. createSpecialSchedule ==> ${error}`);
-            throw 1;
-          }
-          await delay(0.1); // 1ms (0.0001초) 지연
+          // try {
+          const email = sendUser.user_email;
+          await prisma.notiHistory.create({
+            data: {
+              ng_text: `병원에 새로운 특별일정이 등록되었습니다.`,
+              user: { connect: { user_id: sendUser.user_id } },
+            },
+          });
         }
+
+        const sendEmails = sendUsers.map((su) => su.user_email);
+        const joinEmails = sendEmails.join();
+
+        await sendEmail(joinEmails, sendTitle, sendText);
 
         // Noti 알림 설정
         const alimInfo = {
@@ -127,5 +136,3 @@ export default {
     },
   },
 };
-
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

@@ -733,6 +733,7 @@ model did {
   did_patExpress4             patExpression   @default(empty) // 환자정보표시순서4번
   did_patExpRatio4            Int             @default(0) // 환자정보 4번 비율
   did_lowMsgUsed              Boolean         @default(false) // 하단메세지 사용여부
+  did_nameMasking             Boolean         @default(false) // 환자 이름 마스킹 여부
   did_resInfoTime             Int             @default(0) // 예약정보 노출 시간
   did_resInfoCycle            Int             @default(0) // 예약정보 노출 주기
   did_doctorRoomMerge         Boolean         @default(false) // 진료실 통합보기
@@ -851,7 +852,7 @@ model ihNum {
 model hospitalNotice {
   hn_id          Int          @id @default(autoincrement())
   hn_title       String       @default("") @db.VarChar(125) // 사내 공지사항 100자
-  hn_text        String       @default("") @db.VarChar(600) // 사내 공지사항 내용 500자
+  hn_text        String       @default("") @db.VarChar(1250) // 사내 공지사항 내용 1000자
   hn_createdAt   DateTime     @default(now())
   hn_updatedAt   DateTime     @updatedAt // 수정일
   hn_creatorName String       @default("") @db.VarChar(20) // 작성자 이름
@@ -881,7 +882,7 @@ model hnAttached {
 // 사내공지 댓글
 model hnComment {
   hnc_id          Int            @id @default(autoincrement())
-  hnc_text        String         @default("") @db.VarChar(125) // 공지사항 댓글 내용 100자
+  hnc_text        String         @default("") @db.VarChar(250) // 공지사항 댓글 내용 100자
   hnc_createdAt   DateTime       @default(now())
   hnc_updatedAt   DateTime       @updatedAt // 수정일
   hnc_creatorName String         @default("") @db.VarChar(20) // 작성자 이름
@@ -940,7 +941,7 @@ model pnAttached {
 // 플랫폼공지 댓글
 model pnComment {
   pnc_id          Int            @id @default(autoincrement())
-  pnc_text        String         @default("") @db.VarChar(125) // 공지사항 댓글 내용 100자
+  pnc_text        String         @default("") @db.VarChar(250) // 공지사항 댓글 내용 100자
   pnc_createdAt   DateTime       @default(now())
   pnc_updatedAt   DateTime       @updatedAt // 수정일
   pnc_creatorName String         @default("") @db.VarChar(20) // 작성자 이름
@@ -1032,7 +1033,7 @@ model oneOnOneAnswer {
   oneAn_creatorName      String    @default("") @db.VarChar(20) // 작성자 이름
   oneAn_creatorRank      String    @default("") @db.VarChar(20) // 작성자 직책
   oneAn_creatorId        Int       @default(0) // 작성자(사용자) id
-  oneAn_answer           String    @default("") @db.VarChar(250) // 일대일 문의 답변
+  oneAn_answer           String    @default("") @db.VarChar(250) // 일대일 문의 답변, 코멘트
   oneOnOne               oneOnOne  @relation(fields: [oneq_id], references: [oneq_id])
   oneq_id                Int
 }

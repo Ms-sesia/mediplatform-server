@@ -1,9 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
-import { stringify } from "querystring";
-import { today9 } from "../../../../libs/todayCal";
-import clients from "../../../../libs/webSocket/clients";
 import webSocket from "../../../../libs/webSocket/webSocket";
 
 const prisma = new PrismaClient();
@@ -50,6 +47,7 @@ export default {
         did_patExpress4,
         did_patExpRatio4,
         did_lowMsgUsed,
+        did_nameMasking,
         did_resInfoTime,
         did_resInfoCycle,
         did_doctorRoomMerge,
@@ -67,7 +65,6 @@ export default {
 
         // 삭제할 id가 있으면 삭제
         if (did_deleteAttachedId.length) {
-          console.log("did_deleteAttachedId:", did_deleteAttachedId, did_deleteAttachedId.length);
           for (let i = 0; i < did_deleteAttachedId.length; i++) {
             const deleteDa = await prisma.didAttached.findUnique({
               where: { da_id: did_deleteAttachedId[i] },
@@ -79,14 +76,7 @@ export default {
               fs.unlinkSync(`${storagePath}/${urlFileName}`);
             }
 
-            // await prisma.didAttached.update({
-            //   where: { da_id: did_deleteAttachedId[i] },
-            //   data: { da_isDelete: true, da_deleteDate: new Date() },
-            // });
-            await prisma.didAttached.delete({
-              where: { da_id: did_deleteAttachedId[i] },
-              // data: { da_isDelete: true, da_deleteDate: new Date() },
-            });
+            await prisma.didAttached.delete({ where: { da_id: did_deleteAttachedId[i] } });
           }
         }
 
@@ -131,6 +121,7 @@ export default {
             did_patExpress4: did_patExpress4 ? did_patExpress4 : did.did_patExpress4,
             did_patExpRatio4: did_patExpRatio4 ? did_patExpRatio4 : did.did_patExpRatio4,
             did_lowMsgUsed: did_lowMsgUsed,
+            did_nameMasking: did_nameMasking,
             did_resInfoTime: did_resInfoTime ? did_resInfoTime : did.did_resInfoTime,
             did_resInfoCycle: did_resInfoCycle ? did_resInfoCycle : did.did_resInfoCycle,
             did_doctorRoomMerge: did_doctorRoomMerge,
@@ -250,10 +241,6 @@ export default {
         const socketIo = await webSocket();
         const pub = socketIo.pub;
 
-        // const channelName = `h-${hospital.hsp_email}`;
-        // const didChannel = "31693396924740kWnm#keV";
-
-        // await pub.publish(channelName, JSON.stringify(updateDidInfo));
         await pub.publish(did.did_uniqueId, JSON.stringify(updateDidInfo));
 
         return true;

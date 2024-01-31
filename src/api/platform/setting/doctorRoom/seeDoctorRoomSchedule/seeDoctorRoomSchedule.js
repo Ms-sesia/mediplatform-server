@@ -27,8 +27,6 @@ export default {
           },
         });
 
-        // console.log(drRoomSchedule);
-
         // drs_day 값을 기준으로 정렬
         drRoomSchedule.sort((a, b) => getDayIndex(a.drs_day) - getDayIndex(b.drs_day));
 

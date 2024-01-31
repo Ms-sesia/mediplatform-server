@@ -96,6 +96,7 @@ const webSocket = async (httpServer) => {
              *  "reservation" // 예약대기 등록 알림
              *  "specialSchedule" // 특별일정 등록 알림
              */
+            // console.log("alim, Client:", clients[channel]);
             clients[channel][socket.id].emit("notiAlim", message);
             break;
         }

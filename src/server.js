@@ -6,7 +6,7 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 import helmet from "helmet";
-import { json } from "body-parser";
+import bodyParser, { json } from "body-parser";
 import schema from "./schema";
 import graphqlUploadExpress from "./libs/graphql_fileUpload/graphqlUploadExpress";
 
@@ -20,6 +20,7 @@ import tobeSchedule from "./libs/scheduler/tobeSchedule";
 import apiRoute from "./api/expApi/router";
 import { hpMainCheck } from "./libs/1stTimeCreate";
 import hspExpiredSchedule from "./libs/scheduler/hspExpiredSchedule";
+import morgan from "morgan";
 
 const PORT = process.env.SERVER_PORT;
 
@@ -38,10 +39,10 @@ const PORT = process.env.SERVER_PORT;
 
   await server.start();
 
-  app.get("/", (req, res, next) => {
-    res.json({ success: true });
-    next();
-  });
+  // app.get("/", (req, res, next) => {
+  //   res.json({ success: true });
+  //   next();
+  // });
 
   app.use(authenticateJwt); // 유저 토큰 인증 - 프로젝트 진행시 사용
 
@@ -62,6 +63,11 @@ const PORT = process.env.SERVER_PORT;
   app.use(json());
   app.use(express.urlencoded({ extended: false }));
   app.use("/api", apiRoute);
+
+  app.post("/", bodyParser.json(), (req, res, next) => {
+    console.log("루트 req body:", req.body);
+    next();
+  });
 
   app.use(graphqlUploadExpress()); // graphql 파일업로드
 

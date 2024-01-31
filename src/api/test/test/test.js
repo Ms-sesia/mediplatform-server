@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import sendEmail from "../../../libs/sendEmail";
 
 const prisma = new PrismaClient();
 
@@ -10,27 +9,19 @@ export default {
       // const { user } = request;
       const { term } = args;
       try {
-        const title = "[test] 메디플랫폼 가입 안내 메일";
-        const text = `안녕하세요. 메디플랫폼 입니다.<br>
-        이 메일은 메디플랫폼 테스트 발송 메일입니다.<br>
-        <br>
-        메일을 받으신 분은 삭제하셔도 됩니다..<br>     
-        <br>
-        감사합니다.`;
-        const userList = await prisma.user.findMany({
-          select: { user_email: true },
-        });
+        const today9 = new Date(new Date().setHours(new Date().getHours() + 9));
 
-        const mailList = userList.map((ul) => ul.user_email);
-        const strMailList = mailList.join();
+        // const expHsp = await prisma.hospital.updateMany({
+        //   where: { hsp_useEndDate: { lt: today9 } },
+        //   data: { hsp_useEnded: true },
+        // });
 
-        console.log(strMailList);
-        await sendEmail(strMailList, title, text);
+        // console.log("expHsp:", expHsp);
 
+        console.log(`${today9.toISOString().split("T")[0]} : 병원 플랫폼 이용 만료일 확인 완료.`);
         return true;
       } catch (e) {
-        console.log("test =>", e);
-        throw new Error("err_00");
+        console.log("test error =>", e);
       }
     },
   },

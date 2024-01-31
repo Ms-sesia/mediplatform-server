@@ -4,10 +4,10 @@ const prisma = new PrismaClient();
 
 export default {
   Mutation: {
-    deleteOneOnOneComment: async (_, args, { request, isAuthenticated }) => {
+    updateOneOnOneComment: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { oneAn_id } = args;
+      const { oneAn_id, oneAn_text } = args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
@@ -18,14 +18,14 @@ export default {
         await prisma.oneOnOneAnswer.update({
           where: { oneAn_id },
           data: {
-            oneAn_isDelete: true,
-            oneAn_deleteDate: new Date(),
+            oneAn_createdAt: new Date(),
+            oneAn_answer: oneAn_text,
           },
         });
 
         return true;
       } catch (e) {
-        console.log("일대일 문의 댓글 삭제 실패. deleteOneOnOneComment", e);
+        console.log("일대일 문의 댓글 수정 실패. updateOneOnOneComment", e);
         if (e === 1) throw new Error("err_01");
         throw new Error("err_00");
       }

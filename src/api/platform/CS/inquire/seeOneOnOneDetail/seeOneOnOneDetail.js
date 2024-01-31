@@ -20,56 +20,36 @@ export default {
                 oneAt_fileSize: true,
               },
             },
-            // oneOnOneAnswer: {
-            //   where: { oneAn_isDelete: false },
-            //   select: {
-            //     oneAn_id: true,
-            //     oneAn_createdAt: true,
-            //     oneAn_adminAble: true,
-            //     oneAn_creatorName: true,
-            //     oneAn_creatorRank: true,
-            //     oneAn_creatorId: true,
-            //     oneAn_adminCreatorId: true,
-            //     oneAn_adminCreatorName: true,
-            //     oneAn_adminCreatorRank: true,
-            //     oneAn_answer: true,
-            //   },
-            // },
+            oneOnOneAnswer: {
+              where: { oneAn_isDelete: false },
+              select: {
+                oneAn_id: true,
+                oneAn_createdAt: true,
+                oneAn_adminAble: true,
+                oneAn_creatorName: true,
+                oneAn_creatorRank: true,
+                oneAn_creatorId: true,
+                oneAn_adminCreatorId: true,
+                oneAn_adminCreatorName: true,
+                oneAn_adminCreatorRank: true,
+                oneAn_answer: true,
+              },
+            },
           },
         });
 
-        const oneOnOneAnswer = await prisma.oneOnOneAnswer.findFirst({
-          where: { oneq_id },
-          orderBy: { oneAn_createdAt: "desc" },
-        });
+        inquire.oneOnOneAnswer.map(async (oneA) => {
+          oneA.oneAn_createdAt = new Date(oneA.oneAn_createdAt).toISOString();
 
-        if (oneOnOneAnswer) {
-          oneOnOneAnswer.oneAn_createdAt = oneOnOneAnswer ? new Date(oneOnOneAnswer.oneAn_createdAt).toISOString() : "";
-          inquire.oneOnOneAnswer = oneOnOneAnswer;
-        } else
-          inquire.oneOnOneAnswer = {
-            oneAn_id: 0,
-            oneAn_createdAt: "",
-            oneAn_adminAble: false,
-            oneAn_creatorName: "",
-            oneAn_creatorRank: "",
-            oneAn_creatorId: 0,
-            oneAn_adminCreatorName: "",
-            oneAn_adminCreatorRank: "",
-            oneAn_adminCreatorId: 0,
-            oneAn_answer: "",
-          };
+          oneA.oneAn_creatorImg = oneA.oneAn_adminAble
+            ? ""
+            : (await prisma.user.findUnique({ where: { user_id: oneA.oneAn_creatorId } })).user_img;
+        });
 
         const creator = await prisma.user.findUnique({ where: { user_id: inquire.oneq_creatorId } });
 
         inquire.oneq_createdAt = new Date(inquire.oneq_createdAt).toISOString();
         inquire.oneq_creatorImg = creator.user_img;
-
-        // inquire.oneOnOneAnswer.map((oneA) => {
-        //   oneA.oneAn_createdAt = new Date(oneA.oneAn_createdAt).toISOString();
-
-        //   return oneA;
-        // });
 
         if (!inquire) throw 1;
 

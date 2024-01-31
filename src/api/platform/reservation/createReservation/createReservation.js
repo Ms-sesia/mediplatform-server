@@ -84,7 +84,6 @@ export default {
           const hsp_alimSet = await prisma.alimSet.findUnique({
             where: { hsp_id: user.hospital.hsp_id },
           });
-          console.log(hsp_alimSet);
           await prisma.resAlim.create();
         }
 
@@ -198,23 +197,28 @@ export default {
                 `;
 
         for (const sendUser of sendUsers) {
-          try {
-            const email = sendUser.user_email;
-            // if (email === "yglee@platcube.com") {
-            await prisma.notiHistory.create({
-              data: {
-                ng_text: `"환자명 : ${patientNameConv}"님의 새로운 예약이 등록되었습니다.`,
-                user: { connect: { user_id: sendUser.user_id } },
-              },
-            });
-            await sendEmail(email, sendTitle, sendText);
-            // }
-          } catch (error) {
-            console.error(`예약등록 알림 메일 발송 에러. createReservation ==> ${error}`);
-            throw 1;
-          }
-          await delay(0.1); // 1ms (0.0001초) 지연
+          // try {
+          const email = sendUser.user_email;
+          // if (email === "yglee@platcube.com") {
+          await prisma.notiHistory.create({
+            data: {
+              ng_text: `"환자명 : ${patientNameConv}"님의 새로운 예약이 등록되었습니다.`,
+              user: { connect: { user_id: sendUser.user_id } },
+            },
+          });
+          // await sendEmail(email, sendTitle, sendText);
+          // }
+          // } catch (error) {
+          //   console.error(`예약등록 알림 메일 발송 에러. createReservation ==> ${error}`);
+          //   throw 1;
+          // }
+          // await delay(0.1); // 1ms (0.0001초) 지연
         }
+
+        const sendEmails = sendUsers.map((su) => su.user_email);
+        const joinEmails = sendEmails.join();
+
+        await sendEmail(joinEmails, sendTitle, sendText);
 
         // Noti 알림 설정
         const alimInfo = {

@@ -69,7 +69,6 @@ export default {
             const fileName = ssaUrl.split("/")[3];
 
             if (fs.existsSync(`${storagePath}/${fileName}`)) {
-              // console.log("존재");
               fs.unlinkSync(`${storagePath}/${fileName}`);
             }
 

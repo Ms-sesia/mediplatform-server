@@ -9,8 +9,6 @@ router.post("/", async (req, res) => {
   const hspData = req.body;
   const hospitalInfo = hspData.hospital;
   const doctorRooms = hspData.doctorRooms;
-  console.log("hospital: ", hospitalInfo);
-  console.log("doctorRooms: ", doctorRooms);
 
   const findHospital = await prisma.hospital.findUnique({
     where: { hsp_email: hospitalInfo.hsp_email },
