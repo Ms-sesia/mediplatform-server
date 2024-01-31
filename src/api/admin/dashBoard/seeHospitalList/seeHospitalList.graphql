@@ -91,6 +91,14 @@ type hospitalInfo {
   """
   hsp_detailAddress: String
   """
+  대표 이메일
+  """
+  hsp_email: String
+  """
+  국가명
+  """
+  hsp_country: String
+  """
   이번달 결제액
   """
   hsp_thisMonthPaymentAmount: Int

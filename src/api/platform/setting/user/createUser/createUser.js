@@ -32,7 +32,7 @@ export default {
           data: {
             user_name: name,
             user_birthday: convBirth.toISOString(),
-            user_cellphone: cellphone,
+            user_cellphone: cellphone.replaceAll("-", ""),
             user_email: email,
             user_org: org,
             user_rank: rank,

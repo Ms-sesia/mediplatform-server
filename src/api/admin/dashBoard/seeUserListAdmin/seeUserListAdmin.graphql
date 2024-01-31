@@ -1,0 +1,73 @@
+type Query {
+  """
+  병원 목록 조회
+
+  * error
+  - err_00 : 사용자 목록 조회에 실패하였습니다.
+  - err_01 : 관리자만 이용 가능합니다.
+  """
+  seeUserListAdmin(
+    """
+    검색어 - 사용자 이름 검색
+    """
+    searchTerm: String
+    """
+    사용자 이름 정렬 - 오름차순 : "asc", 내림차순 : "desc
+    """
+    orderBy: String
+    take: Int
+    cursor: Int
+  ): seeUserListAdminInfo
+}
+
+type seeUserListAdminInfo {
+  totalLength: Int
+  userInfoList: [userInfoAdmin]
+}
+
+"""
+사용자 정보 - 관리자
+"""
+type userInfoAdmin {
+  user_id: Int
+  """
+  등록일
+  """
+  user_createdAt: String
+  """
+  이름
+  """
+  user_name: String
+  """
+  생년월일
+  """
+  user_birthday: String
+  """
+  휴대폰번호
+  """
+  user_cellphone: String
+  """
+  사용자 email - id가 됨
+  """
+  user_email: String
+  """
+  직책
+  """
+  user_rank: String
+  """
+  직무
+  """
+  user_job: String
+  """
+  탈퇴(삭제)여부 - true: 탈퇴(Y), false: 탈퇴안됨(N)
+  """
+  user_isDelete: Boolean
+  """
+  삭제일 - 없으면 빈값
+  """
+  user_deleteDate: String
+  """
+  속한 병원명
+  """
+  hsp_name: String
+}

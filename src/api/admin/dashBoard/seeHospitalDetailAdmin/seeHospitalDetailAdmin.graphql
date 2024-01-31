@@ -14,20 +14,55 @@ type Query {
   ): seeHospitalDetailAdminInfo
 }
 
-# 병원 상세정보
+"""
+병원 상세정보
+"""
 type seeHospitalDetailAdminInfo {
   hsp_id: Int
-  hsp_name: String # 병원 이름 50자
-  hsp_useStartDate: String # 계약 시작일
-  hsp_useEndDate: String # 계약 종료일(만료일)
-  hsp_chief: String # 병원 대표자 명 10자
-  hsp_createdAt: String # 등록일(가입일)
-  hsp_hospitalNumber: String # 요양기관번호  20자
-  hsp_businessNumber: String # 사업자번호 20자
-  hsp_email: String # 대표 이메일
-  hsp_adminCreatorName: String # 등록자(담당자) 이름
-  hsp_adminCreatorRank: String # 등록자(담당자) 직책
-  totalUserNumber: Int # 총 사용자 수F
+  """
+  병원 이름 50자
+  """
+  hsp_name: String
+  """
+  계약 시작일
+  """
+  hsp_useStartDate: String
+  """
+  계약 종료일(만료일)
+  """
+  hsp_useEndDate: String
+  """
+  병원 대표자 명 10자
+  """
+  hsp_chief: String
+  """
+  등록일(가입일)
+  """
+  hsp_createdAt: String
+  """
+  요양기관번호  20자
+  """
+  hsp_hospitalNumber: String
+  """
+  사업자번호 20자
+  """
+  hsp_businessNumber: String
+  """
+  대표 이메일
+  """
+  hsp_email: String
+  """
+  등록자(담당자) 이름
+  """
+  hsp_adminCreatorName: String
+  """
+  등록자(담당자) 직책
+  """
+  hsp_adminCreatorRank: String
+  """
+  총 사용자 수F
+  """
+  totalUserNumber: Int
   hospitalUserList: [hospitalUser]
 }
 
@@ -35,8 +70,20 @@ type seeHospitalDetailAdminInfo {
 병원 사용자
 """
 type hospitalUser {
-  user_name: String # 이름
-  user_cellphone: String # 휴대폰번호
-  user_email: String # 사용자 email
-  user_rank: String # 직책
+  """
+  이름
+  """
+  user_name: String
+  """
+  휴대폰번호
+  """
+  user_cellphone: String
+  """
+  사용자 email
+  """
+  user_email: String
+  """
+  직책
+  """
+  user_rank: String
 }

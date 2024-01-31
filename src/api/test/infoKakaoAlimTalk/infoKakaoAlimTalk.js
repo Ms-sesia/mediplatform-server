@@ -41,14 +41,6 @@ export default {
           "\n" +
           `감사합니다."`;
 
-        // "안녕하세요. #{환자명}님, #{병원명}입니다.
-        // #{시간} #{진료의명} 원장으로 진료 예약이 되어 있었습니다.
-
-        // 재 예약을 원하시면 미리 #{문의 전화번호}로 연락 주시기 바랍니다.
-        // 병원 홈페이지: #{url}
-
-        // 감사합니다."
-
         const kakaoSendBody = {
           msg_type: "AL",
           mt_failover: "N",
@@ -61,16 +53,16 @@ export default {
             sender_key: senderKey, // 과장님께 문의
             template_code: templateCode,
             response_method: "push",
-          },
-          attachment: {
-            button: [
-              {
-                name: "채널 추가",
-                type: "AC",
-                // url_pc: "",
-                // url_mobile: "",
-              },
-            ],
+            attachment: {
+              button: [
+                {
+                  name: "채널 추가",
+                  type: "AC",
+                  // url_pc: "",
+                  // url_mobile: "",
+                },
+              ],
+            },
           },
         };
 

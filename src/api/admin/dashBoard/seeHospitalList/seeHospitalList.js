@@ -23,6 +23,7 @@ export default {
           where: { hp_paymentDate: { gte: lastMonthStartdate, lte: lastMonthEnddate } },
           _sum: { hp_paymentAmount: true },
         });
+
         const cumulativeSales = await prisma.hospitalPayment.aggregate({
           _sum: { hp_paymentAmount: true },
         });
@@ -87,7 +88,7 @@ export default {
         });
 
         return {
-          thisMonthSales: thisMonthSales._sum.hp_paymentAmount,
+          thisMonthSales: thisMonthSales._sum.hp_paymentAmount ? thisMonthSales._sum.hp_paymentAmount : 0,
           cumulativeSales: cumulativeSales._sum.hp_paymentAmount,
           hospitalNumber,
           userNumber,
