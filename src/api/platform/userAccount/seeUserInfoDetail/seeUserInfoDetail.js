@@ -21,6 +21,8 @@ export default {
           where: { hsp_id: loginUser.hsp_id },
         });
 
+        loginUser.hsp_email = hospital.hsp_email;
+
         const rank = await prisma.rank.findFirst({
           where: { AND: [{ rank_name: loginUser.user_rank }, { hsp_id: loginUser.hsp_id }] },
         });

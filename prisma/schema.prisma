@@ -34,6 +34,8 @@ model adminPermission {
   ap_dash     Boolean @default(true) // 대시보드
   ap_homepage Boolean @default(false) // 홈페이지
   ap_CS       Boolean @default(false) // 고객센터(문의사항)
+  ap_faq      Boolean @default(false) // 자주묻는질문
+  ap_notice   Boolean @default(false) // 공지사항
   ap_system   Boolean @default(false) // 시스템관리
   admin       admin   @relation(fields: [admin_id], references: [admin_id])
   admin_id    Int     @unique

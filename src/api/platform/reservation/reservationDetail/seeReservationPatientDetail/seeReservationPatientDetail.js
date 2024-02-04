@@ -77,7 +77,7 @@ export default {
         const approvalDate = reservation.re_confirmDate ? new Date(reservation.re_confirmDate).toISOString() : "";
 
         const alimSet = await prisma.resAlim.findUnique({ where: { re_id } });
-        const template = alimSet.ra_templateId
+        const template = alimSet
           ? await prisma.resAlimTemplate.findUnique({ where: { rat_id: alimSet.ra_templateId } })
           : "";
 

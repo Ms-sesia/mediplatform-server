@@ -327,6 +327,7 @@ export default {
 
         const seq = Math.floor(Math.random() * 4);
         const callPatient = callPatientInfo[seq];
+        console.log("호출환자 정보:", callPatient);
 
         await pub.publish(channelName, JSON.stringify(callPatient));
 

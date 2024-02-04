@@ -40,12 +40,40 @@ type seeAdminOneOnOneListInfo {
 }
 
 type adminOneOnOneList {
-  oneq_id: Int # 일대일 문의 id
-  text: String # 일대일 문의 내용
-  hospitalName: String # 병원명
-  creatorName: String # 작성자이름
-  creatorRank: String # 작성자 직책
-  creatorEmail: String # 작성자 이메일
-  createdAt: String # 작성일(문의일)
-  answerStatus: Boolean # 답변상태
+  """
+  일대일 문의 id
+  """
+  oneq_id: Int
+  """
+  일대일 문의 질문 제목 | 200자
+  """
+  title: String
+  """
+  일대일 문의 내용
+  """
+  text: String
+  """
+  병원명
+  """
+  hospitalName: String
+  """
+  작성자이름
+  """
+  creatorName: String
+  """
+  작성자 직책
+  """
+  creatorRank: String
+  """
+  작성자 이메일
+  """
+  creatorEmail: String
+  """
+  작성일(문의일)
+  """
+  createdAt: String
+  """
+  답변상태
+  """
+  answerStatus: Boolean
 }

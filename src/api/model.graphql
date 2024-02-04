@@ -128,6 +128,10 @@ type user {
   사용자 소속 병원명
   """
   user_hospitalName: String
+  """
+  사용자가 속한 병원 이메일
+  """
+  hsp_email: String
 }
 
 """

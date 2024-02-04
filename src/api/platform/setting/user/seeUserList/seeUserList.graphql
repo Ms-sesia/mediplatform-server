@@ -4,7 +4,7 @@ type Query {
   """
   seeUserList(
     """
-    검색어 - 모니터이름, 없으면 빈값
+    검색어 - 사용자이름, 없으면 빈값
     """
     searchTerm: String
     """

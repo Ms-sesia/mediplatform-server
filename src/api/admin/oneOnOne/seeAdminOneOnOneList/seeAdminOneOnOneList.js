@@ -52,6 +52,7 @@ export default {
 
           return {
             oneq_id: one.oneq_id,
+            title: one.oneq_title,
             text: one.oneq_text,
             hospitalName: hsp.hsp_name,
             creatorName: creator.user_name,

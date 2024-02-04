@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import fs from "fs";
 import path from "path";
 
 const prisma = new PrismaClient();
@@ -21,19 +20,6 @@ export default {
           where: { hsc_id },
         });
 
-        // 이미지 삭제 추가 필요
-        const hsi = await prisma.homepageServiceImg.findMany({ where: { hsc_id } });
-        hsi.forEach(async (img) => {
-          const filename = img.hsi_img.split("/")[3];
-
-          if (fs.existsSync(`${storagePath}/${filename}`)) {
-            fs.unlinkSync(`${storagePath}/${filename}`);
-          }
-        });
-
-        await prisma.homepageServiceImg.deleteMany({
-          where: { hsc_id },
-        });
         // 서비스 내용 삭제
         await prisma.homepageServiceContent.delete({
           where: { hsc_id },

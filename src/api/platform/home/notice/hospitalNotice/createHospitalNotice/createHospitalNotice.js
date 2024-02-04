@@ -74,27 +74,18 @@ export default {
         `;
 
         for (const sendUser of sendUsers) {
-          // try {
-          const email = sendUser.user_email;
           await prisma.notiHistory.create({
             data: {
               ng_text: `새로운 사내공지사항 "${title}"이(가) 등록되었습니다.`,
               user: { connect: { user_id: sendUser.user_id } },
             },
           });
-          console.log("공지 알림 등록 유저:", sendUser);
-          // await sendEmail(email, sendTitle, sendText);
-          // } catch (error) {
-          //   console.error(`사내공지 등록 알림 메일 발송 에러. createHospitalNotice ==> ${error}`);
-          //   throw 1;
-          // }
-          // await delay(0.1); // 1ms (0.0001초) 지연
         }
 
         const sendEmails = sendUsers.map((su) => su.user_email);
         const joinEmails = sendEmails.join();
 
-        await sendEmail(joinEmails, sendTitle, sendText);
+        // await sendEmail(joinEmails, sendTitle, sendText);
 
         // Noti 알림 설정
         const alimInfo = {
@@ -109,6 +100,7 @@ export default {
         const channelName = `h-${hospital.hsp_email}`;
 
         await pub.publish(channelName, JSON.stringify(alimInfo));
+        console.log("공지 등록 알림발송 완료. 채널:", channelName);
 
         return true;
       } catch (e) {
@@ -118,5 +110,3 @@ export default {
     },
   },
 };
-
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
