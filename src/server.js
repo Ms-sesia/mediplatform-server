@@ -21,6 +21,7 @@ import apiRoute from "./api/expApi/router";
 import { hpMainCheck } from "./libs/1stTimeCreate";
 import hspExpiredSchedule from "./libs/scheduler/hspExpiredSchedule";
 import morgan from "morgan";
+import resAlimSchedule from "./libs/scheduler/resAlimSchedule";
 
 const PORT = process.env.SERVER_PORT;
 
@@ -54,6 +55,7 @@ const PORT = process.env.SERVER_PORT;
   tobeSchedule();
   await hspExpiredSchedule();
   await hpMainCheck();
+  await resAlimSchedule();
 
   const corsOptions = {
     // origin: ["https://mediplatform.platcube.com"],
@@ -65,7 +67,7 @@ const PORT = process.env.SERVER_PORT;
   app.use("/api", apiRoute);
 
   app.post("/", bodyParser.json(), (req, res, next) => {
-    console.log("루트 req body:", req.body);
+    console.log("인포뱅크 알림톡 전송 결과:", req.body);
     next();
   });
 

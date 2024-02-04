@@ -85,7 +85,7 @@ export default {
         const sendEmails = sendUsers.map((su) => su.user_email);
         const joinEmails = sendEmails.join();
 
-        // await sendEmail(joinEmails, sendTitle, sendText);
+        await sendEmail(joinEmails, sendTitle, sendText);
 
         // Noti 알림 설정
         const alimInfo = {

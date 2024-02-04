@@ -68,23 +68,51 @@ export default {
           },
         });
 
-        if (alimTemplateId !== 0) {
-          await prisma.resAlim.create({
+        // 알림 생성
+        await prisma.resAlim.create({
+          data: {
+            ra_type: alimType ? alimType : "sms",
+            ra_time1: alimTime1 ? alimTime1 : true,
+            ra_time2: alimTime2 ? alimTime2 : false,
+            ra_time3: alimTime3 ? alimTime3 : false,
+            ra_time4: alimTime4 ? alimTime4 : false,
+            ra_templateId: alimTemplateId !== 0 ? alimTemplateId : 0,
+            reservation: { connect: { re_id: reservation.re_id } },
+          },
+        });
+
+        // 사용자 알림 있는지 확인
+        const userAlimSet = await prisma.userPatientAlimSet.findFirst({
+          where: { user_id: loginUser.user_id },
+          orderBy: { upas_updatedAt: "desc" },
+        });
+
+        // 사용자 알림 세팅 저장 - 이미 있을경우 업데이트
+        if (userAlimSet) {
+          await prisma.userPatientAlimSet.update({
+            where: { upas_id: userAlimSet.upas_id },
             data: {
-              ra_type: alimType,
-              ra_time1: alimTime1,
-              ra_time2: alimTime2,
-              ra_time3: alimTime3,
-              ra_time4: alimTime4,
-              ra_templateId: alimTemplateId,
-              reservation: { connect: { re_id: reservation.re_id } },
+              upas_type: alimType,
+              upas_time1: alimTime1,
+              upas_time2: alimTime2,
+              upas_time3: alimTime3,
+              upas_time4: alimTime4,
+              upas_templateId: alimTemplateId !== 0 ? alimTemplateId : 0,
             },
           });
+          // 없을 경우 생성
         } else {
-          const hsp_alimSet = await prisma.alimSet.findUnique({
-            where: { hsp_id: user.hospital.hsp_id },
+          await prisma.userPatientAlimSet.create({
+            data: {
+              upas_type: alimType,
+              upas_time1: alimTime1,
+              upas_time2: alimTime2,
+              upas_time3: alimTime3,
+              upas_time4: alimTime4,
+              upas_templateId: alimTemplateId !== 0 ? alimTemplateId : 0,
+              user: { connect: { user_id: loginUser.user_id } },
+            },
           });
-          await prisma.resAlim.create();
         }
 
         const alimTemplate =
