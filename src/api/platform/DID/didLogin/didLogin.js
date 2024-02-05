@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { makeHashPassword } from "../../../../libs/passwordHashing";
 import jwt from "jsonwebtoken";
+import webSocket from "../../../../libs/webSocket/webSocket";
 
 const prisma = new PrismaClient();
 
@@ -37,6 +38,15 @@ export default {
         });
 
         const loginToken = didLoginToken(user);
+
+        const reqWaitingPatiInfo = {
+          SendStatus: "reqWaitingPatient",
+          request: true,
+        };
+
+        const pub = (await webSocket()).pub;
+
+        await pub.publish(did.did_uniqueId, JSON.stringify(reqWaitingPatiInfo));
 
         return {
           did_id: did.did_id,

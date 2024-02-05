@@ -243,6 +243,12 @@ export default {
 
         await pub.publish(did.did_uniqueId, JSON.stringify(updateDidInfo));
 
+        const reqWaitingPatiInfo = {
+          SendStatus: "reqWaitingPatient",
+          request: true,
+        };
+        await pub.publish(did.did_uniqueId, JSON.stringify(reqWaitingPatiInfo));
+
         return true;
       } catch (e) {
         console.log("did 모니터 설정 변경 실패. updateDidMonitor", e);

@@ -116,6 +116,9 @@ const webSocket = async (httpServer) => {
           case "saveDid":
             socket.emit("saveDid", message);
             break;
+          case "reqWaitingPatient": // DID 접속 상태에서 환자정보 요청하기
+            socket.emit("reqWaitingPatient", message);
+            break;
         }
       });
 

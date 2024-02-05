@@ -41,11 +41,6 @@ const PORT = process.env.SERVER_PORT;
 
   await server.start();
 
-  // app.get("/", (req, res, next) => {
-  //   res.json({ success: true });
-  //   next();
-  // });
-
   app.use(authenticateJwt); // 유저 토큰 인증 - 프로젝트 진행시 사용
 
   // 이미지 혹은 파일들 경로 접속 허용
@@ -68,6 +63,7 @@ const PORT = process.env.SERVER_PORT;
   app.use("/api", apiRoute);
 
   app.post("/", bodyParser.json(), createAlimTalkLog);
+  // app.post("/infobank/alimtalk/report", bodyParser.json(), createAlimTalkLog); => 등록 요청
 
   app.use(graphqlUploadExpress()); // graphql 파일업로드
 
