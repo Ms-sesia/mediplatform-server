@@ -44,8 +44,6 @@ export default async (time, msg, cellphone, receiverName, resSelect, trId, sendN
         ${receiverName}
       ); `;
 
-    // console.log(result);
-
     return {
       status: "success",
       message: `${receiverName}님에게 문자 발송에 성공하였습니다.`,

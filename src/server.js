@@ -22,6 +22,7 @@ import { hpMainCheck } from "./libs/1stTimeCreate";
 import hspExpiredSchedule from "./libs/scheduler/hspExpiredSchedule";
 import morgan from "morgan";
 import resAlimSchedule from "./libs/scheduler/resAlimSchedule";
+import { createAlimTalkLog } from "./libs/infoKakaoAlim/createLog";
 
 const PORT = process.env.SERVER_PORT;
 
@@ -66,10 +67,7 @@ const PORT = process.env.SERVER_PORT;
   app.use(express.urlencoded({ extended: false }));
   app.use("/api", apiRoute);
 
-  app.post("/", bodyParser.json(), (req, res, next) => {
-    console.log("인포뱅크 알림톡 전송 결과:", req.body);
-    next();
-  });
+  app.post("/", bodyParser.json(), createAlimTalkLog);
 
   app.use(graphqlUploadExpress()); // graphql 파일업로드
 

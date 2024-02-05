@@ -1,15 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import sendSMS from "../../../libs/sendSMS";
-import axios from "axios";
+import { toInternationalFormat } from "../../../libs/checkValidation";
+import { getAlimTalkToken, sendAlimTalk } from "../../../libs/infoKakaoAlim/alimtalk";
 
 const prisma = new PrismaClient();
 
 export default {
   Mutation: {
-    resAlimTest: async (_, args, { request, isAuthenticated }) => {
-      // isAuthenticated(request);
-      // const { user } = request;
-      const { term } = args;
+    resAlimTest: async (_, args, __) => {
       try {
         const calTimeMs = 1000 * 60 * 60 * 9; // 한국시간 GMT+9 에 맞추기 위한 +9
 
@@ -67,15 +65,12 @@ export default {
         findAlimRes.forEach(async (far) => {
           const cellphone = far.re_patientCellphone;
 
-          console.log("보낼 폰번호: ", cellphone);
-          console.log("템플릿 type: ", far.resAlim.ra_type);
-          console.log("템플릿 id: ", far.resAlim.ra_templateId);
-
           const template =
             far.resAlim.ra_templateId === 0
               ? process.env.DEFAULT_SMS_MESSAGE
               : (await prisma.resAlimTemplate.findUnique({ where: { rat_id: far.resAlim.ra_templateId } })).rat_text;
 
+          // 문자 발송
           if (far.resAlim.ra_type === "sms") {
             const offsetTime = new Date().getTime() + calTimeMs;
             const sendTime = new Date(offsetTime).toISOString();
@@ -91,7 +86,7 @@ export default {
               )
               .replace("{예약시간}", far.re_time)}`;
 
-            sendSMS(
+            const sendSmsResult = await sendSMS(
               sendTime,
               message,
               cellphone,
@@ -100,26 +95,18 @@ export default {
               far.hospital.hsp_messageTrId,
               far.hospital.hsp_messageSendNum
             );
+            if (sendSmsResult.status === "fail") console.log("문자 발송 실패 =>", e);
+
             console.log(`${cellphone}로 문자 전송 완료.`);
           }
 
+          // 알림톡발송
           if (far.resAlim.ra_type === "kakao") {
+            // 휴대폰번호 유효성검사
             const intFormatCellphone = toInternationalFormat(cellphone);
 
-            const tokenInfo = (
-              await axios.post(
-                process.env.INFO_KAKAO_TOKENURL,
-                {},
-                {
-                  headers: {
-                    "X-IB-Client-Id": process.env.KAKAO_ID,
-                    "X-IB-Client-Passwd": process.env.KAKAO_PW,
-                    "Content-Type": "application/json;charset=UTF-8",
-                    Accept: "application/json",
-                  },
-                }
-              )
-            ).data;
+            // 알림톡 토큰 발행
+            const tokenInfo = await getAlimTalkToken();
 
             const drName =
               far.re_doctorRoomId !== 0
@@ -145,74 +132,17 @@ export default {
               .replace("#{url}", far.hospital.hsp_email)}
               `;
 
-            await kakaoSend(tokenInfo, intFormatCellphone, templateCode, message);
+            await sendAlimTalk(tokenInfo, intFormatCellphone, templateCode, message);
 
             console.log(`${cellphone} 알림톡 전송 완료.`);
           }
-
-          // console.log(message);
         });
 
         return true;
       } catch (e) {
-        console.log("test error =>", e);
+        console.log("resAlimtTest error =>", e);
         if (e.errorCode === 1) console.log("정확하지 않은 핸드폰번호는 카카오톡 발송이 불가능합니다.", e);
       }
     },
   },
-};
-
-const kakaoSend = async (tokenInfo, cellphone, templateCode, template) => {
-  try {
-    const kakaoSendBody = {
-      msg_type: "AL",
-      mt_failover: "N",
-      msg_data: {
-        to: cellphone,
-        content: template,
-      },
-      msg_attr: {
-        sender_key: process.env.INFO_KAKAO_SENDERKEY,
-        template_code: templateCode,
-        response_method: "push",
-        attachment: {
-          button: [
-            {
-              name: "채널 추가",
-              type: "AC",
-            },
-          ],
-        },
-      },
-    };
-
-    const sendResData = await axios.post(process.env.INFO_KAKAO_MSGSENDURL, kakaoSendBody, {
-      headers: {
-        Authorization: `${tokenInfo.schema} ${tokenInfo.accessToken}`,
-        "Content-Type": "application/json;charset=UTF-8",
-        Accept: "application/json",
-      },
-    });
-
-    console.log("kakao alim talk 전송 결과 :", sendResData.data);
-  } catch (e) {
-    console.log("kakao alim talk 전송 에러. =>", e);
-  }
-};
-
-// 핸드폰번호 유효성 검사
-const checkPhone = (number) => {
-  // 한국 핸드폰 번호 패턴 (010으로 시작하며 총 11자리 숫자)
-  const pattern = /^010\d{8}$/;
-  return pattern.test(number);
-};
-
-// 국제번호로 변환
-const toInternationalFormat = (number) => {
-  // '010' 접두어를 제거하고, '82'를 앞에 추가
-  if (checkPhone(number)) {
-    return "82" + number.substring(1);
-  } else {
-    throw { errorCode: 1, number };
-  }
 };
