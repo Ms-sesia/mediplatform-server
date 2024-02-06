@@ -73,4 +73,12 @@ type admin_permission {
   시스템관리
   """
   ap_system: Boolean
+  """
+  공지사항
+  """
+  ap_notice: Boolean
+  """
+  자주묻는질문
+  """
+  ap_faq: Boolean
 }

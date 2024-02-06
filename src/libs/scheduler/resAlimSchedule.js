@@ -11,6 +11,8 @@ export default async () => {
   // 매일 오전 9시
   schedule.scheduleJob("0 0 9 * * *", async () => {
     try {
+      const today = new Date(new Date().setDate(new Date().getDate() + 9));
+      console.log(`${today.toISOString().split("T")[0]}, 오전 9시. 예약 알림 스케쥴러 진행.`);
       const calTimeMs = 1000 * 60 * 60 * 9; // 한국시간 GMT+9 에 맞추기 위한 +9
 
       // 연동 기획 추가 필요

@@ -7,7 +7,7 @@ export default {
     updateAdminPermission: async (_, args, { request, isAuthenticated }) => {
       isAuthenticated(request);
       const { user } = request;
-      const { admin_id, ap_dash, ap_homepage, ap_CS, ap_system } = args;
+      const { admin_id, ap_dash, ap_homepage, ap_CS, ap_faq, ap_notice, ap_system } = args;
       try {
         if (!user.admin_master) throw 1;
 
@@ -18,6 +18,8 @@ export default {
             ap_homepage,
             ap_CS,
             ap_system,
+            ap_notice,
+            ap_faq,
           },
         });
 

@@ -12,8 +12,10 @@ export default {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
         const oneComment = await prisma.oneOnOneAnswer.findUnique({ where: { oneAn_id } });
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
 
-        if (oneComment.oneAn_creatorId !== loginUser.user_id) throw 1;
+        // 작성자가 아니면서 병원 계정도 아님
+        if (oneComment.oneAn_creatorId !== loginUser.user_id && hospital.hsp_email !== loginUser.user_email) throw 1;
 
         await prisma.oneOnOneAnswer.update({
           where: { oneAn_id },

@@ -37,6 +37,8 @@ export default {
                 ap_homepage: true,
                 ap_CS: true,
                 ap_system: true,
+                ap_notice: true,
+                ap_faq: true,
               },
             },
           },

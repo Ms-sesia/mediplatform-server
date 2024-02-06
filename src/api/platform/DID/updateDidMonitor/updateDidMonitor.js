@@ -247,7 +247,9 @@ export default {
           SendStatus: "reqWaitingPatient",
           request: true,
         };
-        await pub.publish(did.did_uniqueId, JSON.stringify(reqWaitingPatiInfo));
+        const channel = `h-${hospital.hsp_email}`;
+
+        await pub.publish(channel, JSON.stringify(reqWaitingPatiInfo));
 
         return true;
       } catch (e) {

@@ -14,11 +14,17 @@ export default {
 
         const inquire = await prisma.oneOnOne.findUnique({ where: { oneq_id } });
 
-        if (loginUser.user_id !== inquire.oneq_creatorId) throw 1;
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
+
+        // 작성자가 아니면서 병원 계정도 아님
+        if (loginUser.user_id !== inquire.oneq_creatorId && hospital.hsp_email !== loginUser.user_email) throw 1;
 
         await prisma.oneOnOne.update({
           where: { oneq_id },
           data: {
+            oneq_editorId: loginUser.user_id,
+            oneq_editorName: loginUser.user_name,
+            oneq_editorRank: loginUser.user_rank,
             oneq_isDelete: true,
             oneq_deleteDate: new Date(),
           },

@@ -45,8 +45,12 @@ export default {
         };
 
         const pub = (await webSocket()).pub;
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: did.hsp_id } });
 
-        await pub.publish(did.did_uniqueId, JSON.stringify(reqWaitingPatiInfo));
+        const channel = `h-${hospital.hsp_email}`;
+
+        // await pub.publish(did.did_uniqueId, JSON.stringify(reqWaitingPatiInfo));
+        await pub.publish(channel, JSON.stringify(reqWaitingPatiInfo));
 
         return {
           did_id: did.did_id,

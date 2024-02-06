@@ -12,7 +12,10 @@ export default {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const platformNoticeComment = await prisma.pnComment.findUnique({ where: { pnc_id } });
 
-        if (loginUser.user_id !== platformNoticeComment.pnc_creatorId) throw 1;
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
+
+        if (loginUser.user_id !== platformNoticeComment.pnc_creatorId && hospital.hsp_email !== loginUser.user_email)
+          throw 1;
 
         await prisma.pnComment.update({
           where: { pnc_id },

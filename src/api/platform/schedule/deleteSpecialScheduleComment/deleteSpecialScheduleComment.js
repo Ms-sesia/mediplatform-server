@@ -12,8 +12,10 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
+
         const ssh = await prisma.specialScheduleHistory.findUnique({ where: { ssh_id } });
-        if (ssh.ssh_creatorId !== loginUser.user_id) throw 1;
+        if (ssh.ssh_creatorId !== loginUser.user_id && hospital.hsp_email !== loginUser.user_email) throw 1;
 
         await prisma.specialScheduleHistory.update({
           where: { ssh_id },

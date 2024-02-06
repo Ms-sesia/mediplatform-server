@@ -3,7 +3,7 @@ type Mutation {
   일대일 문의 수정하기
 
   * error
-  - err_00 : 일대일 문의 등록하기에 실패하였습니다.
+  - err_00 : 일대일 문의 수정하기에 실패하였습니다.
   """
   updateOneOnOne(
     """

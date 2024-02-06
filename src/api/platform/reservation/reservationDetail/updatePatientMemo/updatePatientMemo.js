@@ -13,7 +13,8 @@ export default {
 
         const patientMemo = await prisma.patientMemo.findUnique({ where: { prm_id } });
 
-        if (loginUser.user_id !== patientMemo.prm_creatorId) throw 1;
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
+        if (loginUser.user_id !== patientMemo.prm_creatorId && hospital.hsp_email !== loginUser.user_email) throw 1;
 
         await prisma.patientMemo.update({
           where: { prm_id },

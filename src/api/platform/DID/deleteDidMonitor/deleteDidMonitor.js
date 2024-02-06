@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { today9 } from "../../../../libs/todayCal";
 import fs from "fs";
 import path from "path";
 import webSocket from "../../../../libs/webSocket/webSocket";
@@ -17,6 +16,11 @@ export default {
 
         const storagePath = path.join(__dirname, "../../../../../", "didMedia");
         const did = await prisma.did.findUnique({ where: { did_id } });
+
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
+
+        // 작성자가 아니면서 병원 계정도 아님
+        if (loginUser.user_id !== oneInquire.oneq_creatorId && hospital.hsp_email !== loginUser.user_email) throw 1;
 
         const attached = await prisma.didAttached.findMany({ where: { did_id } });
 

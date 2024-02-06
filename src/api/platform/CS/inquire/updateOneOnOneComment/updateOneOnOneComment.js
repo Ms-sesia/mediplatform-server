@@ -13,7 +13,9 @@ export default {
 
         const oneComment = await prisma.oneOnOneAnswer.findUnique({ where: { oneAn_id } });
 
-        if (oneComment.oneAn_creatorId !== loginUser.user_id) throw 1;
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
+
+        if (oneComment.oneAn_creatorId !== loginUser.user_id && hospital.hsp_email !== loginUser.user_email) throw 1;
 
         await prisma.oneOnOneAnswer.update({
           where: { oneAn_id },

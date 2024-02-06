@@ -15,7 +15,9 @@ export const createAlimTalkLog = async (req, res, next) => {
     // 파일 이어쓰기
     fs.appendFileSync(
       `${storagePath}/${filename}`,
-      `${JSON.stringify(req.body)}\n----------------------------------------------------------------------\n`
+      `발송일시 : ${today}\n${JSON.stringify(
+        req.body
+      )}\n----------------------------------------------------------------------\n`
     );
   } catch (e) {
     console.log("인포뱅크 카카오알림톡 로그기록 실패 =>", e);

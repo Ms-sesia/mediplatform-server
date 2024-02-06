@@ -99,6 +99,9 @@ const webSocket = async (httpServer) => {
             // console.log("alim, Client:", clients[channel]);
             clients[channel][socket.id].emit("notiAlim", message);
             break;
+          case "reqWaitingPatient": // 채널로 환자정보 요청
+            socket.emit("reqWaitingPatient", message);
+            break;
         }
       }
     });
@@ -115,9 +118,6 @@ const webSocket = async (httpServer) => {
             break;
           case "saveDid":
             socket.emit("saveDid", message);
-            break;
-          case "reqWaitingPatient": // DID 접속 상태에서 환자정보 요청하기
-            socket.emit("reqWaitingPatient", message);
             break;
         }
       });
@@ -170,7 +170,6 @@ const webSocket = async (httpServer) => {
     // did - 대기환자
     socket.on("getWaitingPatiInfo", async (data) => {
       const getPatient = JSON.parse(data);
-      // console.log("getPatient:", getPatient);
 
       if (getPatient) {
         const sendChannel = `h-${getPatient.Email}`;

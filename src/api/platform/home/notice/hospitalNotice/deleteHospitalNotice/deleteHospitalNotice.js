@@ -1,7 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import fs from "fs";
 import path from "path";
-import { today9 } from "../../../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 
@@ -16,7 +14,10 @@ export default {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const hospitalNotice = await prisma.hospitalNotice.findUnique({ where: { hn_id } });
 
-        if (loginUser.user_id !== hospitalNotice.hn_creatorId) throw 1;
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
+
+        // 작성자가 아니면서 병원 계정도 아님
+        if (loginUser.user_id !== hospitalNotice.hn_creatorId && hospital.hsp_email !== loginUser.user_email) throw 1;
 
         // 댓글 삭제
         await prisma.hnComment.updateMany({
@@ -30,18 +31,7 @@ export default {
           },
         });
 
-        // // 첨부파일 삭제 - 필요?
-        // const deleteHnAttached = await prisma.hnAttached.findMany({ where: { hn_id } });
-
-        // deleteHnAttached.map(async (delFile) => {
-        //   const urlFileName = delFile.hna_url.split("/")[3];
-        //   if (fs.existsSync(`${storagePath}/${urlFileName}`)) {
-        //     fs.unlinkSync(`${storagePath}/${urlFileName}`);
-        //   }
-
-        //   await prisma.hnAttached.delete({ where: { hna_id: delFile.hna_id } });
-        // });
-
+        // 공지사항 삭제 상태로 돌림
         await prisma.hospitalNotice.update({
           where: { hn_id },
           data: {

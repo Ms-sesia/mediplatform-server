@@ -1,0 +1,23 @@
+type Mutation {
+  """
+  자주묻는질문 수정
+
+  * error
+  - err_00 : 자주묻는질문 수정에 실패하였습니다.
+  - err_01 : 관리자만 사용할 수 있는 기능입니다.
+  """
+  updateFAQ(
+    """
+    자주묻는질문 id
+    """
+    faq_id: Int!
+    """
+    질문
+    """
+    question: String
+    """
+    답변
+    """
+    answer: String
+  ): Boolean
+}

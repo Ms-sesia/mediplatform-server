@@ -26,6 +26,11 @@ export default {
           },
         });
 
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
+
+        // 작성자가 아니면서 병원 계정도 아님
+        if (loginUser.user_id !== oneInquire.oneq_creatorId && hospital.hsp_email !== loginUser.user_email) throw 1;
+
         if (attached.length) {
           for (let i = 0; i < attached.length; i++) {
             const { createReadStream, filename, encoding, mimetype } = await attached[i];

@@ -15,8 +15,11 @@ export default {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const hospitalNotice = await prisma.hospitalNotice.findUnique({ where: { hn_id } });
 
-        if (loginUser.user_id !== hospitalNotice.hn_creatorId) throw 1;
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
 
+        // 작성자가 아니면서 병원 계정도 아님
+        if (loginUser.user_id !== hospitalNotice.hn_creatorId && hospital.hsp_email !== loginUser.user_email) throw 1;
+        
         if (deleteAttached.length) {
           for (let i = 0; i < deleteAttached.length; i++) {
             const deleteHna = await prisma.hnAttached.findUnique({

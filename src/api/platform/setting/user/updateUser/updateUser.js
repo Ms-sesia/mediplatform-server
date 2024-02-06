@@ -11,6 +11,8 @@ export default {
       try {
         const updateUser = await prisma.user.findUnique({ where: { user_id: user_id } });
 
+        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: user.hospital.hsp_id } });
+
         await prisma.user.update({
           where: { user_id },
           data: {
@@ -26,7 +28,7 @@ export default {
 
         if (rank !== updateUser.user_rank) {
           const findRank = await prisma.rank.findMany({
-            where: { AND: [{ hsp_id }, { rank_name: rank }] },
+            where: { AND: [{ hsp_id: hospital.hsp_id }, { rank_name: rank }] },
           });
 
           const rankPermission = await prisma.rankPermission.findUnique({
