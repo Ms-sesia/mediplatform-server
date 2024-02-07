@@ -9,6 +9,7 @@ export default {
       // const { user } = request;
       const { term } = args;
       try {
+        console.log("테스트 진행");
         return true;
       } catch (e) {
         console.log("test error =>", e);

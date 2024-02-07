@@ -34,6 +34,15 @@ const PORT = process.env.TEST_SERVER_PORT;
     schema,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     introspection: true, // 배포시 false, 개발 및 테스트시 true
+    // // 배포시 사용
+    // formatError: (err) => {
+    //   if (err.extensions) {
+    //     delete err.extensions;
+    //     delete err.path;
+    //     delete err.locations;
+    //   }
+    //   return err;
+    // },
   });
 
   await server.start();
@@ -55,8 +64,9 @@ const PORT = process.env.TEST_SERVER_PORT;
   await hpMainCheck();
 
   const corsOptions = {
-    // origin: ["https://mediplatform.platcube.com"],
+    origin: ["https://medipftest.platcube.info"],
     // optionsSuccessStatus: 200,
+    credentials: true,
   };
 
   app.use(json());
@@ -66,10 +76,15 @@ const PORT = process.env.TEST_SERVER_PORT;
   app.use(graphqlUploadExpress()); // graphql 파일업로드
 
   app.use(
-    "/graphql",
+    "/api-graphql",
     cors(corsOptions),
-    helmet({ contentSecurityPolicy: false }),
+    helmet({ contentSecurityPolicy: false }), // 배포시 true - 502
     json(),
+    // (req, res, next) => {
+    //   // if (req.method === "GET") return res.redirect(process.env.ERROR_REDIRECT_URL); // get으로 요청시 에러
+    //   if (req.method === "GET") return res.send("잚못된 접근입니다. 다시 시도해주세요."); // get으로 요청시 에러
+    //   next();
+    // },
     expressMiddleware(server, { context: async ({ req }) => ({ request: req, isAuthenticated }) })
   );
 
