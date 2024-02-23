@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
 import { weekdays_eng } from "../../../../libs/todayCal";
-import { getHspIsOffDay, getIsDrRoomOffDay } from "../../../../libs/getSchedule";
+import { getDrRoomHour } from "../../../../libs/getSchedule";
 
 const prisma = new PrismaClient();
 
@@ -14,6 +14,7 @@ router.get("/", async (req, res) => {
   try {
     if (!req.query.botId) throw 1;
     if (!req.query.officeCode) throw 2;
+    if (!req.query.date) throw 5;
 
     const botId = req.query.botId;
     const deptCode = req.query.officeCode;
@@ -30,33 +31,21 @@ router.get("/", async (req, res) => {
 
     if (!drRoom) throw 4;
 
-    let schedule = new Array();
-    for (let i = 0; i < 31; i++) {
-      const today = new Date(new Date().setDate(new Date().getDate() + i));
-      const today9 = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9); // KST(UTC+9) 계산
-      const day = today9.getDay(); // 요일 계산
-      const schDate = new Date(today9.toISOString().split("T")[0]);
+    const reqDate = new Date(req.query.date);
+    const reqDate9 = new Date(reqDate.getFullYear(), reqDate.getMonth(), reqDate.getDate(), 9); // KST(UTC+9) 계산
+    const day = weekdays_eng[reqDate9.getDay()]; // 요일 계산
+    const schDate = new Date(reqDate9.toISOString().split("T")[0]);
 
-      // console.log(`${today9.toISOString().split("T")[0]}, day: ${weekdays_eng[day]}`);
-
-      const hspIsOff = await getHspIsOffDay(hospital.hsp_id, schDate, weekdays_eng[day]);
-      const drIsOff = await getIsDrRoomOffDay(hospital.hsp_id, drRoom.dr_id, schDate, weekdays_eng[day]);
-
-      const drResAvail = {
-        date: today9.toISOString().split("T")[0],
-        availableTf: drIsOff ? "F" : hspIsOff ? "F" : "T", // 병원이 휴무가 아니지만 진료실이 휴무면 불가
-      };
-
-      schedule.push(drResAvail);
-    }
+    // 예약 가능한 시간대 계산
+    const availableTimes = await getDrRoomHour(hospital.hsp_id, drRoom.dr_id, schDate, day);
 
     // return res.status(200).json({
-    //   data: schedule,
+    //   data: availableTimes,
     // });
-    return res.status(200).json(schedule);
+    return res.status(200).json(availableTimes);
   } catch (e) {
-    console.log(`Api Error - reservationDate : 진료 예약 날짜 전송 에러. ${e}`);
-    let errMsg = "진료예약 가능한 날짜를 조회하는데 실패하였습니다.";
+    console.log(`Api Error - reservationTime : 진료예약 가능한 시간 전송 에러. ${e}`);
+    let errMsg = "진료예약 가능한 시간을 조회하는데 실패하였습니다.";
 
     if (e === 1 || e === 3)
       return res.status(400).json({
@@ -67,9 +56,13 @@ router.get("/", async (req, res) => {
       return res.status(400).json({
         errMsg: "진료실 코드를 확인해주세요.",
       });
+    if (e === 5)
+      return res.status(400).json({
+        errMsg: "날짜를 확인해주세요.",
+      });
 
     return res.status(404).json({
-      errMsg: errMsg,
+      errMsg,
     });
   }
 });

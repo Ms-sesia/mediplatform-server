@@ -6,6 +6,11 @@ import regNewPatient from "./regNewPatient";
 import regNewReservation from "./regNewReservation";
 import sendTobeInsureData from "./sendTobeInsureData";
 import reservationDate from "./Infobank/reservationDate";
+import reservationTime from "./Infobank/reservationTime";
+import reservationMinute from "./Infobank/reservationMinute";
+import hospitalInfo from "./Infobank/hospitalInfo";
+import operationTime from "./Infobank/operationTime";
+import reservationInfo from "./Infobank/reservationInfo";
 
 const router = express.Router();
 
@@ -16,5 +21,10 @@ router.use("/regNewPatient", regNewPatient);
 router.use("/regNewReservation", regNewReservation);
 router.use("/sendTobeInsureData", sendTobeInsureData);
 router.use("/infobank/chatbot/reservationDate", reservationDate);
+router.use("/infobank/chatbot/reservationTime", reservationTime);
+router.use("/infobank/chatbot/reservationMinute", reservationMinute);
+router.use("/infobank/chatbot/hospitalInfo", hospitalInfo);
+router.use("/infobank/chatbot/operationTime", operationTime);
+router.use("/infobank/chatbot/reservationInfo", reservationInfo);
 
 export default router;

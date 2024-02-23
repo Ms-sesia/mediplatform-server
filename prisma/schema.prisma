@@ -411,45 +411,50 @@ model patientMemo {
 
 // 예약 => 6개월 or 1년 예약 데이터 수집.
 model reservation {
-  re_id               Int        @id @default(autoincrement())
-  re_createdAt        DateTime   @default(now()) // 등록일(예약일시)
-  re_updatedAt        DateTime   @updatedAt
-  re_creatorName      String     @default("") @db.VarChar(25) // 등록자 이름
-  re_creatorRank      String     @default("") @db.VarChar(25) // 등록자 직책
-  re_creatorId        Int        @default(0) // 등록자 id
-  re_editorName       String     @default("") @db.VarChar(25) // 수정자 이름
-  re_editorRank       String     @default("") @db.VarChar(25) // 수정자 직책
-  re_editorId         Int        @default(0) // 수정자 id
-  re_isDelete         Boolean    @default(false) // 삭제여부
-  re_deleteDate       DateTime? // 삭제일
-  re_emrId            Int        @default(0) // emr의 예약 id
-  re_desireDate       DateTime   @default(now()) // 예약 희망 일
-  re_desireTime       String     @default("") @db.VarChar(10) // 예약 희망 시간(10:30)
-  re_resDate          DateTime   @default(now()) // 예약일자
-  re_year             Int        @default(0) // 예약 - 연도
-  re_month            Int        @default(0) // 예약 - 월
-  re_date             Int        @default(0) // 예약 - 일
-  re_time             String     @default("") @db.VarChar(10) // 예약 시간(09:30)
-  re_status           reStatus   @default(waiting) // 예약 상태 
-  re_platform         rePlatform @default(platform) // 예약 매체
-  re_patientName      String     @default("") @db.VarChar(20) // 예약자(환자) 이름
-  re_patientRrn       String     @default("") @db.VarChar(25) // 예약자(환자) 주민번호 871012-1
-  re_patientCellphone String     @default("") @db.VarChar(25) // 예약자(환자) 휴대폰번호
-  re_chartNumber      String     @default("") @db.VarChar(25) // 환자 차트번호
-  re_oneLineMem       String     @default("") @db.VarChar(65) // 한줄 메모 50자
-  re_confirmUserName  String     @default("") @db.VarChar(20) // 승인자 이름
-  re_confirmUserRank  String     @default("") @db.VarChar(20) // 승인자 직급
-  re_confirmDate      DateTime? // 승인일시 : 상태가 업데이트되는 날짜
-  re_LCategory        String     @default("") @db.VarChar(65) // 예약구분 - 대분류 50자
-  re_SCategory        String     @default("") @db.VarChar(65) // 예약구분 - 소분류 50자
-  re_doctorRoomName   String     @default("") @db.VarChar(25) // 진료실 이름
-  re_doctorRoomId     Int        @default(0) // 진료실 id
-  re_appUserId        String     @default("") @db.VarChar(250) // 예약정보 id - 인포뱅크 요청
-  resAlim             resAlim?
-  patient             patient?   @relation(fields: [pati_id], references: [pati_id])
-  pati_id             Int?
-  hospital            hospital   @relation(fields: [hsp_id], references: [hsp_id])
-  hsp_id              Int
+  re_id                 Int        @id @default(autoincrement())
+  re_createdAt          DateTime   @default(now()) // 등록일(예약일시)
+  re_updatedAt          DateTime   @updatedAt
+  re_creatorName        String     @default("") @db.VarChar(25) // 등록자 이름
+  re_creatorRank        String     @default("") @db.VarChar(25) // 등록자 직책
+  re_creatorId          Int        @default(0) // 등록자 id
+  re_editorName         String     @default("") @db.VarChar(25) // 수정자 이름
+  re_editorRank         String     @default("") @db.VarChar(25) // 수정자 직책
+  re_editorId           Int        @default(0) // 수정자 id
+  re_isDelete           Boolean    @default(false) // 삭제여부
+  re_deleteDate         DateTime? // 삭제일
+  re_emrId              Int        @default(0) // emr의 예약 id
+  re_desireDate         DateTime   @default(now()) // 예약 희망 일
+  re_desireTime         String     @default("") @db.VarChar(10) // 예약 희망 시간(10:30)
+  re_resDate            DateTime   @default(now()) // 예약일자
+  re_year               Int        @default(0) // 예약 - 연도
+  re_month              Int        @default(0) // 예약 - 월
+  re_date               Int        @default(0) // 예약 - 일
+  re_time               String     @default("") @db.VarChar(10) // 예약 시간(09:30)
+  re_status             reStatus   @default(waiting) // 예약 상태 
+  re_platform           rePlatform @default(platform) // 예약 매체
+  re_patientName        String     @default("") @db.VarChar(20) // 예약자(환자) 이름
+  re_patientRrn         String     @default("") @db.VarChar(25) // 예약자(환자) 주민번호(생년월일)
+  re_patientCellphone   String     @default("") @db.VarChar(25) // 예약자(환자) 휴대폰번호
+  re_chartNumber        String     @default("") @db.VarChar(25) // 환자 차트번호
+  re_oneLineMem         String     @default("") @db.VarChar(65) // 한줄 메모 50자
+  re_confirmUserName    String     @default("") @db.VarChar(20) // 승인자 이름
+  re_confirmUserRank    String     @default("") @db.VarChar(20) // 승인자 직급
+  re_confirmDate        DateTime? // 승인일시 : 상태가 업데이트되는 날짜
+  re_LCategory          String     @default("") @db.VarChar(65) // 예약구분 - 대분류 50자
+  re_SCategory          String     @default("") @db.VarChar(65) // 예약구분 - 소분류 50자
+  re_doctorRoomName     String     @default("") @db.VarChar(25) // 진료실 이름
+  re_doctorRoomId       Int        @default(0) // 진료실 id
+  re_appUserId          String     @default("") @db.VarChar(250) // 예약정보 id - 인포뱅크 요청
+  // infobank chatbot관련 정보 - infobank api reservationInfo 에서 확인
+  re_reservedTreatment  String     @default("") @db.VarChar(100) // 예약 진료항목
+  re_proxyReservationYn Boolean    @default(false) // 대리예약여부, true: 대리예약, false: 본인예약
+  re_requirement        String     @default("") @db.VarChar(650) // 요청사항
+  re_chatbotRegDate     DateTime? // 챗봇예약 접수 일시
+  resAlim               resAlim?
+  patient               patient?   @relation(fields: [pati_id], references: [pati_id])
+  pati_id               Int?
+  hospital              hospital   @relation(fields: [hsp_id], references: [hsp_id])
+  hsp_id                Int
 
   @@index([hsp_id, re_year, re_month, re_date])
 }
