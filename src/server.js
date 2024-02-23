@@ -20,7 +20,6 @@ import tobeSchedule from "./libs/scheduler/tobeSchedule";
 import apiRoute from "./api/expApi/router";
 import { hpMainCheck } from "./libs/1stTimeCreate";
 import hspExpiredSchedule from "./libs/scheduler/hspExpiredSchedule";
-import morgan from "morgan";
 import resAlimSchedule from "./libs/scheduler/resAlimSchedule";
 import { createAlimTalkLog } from "./libs/infoKakaoAlim/createLog";
 
@@ -53,10 +52,7 @@ const PORT = process.env.SERVER_PORT;
   await hpMainCheck();
   await resAlimSchedule();
 
-  const corsOptions = {
-    // origin: ["https://mediplatform.platcube.com"],
-    // optionsSuccessStatus: 200,
-  };
+  const corsOptions = {};
 
   app.use(json());
   app.use(express.urlencoded({ extended: false }));
@@ -68,7 +64,7 @@ const PORT = process.env.SERVER_PORT;
   app.use(graphqlUploadExpress()); // graphql 파일업로드
 
   app.use(
-    "/graphql",
+    "/api-graphql",
     cors(corsOptions),
     helmet({ contentSecurityPolicy: false }),
     json(),
