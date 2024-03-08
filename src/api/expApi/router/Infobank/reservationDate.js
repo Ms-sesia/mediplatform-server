@@ -37,8 +37,6 @@ router.get("/", async (req, res) => {
       const day = today9.getDay(); // 요일 계산
       const schDate = new Date(today9.toISOString().split("T")[0]);
 
-      // console.log(`${today9.toISOString().split("T")[0]}, day: ${weekdays_eng[day]}`);
-
       const hspIsOff = await getHspIsOffDay(hospital.hsp_id, schDate, weekdays_eng[day]);
       const drIsOff = await getIsDrRoomOffDay(hospital.hsp_id, drRoom.dr_id, schDate, weekdays_eng[day]);
 
@@ -50,9 +48,6 @@ router.get("/", async (req, res) => {
       schedule.push(drResAvail);
     }
 
-    // return res.status(200).json({
-    //   data: schedule,
-    // });
     return res.status(200).json(schedule);
   } catch (e) {
     console.log(`Api Error - reservationDate : 진료 예약 날짜 전송 에러. ${e}`);

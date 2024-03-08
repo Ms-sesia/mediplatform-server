@@ -95,9 +95,10 @@ export default {
               far.hospital.hsp_messageTrId,
               far.hospital.hsp_messageSendNum
             );
-            if (sendSmsResult.status === "fail") console.log("문자 발송 실패 =>", e);
 
-            console.log(`${cellphone}로 문자 전송 완료.`);
+            // if (sendSmsResult.status === "fail") console.log("문자 발송 실패 =>", e);
+
+            // console.log(`${cellphone}로 문자 전송 완료.`);
           }
 
           // 알림톡발송
@@ -134,7 +135,7 @@ export default {
 
             await sendAlimTalk(tokenInfo, intFormatCellphone, templateCode, message);
 
-            console.log(`${cellphone} 알림톡 전송 완료.`);
+            // console.log(`${cellphone} 알림톡 전송 완료.`);
           }
         });
 

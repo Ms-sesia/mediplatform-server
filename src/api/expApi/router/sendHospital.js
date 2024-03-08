@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
+import sendEmail from "../../../libs/sendEmail";
 
 const prisma = new PrismaClient();
 
@@ -16,7 +17,6 @@ router.post("/", async (req, res) => {
 
   // 병원 정보가 없으면 병원 생성 및 진료실 생성
   if (!hospital) {
-    // console.log("병원정보 생성");
     hospital = await prisma.hospital.create({
       data: {
         hsp_name: hospitalInfo.hsp_name,
@@ -29,10 +29,34 @@ router.post("/", async (req, res) => {
       },
     });
 
+    // const title = "메디플랫폼 가입 안내 메일";
+    // const text = `안녕하세요. 메디플랫폼 입니다.<br>
+    // 이 메일은 메디플랫폼 이용 병원 등록정보 및 마스터 계정 정보 전달용 메일입니다.<br>
+    // <br>
+    // 병원 등록 정보는 아래와 같습니다.<br>
+    // <br>
+    // 병원명 : ${name}<br>
+    // 계약시작일 : ${contractStartDate.toISOString().split("T")[0]}<br>
+    // 계약종료일 : ${contractEndDate.toISOString().split("T")[0]}<br>
+    // 대표자명 : ${chief}<br>
+    // 이메일 : ${email}<br>
+    // 사용국가 : ${country}<br>
+    // 사업자번호 : ${businessNumber}<br>
+    // 요양기관번호 : ${hospitalNumber}<br>
+    // <br>
+    // 생성된 계정의 정보는 아래와 같습니다.<br>
+    // <br>
+    // 아이디(email) : ${email}<br>
+    // 임시비밀번호 : ${tempPw}<br>
+    // <br>
+    // 로그인 후 비밀번호를 변경하고 사용해주세요.<br>
+    // 감사합니다.`;
+
+    // await sendEmail(hospitalInfo.hsp_email, title, text)
+
     // 진료실 생성
     if (doctorRooms.length) await createDrRoom(doctorRooms, hospital.hsp_id);
   } else {
-    // console.log("병원정보 업데이트");
     // 병원 정보가 있으면 이메일 제외 업데이트
     hospital = await prisma.hospital.update({
       where: { hsp_id: hospital.hsp_id },
@@ -57,8 +81,7 @@ router.post("/", async (req, res) => {
     // 신규 및 업데이트 대상 진료실 처리
     for (const drRoom of doctorRooms) {
       if (existingDrRoomsMap.has(drRoom.dr_deptCode)) {
-        // console.log("진료실 업데이트. 진료실코드:", drRoom.dr_deptCode);
-        // 진료실 업데이트
+        // 진료실 정보 업데이트
         await prisma.doctorRoom.updateMany({
           where: { AND: [{ dr_deptCode: drRoom.dr_deptCode }, { hsp_id: hospital.hsp_id }, { dr_isDelete: false }] },
           data: {
@@ -68,11 +91,22 @@ router.post("/", async (req, res) => {
             hsp_id: hospital.hsp_id,
           },
         });
+
+        // did 진료실 정보 업데이트
+        await prisma.didDoctorRoom.updateMany({
+          where: {
+            AND: [{ ddr_deptCode: drRoom.dr_deptCode }, { did: { hsp_id: hospital.hsp_id } }, { ddr_isDelete: false }],
+          },
+          data: {
+            ddr_doctorRoomName: drRoom.dr_roomName,
+            ddr_doctorName: drRoom.dr_doctorName,
+          },
+        });
+
         // 처리된 진료실은 맵에서 제거
         existingDrRoomsMap.delete(drRoom.dr_deptCode);
       } else {
-        // console.log("진료실 새로 생성. 진료실 정보: ", drRoom);
-        await prisma.doctorRoom.create({
+        const createDrRoom = await prisma.doctorRoom.create({
           data: {
             dr_deptCode: drRoom.dr_deptCode,
             dr_roomName: drRoom.dr_roomName,
@@ -81,17 +115,53 @@ router.post("/", async (req, res) => {
             hospital: { connect: { hsp_id: hospital.hsp_id } },
           },
         });
+
+        // 생성할 did 진료실의 did목록
+        const dids = await prisma.did.findMany({
+          where: { AND: [{ hsp_id: hospital.hsp_id }, { did_isDelete: false }] },
+        });
+
+        // did 목록에 진료실 새로 생성
+        dids.map(async (did) => {
+          const latestDdrRoom = await prisma.didDoctorRoom.findFirst({
+            where: { AND: [{ did_id: did.did_id }, { ddr_isDelete: false }] },
+            orderBy: { ddr_number: "desc" },
+          });
+
+          await prisma.didDoctorRoom.create({
+            data: {
+              ddr_info: `${createDrRoom.dr_roomName} ${createDrRoom.dr_doctorName}`,
+              ddr_deptCode: createDrRoom.dr_deptCode,
+              ddr_doctorRoomName: createDrRoom.dr_roomName,
+              ddr_doctorName: createDrRoom.dr_doctorName,
+              ddr_number: latestDdrRoom ? latestDdrRoom.ddr_number + 1 : 1,
+              did: { connect: { did_id: did.did_id } },
+            },
+          });
+        });
+
+        // 처리된 진료실은 맵에서 제거
+        existingDrRoomsMap.delete(drRoom.dr_deptCode);
       }
     }
 
     // 진료실 삭제
     for (const [dr_deptCode] of existingDrRoomsMap) {
-      // console.log("삭제 할 진료실코드:", dr_deptCode);
       await prisma.doctorRoom.updateMany({
         where: { AND: [{ dr_deptCode: dr_deptCode }, { hsp_id: hospital.hsp_id }, { dr_isDelete: false }] },
         data: {
           dr_isDelete: true,
           dr_deleteDate: new Date(),
+        },
+      });
+
+      await prisma.didDoctorRoom.updateMany({
+        where: {
+          AND: [{ ddr_deptCode: dr_deptCode }, { did: { hsp_id: hospital.hsp_id } }, { ddr_isDelete: false }],
+        },
+        data: {
+          ddr_isDelete: true,
+          ddr_deleteDate: new Date(),
         },
       });
     }

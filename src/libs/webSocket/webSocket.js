@@ -31,12 +31,12 @@ const webSocket = async (httpServer) => {
 
   socketIo.on("connection", async (socket) => {
     socket.emit("resConnection", resConnection);
-    console.log(
-      "웹 프론트 사용자 연결 완료. 이메일:",
-      socket.handshake.query.hospitalEmail,
-      "/ 접속 socket Id:",
-      socket.id
-    );
+    // console.log(
+    //   "웹 프론트 사용자 연결 완료. 이메일:",
+    //   socket.handshake.query.hospitalEmail,
+    //   "/ 접속 socket Id:",
+    //   socket.id
+    // );
 
     // 프론트가 받을 구독 채널이름
     const hospitalChannel = `h-${socket.handshake.query.hospitalEmail}`;

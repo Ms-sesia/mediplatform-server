@@ -65,7 +65,7 @@ export default {
             ${receiverName}
             ); `;
         // ${resSend ? "Y" : "N"},
-        console.log("문자 테스트 전송 결과:", result);
+        // console.log("문자 테스트 전송 결과:", result);
 
         return true;
       } catch (e) {

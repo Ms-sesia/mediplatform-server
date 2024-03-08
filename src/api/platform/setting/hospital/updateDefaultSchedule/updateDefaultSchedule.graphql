@@ -1,54 +1,54 @@
 type Mutation {
   """
-  진료실 스케쥴 수정
+  병원 기본 스케쥴 수정
 
   * error
-  - err_00 : 진료실 스케쥴 수정에 실패하였습니다.
+  - err_00 : 병원 기본 운영 스케쥴 수정에 실패하였습니다. 
   """
-  updateDoctorRoomSchedule(
+  updateDefaultSchedule(
     """
-    삭제할 진료실 일정 id
+    기본 운영스케쥴 Id
     """
-    drs_id: Int!
+    ds_id: Int!
     """
     요일 - mon, tue, wed, thu, fri, sat, sun
     """
-    day: day
+    ds_day: day
     """
     시작 시간
     """
-    startHour: Int
+    ds_startHour: Int
     """
     시작 분
     """
-    startMin: Int
+    ds_startMin: Int
     """
     종료 시간
     """
-    endHour: Int
+    ds_endHour: Int
     """
     종료 분
     """
-    endMin: Int
+    ds_endMin: Int
     """
     점심시간 휴진 사용 여부. false 미사용, true 사용
     """
-    lunchBreak: Boolean
+    ds_lunchBreak: Boolean
     """
     점심시간 시작 시간
     """
-    lunchBreakStartHour: Int
+    ds_lbStartHour: Int
     """
     점심시간 시작 분
     """
-    lunchBreakStartMin: Int
+    ds_lbStartMin: Int
     """
     점심시간 종료 시간
     """
-    lunchBreakEndHour: Int
+    ds_lbEndHour: Int
     """
     점심시간 종료 분
     """
-    lunchBreakEndMin: Int
+    ds_lbEndMin: Int
   ): Boolean
 }

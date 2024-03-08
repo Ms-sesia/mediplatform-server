@@ -154,7 +154,7 @@ export const getDrRoomHour = async (hsp_id, dr_id, schDate, DayofWeek) => {
   const drRoomTime = await drRoomSche(hsp_id, dr_id, schDate, DayofWeek);
   let availableTimes = new Array();
 
-  // 운영 시간이 존재하지 않는 경우 처리
+  // 운영 시간이 존재하지 않는 경우
   const startHour = drRoomTime.startHour === 0 && drRoomTime.endHour === 0 ? 9 : drRoomTime.startHour;
   const endHour = drRoomTime.startHour === 0 && drRoomTime.endHour === 0 ? 18 : drRoomTime.endHour;
 
@@ -165,14 +165,14 @@ export const getDrRoomHour = async (hsp_id, dr_id, schDate, DayofWeek) => {
     // 점심 시간 및 특별 스케줄 시간 제외
     if (drRoomTime.lunchBreak && hour >= drRoomTime.lbStartHour && hour < drRoomTime.lbEndHour) {
       availableTimes.push({
-        hour,
+        time: hour,
         availableTf: "F",
       });
       continue;
     }
     if (drRoomTime.isOffDay && hour >= drRoomTime.offStartHour && hour < drRoomTime.offEndHour) {
       availableTimes.push({
-        hour,
+        time: hour,
         availableTf: "F",
       });
       continue;
@@ -181,7 +181,7 @@ export const getDrRoomHour = async (hsp_id, dr_id, schDate, DayofWeek) => {
     const availableTf = drRoomTime.startHour === 0 && drRoomTime.endHour === 0 ? "F" : "T";
 
     availableTimes.push({
-      hour: hourStr,
+      time: hourStr,
       availableTf,
     });
   }

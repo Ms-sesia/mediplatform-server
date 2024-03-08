@@ -231,17 +231,26 @@ export default {
 };
 
 const generateFixedDays = (month, year, hspOffDay, monthOffdays, weekOffdays) => {
-  const daysInMonth = new Date(year, month, 0).getDate();
+  const daysInMonth = new Date(year, month, 0).getDate(); // 해당 월의 일수
   const fixedDays = [];
+
+  // 해당 월의 시작일과 종료일
+  const findStartDate = new Date(year, month - 1, 1);
+  const findEndDate = new Date(year, month, 0);
 
   // hspOffDay 처리
   hspOffDay.forEach((offday) => {
-    let startDay = offday.startDate.getDate();
-    let endDay = offday.endDate.getDate();
+    let startDay = offday.startDate;
+    let endDay = offday.endDate;
 
-    for (let day = startDay; day <= endDay; day++) {
-      const date = new Date(year, month - 1, day, 9).getDate();
-      fixedDays.push(date);
+    // 검색한 월에 속한 휴무일만 필터링
+    if (startDay < findEndDate && endDay >= findStartDate) {
+      let currentDay = new Date(Math.max(startDay.getTime(), findStartDate.getTime()));
+
+      while (currentDay <= endDay && currentDay <= findEndDate) {
+        fixedDays.push(currentDay.getDate());
+        currentDay.setDate(currentDay.getDate() + 1); // 다음 날짜로
+      }
     }
   });
 
@@ -267,5 +276,5 @@ const generateFixedDays = (month, year, hspOffDay, monthOffdays, weekOffdays) =>
     }
   });
 
-  return fixedDays.sort((a, b) => a - b);
+  return [...new Set(fixedDays)].sort((a, b) => a - b); // 중복 제거 후 정렬
 };

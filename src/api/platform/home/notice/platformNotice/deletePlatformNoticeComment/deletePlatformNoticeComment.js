@@ -10,11 +10,12 @@ export default {
       const { pnc_id } = args;
       try {
         const pnc = await prisma.pnComment.findUnique({ where: { pnc_id } });
-        const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
 
         let loginUser;
         // 사용자
         if (user.userType !== "admin") {
+          const hospital = await prisma.hospital.findUnique({ where: { hsp_id: loginUser.hsp_id } });
+
           loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
           if (loginUser.user_id !== pnc.pnc_creatorId && hospital.hsp_email !== loginUser.user_email) throw 1; // 작성자, 병원계정
           // 관리자는 삭제 가능

@@ -112,6 +112,24 @@ export default {
           },
         });
 
+        await prisma.rank.create({
+          data: {
+            name: "대표원장",
+            hospital: { connect: { hsp_id: hospital.hsp_id } },
+            rankPermission: {
+              create: {
+                rp_reservation: true,
+                rp_schedule: true,
+                rp_patient: true,
+                rp_did: true,
+                rp_insurance: true,
+                rp_cs: true,
+                rp_setting: true,
+              },
+            },
+          },
+        });
+
         return true;
       } catch (e) {
         console.log("병원 추가 실패. createHospital", e);

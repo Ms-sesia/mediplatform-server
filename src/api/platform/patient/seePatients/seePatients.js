@@ -13,26 +13,11 @@ export default {
         const createSearchHistory = await searchHistory(searchTerm, user.user_id);
         if (!createSearchHistory.status) throw createSearchHistory.error;
 
-        const searchStart = new Date(searchStartDate);
-        const searchEnd = new Date(searchEndDate);
+        const splitSS = searchStartDate.split("T")[0].split("-");
+        const splitSE = searchEndDate.split("T")[0].split("-");
 
-        // const totalPatientInfo = await prisma.reservation.findMany({
-        //   where: {
-        //     AND: [
-        //       { hsp_id: user.hospital.hsp_id },
-        //       { re_isDelete: false },
-        //       { re_resDate: { gte: searchStart, lte: searchEnd } },
-        //       {
-        //         OR: [
-        //           { re_patientName: { contains: searchTerm } },
-        //           { re_patientCellphone: { contains: searchTerm } },
-        //           { patient: { pati_chartNumber: { contains: searchTerm } } },
-        //         ],
-        //       },
-        //     ],
-        //   },
-        //   orderBy: { re_resDate: orderBy },
-        // });
+        const searchStart = new Date(Number(splitSS[0]), Number(splitSS[1]) - 1, Number(splitSS[2]));
+        const searchEnd = new Date(Number(splitSE[0]), Number(splitSE[1]) - 1, Number(splitSE[2]) + 1);
 
         const totalPatientInfo = await prisma.reservation.findMany({
           distinct: ["pati_id"],
@@ -40,7 +25,7 @@ export default {
             AND: [
               { hsp_id: user.hospital.hsp_id },
               { re_isDelete: false },
-              { re_resDate: { gte: searchStart, lte: searchEnd } },
+              { re_resDate: { gte: searchStart, lt: searchEnd } },
               {
                 OR: [
                   { re_patientName: { contains: searchTerm } },
@@ -70,7 +55,7 @@ export default {
               { hsp_id: user.hospital.hsp_id },
               { re_isDelete: false },
               // { patient: { pati_isDelete: false } },
-              { re_resDate: { gte: searchStart, lte: searchEnd } },
+              { re_resDate: { gte: searchStart, lt: searchEnd } },
               {
                 OR: [
                   { re_patientName: { contains: searchTerm } },

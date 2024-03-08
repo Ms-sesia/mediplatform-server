@@ -5,9 +5,9 @@ const prisma = new PrismaClient();
 export default {
   Query: {
     seeFAQAdmin: async (_, args, { request, isAuthenticated }) => {
+      const { orderby, take, cursor } = args;
       isAuthenticated(request);
       const { user } = request;
-      const { orderby, take, cursor } = args;
       try {
         const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
         if (!loginAdmin) throw 1;

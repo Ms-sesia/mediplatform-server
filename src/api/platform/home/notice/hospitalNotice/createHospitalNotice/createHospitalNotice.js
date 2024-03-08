@@ -100,7 +100,6 @@ export default {
         const channelName = `h-${hospital.hsp_email}`;
 
         await pub.publish(channelName, JSON.stringify(alimInfo));
-        console.log("공지 등록 알림발송 완료. 채널:", channelName);
 
         return true;
       } catch (e) {

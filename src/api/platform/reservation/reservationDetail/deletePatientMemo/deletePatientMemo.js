@@ -10,7 +10,6 @@ export default {
       const { user } = request;
       const { prm_id } = args;
       try {
-        console.log("1번 여기?");
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
         const patientMemo = await prisma.patientMemo.findUnique({ where: { prm_id } });

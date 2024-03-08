@@ -133,7 +133,5 @@ export const convEmrToTobeData = (emrData) => {
   tobeInsureData.diagsList = tobeDiagsList;
   tobeInsureData.phamList = tobePhamList;
 
-  console.log();
-
   return tobeInsureData;
 };

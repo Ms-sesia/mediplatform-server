@@ -81,7 +81,9 @@ export default {
         const reservationInfos = reservationList.map(async (res, idx) => {
           // 내원확정된 횟수
           const visitCount = await prisma.reservation.count({
-            where: { AND: [{ hsp_id: res.hsp_id }, { pati_id: res.pati_id }, { re_status: "confirm" }] },
+            where: {
+              AND: [{ hsp_id: res.hsp_id }, { pati_id: res.pati_id ? res.pati_id : 0 }, { re_status: "confirm" }],
+            },
           });
 
           const recentlyVisit = await prisma.reservation.findFirst({
