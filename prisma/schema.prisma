@@ -294,6 +294,7 @@ model user {
   hsp_id              Int
   userPhoneAuthCode   userPhoneAuthCode[]
   notiHistory         notiHistory[] // 알리 발송 내역 
+  userLoginHistory    userLoginHistory[] // 사용자 로그인 기록
 
   @@index([user_name, user_cellphone])
 }
@@ -329,6 +330,18 @@ model userPhoneAuthCode {
   upac_cellphone String   @default("") @db.VarChar(25) // 인증받을 핸드폰번호
   user           user     @relation(fields: [user_id], references: [user_id])
   user_id        Int
+}
+
+// 관리자 로그인 기록 
+model userLoginHistory {
+  ulh_id        Int      @id @default(autoincrement())
+  ulh_createdAt DateTime @default(now())
+  ulh_ip        String   @default("") @db.VarChar(20) // 접속 ip
+  ulh_os        String   @default("") @db.VarChar(20) // 접속 os
+  ulh_browser   String   @default("") @db.VarChar(20) // 접속 브라우저
+  ulh_status    Boolean  @default(false) // 로그인상태. 로그인 : true, 로그아웃 : false
+  user          user?    @relation(fields: [user_id], references: [user_id])
+  user_id       Int?
 }
 
 // 검색 기록

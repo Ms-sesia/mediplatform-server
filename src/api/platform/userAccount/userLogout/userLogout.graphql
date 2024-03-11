@@ -1,0 +1,6 @@
+type Mutation {
+  """
+  로그아웃 기록을 위한 뮤테이션
+  """
+  userLogout: String
+}

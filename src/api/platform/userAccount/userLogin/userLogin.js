@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import useragent from "useragent";
 import { generateToken } from "../../../../generate";
 import { makeHashPassword } from "../../../../libs/passwordHashing";
 
@@ -34,6 +35,20 @@ export default {
             user_rank: true,
             user_passwordInit: true,
             hospital: { select: { hsp_id: true } },
+          },
+        });
+
+        const ip = request.headers["x-forwarded-for"];
+        // os, browser 정보
+        const agent = useragent.parse(request.headers["user-agent"]);
+
+        await prisma.userLoginHistory.create({
+          data: {
+            ulh_ip: ip,
+            ulh_os: agent.os.toString(),
+            ulh_browser: agent.toAgent(),
+            ulh_status: true,
+            user: { connect: { user_id: user.user_id } },
           },
         });
 

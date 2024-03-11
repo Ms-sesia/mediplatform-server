@@ -17,14 +17,44 @@ type Query {
 
 type doctorRoomSchdule {
   drs_id: Int
-  drs_day: day # 요일
-  drs_startHour: Int # 시작 시간
-  drs_startMin: Int # 시작 분
-  drs_endHour: Int # 종료 시간
-  drs_endMin: Int # 종료 분
-  drs_lunchBreak: Boolean # 점심시간 휴진 사용 여부. false 미사용, true 사용
-  drs_lbStartHour: Int # 점심시간 시작 시간
-  drs_lbStartMin: Int # 점심시간 시작 분
-  drs_lbEndHour: Int # 점심시간 종료 시간
-  drs_lbEndMin: Int # 점심시간 종료 분
+  """
+  요일
+  """
+  drs_day: day
+  """
+  시작 시간
+  """
+  drs_startHour: Int
+  """
+  시작 분
+  """
+  drs_startMin: Int
+  """
+  종료 시간
+  """
+  drs_endHour: Int
+  """
+  종료 분
+  """
+  drs_endMin: Int
+  """
+  점심시간 휴진 사용 여부. false 미사용, true 사용
+  """
+  drs_lunchBreak: Boolean
+  """
+  점심시간 시작 시간
+  """
+  drs_lbStartHour: Int
+  """
+  점심시간 시작 분
+  """
+  drs_lbStartMin: Int
+  """
+  점심시간 종료 시간
+  """
+  drs_lbEndHour: Int
+  """
+  점심시간 종료 분
+  """
+  drs_lbEndMin: Int
 }
