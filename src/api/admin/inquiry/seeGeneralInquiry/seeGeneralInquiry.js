@@ -16,6 +16,7 @@ export default {
           where: {
             gi_answerStatus: answerStatus === "total" ? undefined : answerStatus === "ans" ? true : false,
           },
+          orderBy: { gi_createdAt: "desc" },
         });
 
         if (!totalGeneralInquiry.length)

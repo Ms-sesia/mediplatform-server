@@ -64,9 +64,9 @@ const PORT = process.env.TEST_SERVER_PORT;
   await hpMainCheck();
 
   const corsOptions = {
-    origin: ["https://medipftest.platcube.info"],
-    // optionsSuccessStatus: 200,
-    credentials: true,
+    // origin: ["https://medipftest.platcube.info"],
+    // // optionsSuccessStatus: 200,
+    // credentials: true,
   };
 
   app.use(json());

@@ -49,6 +49,10 @@ type Mutation {
     """
     doctorRoomName: String!
     """
+    진료실 코드(부서코드?)
+    """
+    dr_deptCode: String
+    """
     알림 유형 - 문자 / 카카오 / 선택안함
     """
     alimType: resAlimType

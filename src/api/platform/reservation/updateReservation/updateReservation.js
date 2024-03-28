@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { today9 } from "../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 
@@ -16,6 +15,7 @@ export default {
         largeCategory,
         smallCategory,
         doctorRoomName,
+        dr_deptCode,
         oneLineMemo,
         alimType,
         alimTime1,
@@ -28,6 +28,10 @@ export default {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
         const rsDate = new Date(resDate);
+
+        const drRoom = await prisma.doctorRoom.findFirst({
+          where: { AND: [{ hsp_id: loginUser.hsp_id }, { dr_deptCode }] },
+        });
 
         const reservation = await prisma.reservation.update({
           where: { re_id },
@@ -43,6 +47,7 @@ export default {
             re_LCategory: largeCategory,
             re_SCategory: smallCategory,
             re_doctorRoomName: doctorRoomName,
+            re_doctorRoomId: drRoom.dr_id,
             re_oneLineMem: oneLineMemo,
             resAlim: {
               update: {

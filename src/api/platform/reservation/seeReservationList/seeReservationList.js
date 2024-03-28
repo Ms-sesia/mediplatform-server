@@ -82,7 +82,13 @@ export default {
           // 내원확정된 횟수
           const visitCount = await prisma.reservation.count({
             where: {
-              AND: [{ hsp_id: res.hsp_id }, { pati_id: res.pati_id ? res.pati_id : 0 }, { re_status: "confirm" }],
+              AND: [
+                //
+                { hsp_id: res.hsp_id },
+                { re_patientName: res.re_patientName },
+                { re_isDelete: false },
+                { re_status: { not: "cancel" } },
+              ],
             },
           });
 
@@ -90,7 +96,9 @@ export default {
             where: {
               AND: [
                 { hsp_id: res.hsp_id },
-                { pati_id: res.pati_id },
+                { re_isDelete: false },
+                { re_patientName: res.re_patientName },
+                { re_patientCellphone: res.re_patientCellphone },
                 { re_status: "confirm" },
                 { re_resDate: { lte: today.toISOString() } },
               ],

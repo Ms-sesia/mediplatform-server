@@ -24,6 +24,11 @@ export default {
           where: { AND: [{ user_id: user.user_id }, { faq_id: faq.faq_id }] },
         });
 
+        await prisma.faq.update({
+          where: { faq_id },
+          data: { faq_viewCount: { increment: 1 } },
+        });
+
         faq.faq_likeCount = faqLikeCount;
         faq.faq_myLikeStatus = myLikeStatus ? myLikeStatus.fl_like : false;
 

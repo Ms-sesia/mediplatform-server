@@ -16,6 +16,7 @@ export default {
           where: {
             ei_answerStatus: answerStatus === "total" ? undefined : answerStatus === "ans" ? true : false,
           },
+          orderBy: { ei_createdAt: "desc" },
         });
 
         if (!totalEstimateInquiry.length)

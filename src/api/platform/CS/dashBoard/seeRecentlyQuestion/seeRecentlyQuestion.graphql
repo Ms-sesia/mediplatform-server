@@ -1,14 +1,14 @@
 type Query {
   """
-  조회수가 높은 질문
+  최근 등록 질문
 
   *error
   err_00 : 데이터 조회에 실패하였습니다.
   """
-  seeHighViewQuestion: [seeHighViewQuestionInfo]
+  seeRecentlyQuestion: [seeRecentlyQuestionInfo]
 }
 
-type seeHighViewQuestionInfo {
+type seeRecentlyQuestionInfo {
   faq_id: Int
   """
   질문

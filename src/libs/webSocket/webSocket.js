@@ -100,7 +100,13 @@ const webSocket = async (httpServer) => {
             clients[channel][socket.id].emit("notiAlim", message);
             break;
           case "reqWaitingPatient": // 채널로 환자정보 요청
-            socket.emit("reqWaitingPatient", message);
+            clients[channel][socket.id].emit("reqWaitingPatient", message);
+            // socket.emit("reqWaitingPatient", message);
+            break;
+          case "regReservation": // 채널로 등록 환자정보 전달
+            // console.log("message:", message);
+            clients[channel][socket.id].emit("regReservation", message);
+            // socket.emit("regReservation", message);
             break;
         }
       }

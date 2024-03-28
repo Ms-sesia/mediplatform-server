@@ -79,15 +79,15 @@ export default async () => {
           const sendTime = new Date(offsetTime).toISOString();
 
           message = `${template
-            .replace("{병원명}", far.hospital.hsp_name)
-            .replace("{환자명}", far.re_patientName)
+            .replace("#{병원명}", far.hospital.hsp_name)
+            .replace("#{환자명}", far.re_patientName)
             .replace(
-              "{예약일}",
+              "#{예약일}",
               new Date(new Date(far.re_resDate).setHours(new Date(far.re_resDate).getHours() + 9))
                 .toISOString()
                 .split("T")[0]
             )
-            .replace("{예약시간}", far.re_time)}`;
+            .replace("#{예약시간}", far.re_time)}`;
 
           sendSMS(
             sendTime,
@@ -98,7 +98,7 @@ export default async () => {
             far.hospital.hsp_messageTrId,
             far.hospital.hsp_messageSendNum
           );
-          // console.log(`${cellphone}로 문자 전송 완료.`);
+          console.log(`"${cellphone}", 문자 전송 완료.`);
         }
 
         if (far.resAlim.ra_type === "kakao") {
@@ -132,7 +132,7 @@ export default async () => {
 
           await sendAlimTalk(tokenInfo, intFormatCellphone, templateCode, message);
 
-          // console.log(`${cellphone} 알림톡 전송 완료.`);
+          console.log(`"${cellphone}", 예약 알림톡 전송 완료.`);
         }
       });
 

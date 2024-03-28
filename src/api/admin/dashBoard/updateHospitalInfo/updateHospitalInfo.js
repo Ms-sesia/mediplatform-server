@@ -13,9 +13,11 @@ export default {
 
         const startDate = new Date(useStartDate);
         const endDate = new Date(useEndDate);
-        const contractStartDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 9);
-        const contractEndDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 9);
+        const contractStartDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+        const contractEndDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
 
+        console.log("useStartDate:", startDate);
+        console.log("useEndDate:", endDate);
         // 병원 정보 수정
         const hospital = await prisma.hospital.update({
           where: { hsp_id },

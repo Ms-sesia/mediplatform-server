@@ -18,32 +18,63 @@ export default async (time, msg, cellphone, receiverName, resSelect, trId, sendN
   const sendTime = new Date(time);
   try {
     await mssql.connect(mssqlConfig);
-    const result = await mssql.query`
-    INSERT INTO SC_TRAN
-      (
-        TR_ID ,
-        TR_SENDDATE ,
-        TR_SENDSTAT ,
-        TR_MSGTYPE ,
-        TR_PHONE ,
-        TR_CALLBACK ,
-        TR_MSG ,
-        TR_ETC1 ,
-        TR_ETC2
-      )
-    VALUES
-      (
-        ${trId},
-        ${sendTime},
-        '0',
-        '0',
-        ${cellphone},
-        ${sendNum},
-        ${msg},
-        ${resSelect ? "Y" : "N"},
-        ${receiverName}
-      ); `;
 
+    let result;
+    if (msg.length > 80) {
+      console.log("lms전송");
+      result = await mssql.query`
+      INSERT INTO MMS_MSG
+        (
+          SUBJECT,
+          PHONE,
+          CALLBACK,
+          STATUS,
+          REQDATE,
+          MSG,
+          TYPE,
+          ID
+        )
+      VALUES
+        (
+          '[메디칼소프트 예약 알림]',
+          ${cellphone},
+          ${sendNum},
+          '0',
+          ${sendTime},
+          ${msg},
+          '0',
+          ${trId}
+        ); `;
+      console.log("sendTime:", sendTime);
+    } else {
+      result = await mssql.query`
+      INSERT INTO SC_TRAN
+        (
+          TR_ID ,
+          TR_SENDDATE ,
+          TR_SENDSTAT ,
+          TR_MSGTYPE ,
+          TR_PHONE ,
+          TR_CALLBACK ,
+          TR_MSG ,
+          TR_ETC1 ,
+          TR_ETC2
+        )
+      VALUES
+        (
+          ${trId},
+          ${sendTime},
+          '0',
+          '0',
+          ${cellphone},
+          ${sendNum},
+          ${msg},
+          ${resSelect ? "Y" : "N"},
+          ${receiverName}
+        ); `;
+    }
+
+    console.log("sms send result:", result);
     return {
       status: "success",
       message: `${receiverName}님에게 문자 발송에 성공하였습니다.`,

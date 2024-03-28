@@ -36,7 +36,7 @@ router.post("/", async (req, res) => {
 
     return res.status(200).json(sendData);
   } catch (e) {
-    console.log(`Api Error - hospitalInfo : 병워 정보 전송 에러. ${e}`);
+    console.log(`Api Error - botInfo : 챗봇 연결정보 전달 에러. ${e}`);
     let message = "병원 정보를 조회하는데 실패하였습니다.";
 
     if (e === 1 || e === 3)

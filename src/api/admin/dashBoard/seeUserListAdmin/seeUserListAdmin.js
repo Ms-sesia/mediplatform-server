@@ -12,7 +12,9 @@ export default {
         if (user.userType !== "admin") throw 1;
 
         const totalUsers = await prisma.user.findMany({
-          where: { user_name: { contains: searchTerm } },
+          where: {
+            OR: [{ user_name: { contains: searchTerm } }, { hospital: { hsp_name: { contains: searchTerm } } }],
+          },
           select: {
             user_id: true,
             user_createdAt: true,
@@ -26,7 +28,7 @@ export default {
             user_deleteDate: true,
             hospital: { select: { hsp_name: true } },
           },
-          orderBy: { user_name: orderBy === "desc" ? "desc" : "asc" },
+          orderBy: [{ user_name: orderBy === "desc" ? "desc" : "asc" }, { user_createdAt: "desc" }],
         });
 
         if (!totalUsers.length)
@@ -39,7 +41,10 @@ export default {
         const cursorOpt = cursor === 0 ? { take } : { take, skip: 0, cursor: { user_id: cursorId } };
 
         const userList = await prisma.user.findMany({
-          where: { user_name: { contains: searchTerm } },
+          // where: { user_name: { contains: searchTerm } },
+          where: {
+            OR: [{ user_name: { contains: searchTerm } }, { hospital: { hsp_name: { contains: searchTerm } } }],
+          },
           select: {
             user_id: true,
             user_createdAt: true,
@@ -53,7 +58,7 @@ export default {
             user_deleteDate: true,
             hospital: { select: { hsp_name: true } },
           },
-          orderBy: { user_name: orderBy === "desc" ? "desc" : "asc" },
+          orderBy: [{ user_name: orderBy === "desc" ? "desc" : "asc" }, { user_createdAt: "desc" }],
           ...cursorOpt,
         });
 

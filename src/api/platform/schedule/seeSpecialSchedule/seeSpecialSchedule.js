@@ -27,8 +27,8 @@ export default {
                 AND: [
                   {
                     OR: [
-                      { ss_startDate: { gte: startDate, lte: endDate } },
-                      { ss_endDate: { gte: startDate, lte: endDate } },
+                      { ss_startDate: { gte: startDate, lt: endDate } },
+                      { ss_endDate: { gte: startDate, lt: endDate } },
                     ],
                   },
                   { ss_isDelete: false },

@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { generateSecretCode } from "../../../../generate";
-import { sendAligoSMS } from "../../../../libs/aligo/sendAligoSMS";
 import sendSMS from "../../../../libs/sendSMS";
 
 const prisma = new PrismaClient();

@@ -106,7 +106,7 @@ export default {
         }
 
         const doctorRoom = await prisma.doctorRoom.findMany({
-          where: { AND: [{ dr_isDelete: false }, { hsp_id: user.hospital.user_id }] },
+          where: { AND: [{ dr_isDelete: false }, { hsp_id: user.hospital.hsp_id }] },
         });
 
         // 진료실이 있을 경우 did진료실 정보 생성

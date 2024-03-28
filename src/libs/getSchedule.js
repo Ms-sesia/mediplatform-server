@@ -92,7 +92,7 @@ export const getHspIsOffDay = async (hsp_id, schDate, DayofWeek) => {
   return isOffDay || !totalOperTime ? true : false;
 };
 
-// 진료실 스케쥴 계산
+// 진료실 휴무 스케쥴 계산
 export const getIsDrRoomOffDay = async (hsp_id, dr_id, schDate, DayofWeek) => {
   const drSchedule = await prisma.doctorRoomSchedule.findMany({
     where: { AND: [{ dr_id }, { drs_isDelete: false }, { drs_day: DayofWeek }] },
@@ -149,7 +149,7 @@ export const getIsDrRoomOffDay = async (hsp_id, dr_id, schDate, DayofWeek) => {
   return isOffDay;
 };
 
-// 진료실 스케쥴 계산
+// 진료실 스케쥴 시간 계산
 export const getDrRoomHour = async (hsp_id, dr_id, schDate, DayofWeek) => {
   const drRoomTime = await drRoomSche(hsp_id, dr_id, schDate, DayofWeek);
   let availableTimes = new Array();

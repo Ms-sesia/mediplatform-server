@@ -1,0 +1,11 @@
+type Query {
+  """
+  did 모니터에서 local EMR로 요청하는 환자대기 목록
+  """
+  reqWaitingPatientList(
+    """
+    로그인한 이메일 정보
+    """
+    hospitalEmail: String!
+  ): Boolean
+}

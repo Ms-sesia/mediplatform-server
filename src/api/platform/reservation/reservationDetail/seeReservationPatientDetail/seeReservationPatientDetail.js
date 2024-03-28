@@ -25,17 +25,6 @@ export default {
                     prm_creatorId: true,
                   },
                 },
-                reservation: {
-                  where: { AND: [{ re_isDelete: false }, { re_status: "confirm" }] },
-                  select: {
-                    re_year: true,
-                    re_month: true,
-                    re_date: true,
-                    re_time: true,
-                    re_status: true,
-                    re_oneLineMem: true,
-                  },
-                },
               },
             },
             resAlim: {
@@ -58,19 +47,37 @@ export default {
             patientMemoList: [],
           };
 
-        const resHistoryList = reservation.patient
-          ? reservation.patient.reservation
-            ? reservation.patient.reservation.map((res) => {
-                const resHistoryDate = new Date(res.re_year, res.re_month, res.re_date).toISOString();
-                return {
-                  resDate: resHistoryDate,
-                  resTime: res.re_time,
-                  resStatus: res.re_status,
-                  oneLineMemo: res.re_oneLineMem,
-                };
-              })
-            : []
-          : [];
+        const resHistories = await prisma.reservation.findMany({
+          where: {
+            AND: [
+              { re_patientName: reservation.re_patientName },
+              { re_patientCellphone: reservation.re_patientCellphone },
+            ],
+          },
+          select: {
+            re_desireDate: true,
+            re_desireTime: true,
+            re_year: true,
+            re_month: true,
+            re_date: true,
+            re_time: true,
+            re_status: true,
+            re_oneLineMem: true,
+          },
+        });
+
+        const resHistoryList = resHistories.map((res) => {
+          const resHistoryDate =
+            res.re_status === "confirm"
+              ? new Date(res.re_year, res.re_month - 1, res.re_date).toISOString()
+              : new Date(res.re_desireDate).toISOString();
+          return {
+            resDate: resHistoryDate,
+            resTime: res.re_time,
+            resStatus: res.re_status,
+            oneLineMemo: res.re_oneLineMem,
+          };
+        });
 
         const resDate = new Date(reservation.re_year, reservation.re_month - 1, reservation.re_date).toISOString();
         const desireDate = new Date(reservation.re_desireDate).toISOString();
@@ -80,6 +87,14 @@ export default {
         const template = alimSet
           ? await prisma.resAlimTemplate.findUnique({ where: { rat_id: alimSet.ra_templateId } })
           : "";
+
+        const drRoom = reservation?.re_doctorRoomId
+          ? await prisma.doctorRoom.findUnique({
+              where: { dr_id: reservation.re_doctorRoomId },
+            })
+          : await prisma.doctorRoom.findFirst({
+              where: { AND: [{ hsp_id: user.hospital.hsp_id }, { dr_roomName: reservation.re_doctorRoomName }] },
+            });
 
         const resDetail = reservation
           ? {
@@ -93,6 +108,7 @@ export default {
               platform: reservation.re_platform,
               status: reservation.re_status,
               doctorRoomName: reservation.re_doctorRoomName,
+              dr_deptCode: drRoom ? drRoom.dr_deptCode : "",
               patientRrn: reservation.re_patientRrn,
               patientChartNumber: reservation.re_chartNumber,
               oneLineMemo: reservation.re_oneLineMem,
@@ -100,11 +116,11 @@ export default {
               approvalDate,
               largeCategory: reservation.re_LCategory,
               smallCategory: reservation.re_SCategory,
-              alimType: alimSet.ra_type,
-              alimTime1: alimSet.ra_time1,
-              alimTime2: alimSet.ra_time2,
-              alimTime3: alimSet.ra_time3,
-              alimTime4: alimSet.ra_time4,
+              alimType: alimSet.ra_type ? alimSet.ra_type : "none",
+              alimTime1: alimSet.ra_time1 ? alimSet.ra_time1 : false,
+              alimTime2: alimSet.ra_time2 ? alimSet.ra_time2 : false,
+              alimTime3: alimSet.ra_time3 ? alimSet.ra_time3 : false,
+              alimTime4: alimSet.ra_time4 ? alimSet.ra_time4 : false,
               template: template ? template.rat_text : "",
             }
           : {};

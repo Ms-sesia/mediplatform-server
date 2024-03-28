@@ -9,6 +9,7 @@ export default {
       const { user } = request;
       try {
         const descFaq = await prisma.faq.findMany({
+          where: { faq_isDelete: false },
           take: 3,
           orderBy: { faq_createdAt: "desc" },
         });

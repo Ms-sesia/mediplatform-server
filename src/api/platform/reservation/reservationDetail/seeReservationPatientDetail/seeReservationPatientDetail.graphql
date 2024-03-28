@@ -137,6 +137,10 @@ type reservationDetailInfo {
   """
   doctorRoomName: String
   """
+  진료실 코드(부서코드?)
+  """
+  dr_deptCode: String
+  """
   예약자(환자) 주민번호 871012-1
   """
   patientRrn: String

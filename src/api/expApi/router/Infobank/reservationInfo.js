@@ -52,7 +52,7 @@ router.get("/", async (req, res) => {
 
     return res.status(200).json(chatbotResUserList);
   } catch (e) {
-    console.log(`Api Error - hospitalInfo : 병워 정보 전송 에러. ${e}`);
+    console.log(`Api Error - (get)reservationInfo : 예약 정보 전송 에러. ${e}`);
     let message = "병원 정보를 조회하는데 실패하였습니다.";
 
     if (e === 1 || e === 3)
@@ -97,40 +97,74 @@ router.post("/", async (req, res) => {
 
     if (!hospital) throw 3;
 
-    const chatbotResUser = await prisma.reservation.findFirst({
-      where: { AND: [{ hsp_id: hospital.hsp_id }, { re_appUserId: infoResData.appUserId }] },
-      orderBy: { re_createdAt: "desc" },
+    const findPati = await prisma.patient.findFirst({
+      where: { hsp_id: hospital.hsp_id, pati_name: infoResData.name },
+      select: { pati_id: true },
     });
 
-    const sendData = {
-      reservationNum: chatbotResUser.re_id.toString(),
-      botId: hospital.hsp_chatbotId,
-      appUserId: chatbotResUser.re_appUserId,
-      hospitalName: hospital.hsp_name,
-      name: chatbotResUser.re_patientName,
-      phoneNumber: chatbotResUser.re_patientCellphone,
-      birthDate: convertDate(chatbotResUser.re_patientRrn),
-      reservationDate: new Date(chatbotResUser.re_desireDate).toISOString().split("T")[0],
-      reservationTime: chatbotResUser.re_desireTime,
-      reservedTreatment: chatbotResUser.re_reservedTreatment,
-      reservedOfficeName: chatbotResUser.re_doctorRoomName,
+    const resDate = new Date(infoResData.reservationDate);
+
+    const drRoom = await prisma.doctorRoom.findFirst({
+      where: {
+        dr_roomName: infoResData.reservedOfficeName,
+        hsp_id: hospital.hsp_id,
+        dr_isDelete: false,
+      },
+      select: { dr_id: true },
+    });
+
+    const chatbotResCreate = await prisma.reservation.create({
+      data: {
+        re_desireDate: resDate,
+        re_desireTime: infoResData.reservationTime,
+        re_resDate: resDate,
+        re_year: resDate.getFullYear(),
+        re_month: resDate.getMonth() + 1,
+        re_date: resDate.getDate(),
+        re_time: infoResData.reservationTime,
+        re_status:
+          infoResData.reservationStatus === 1 ? "confirm" : infoResData.reservationStatus === 2 ? "cancel" : "waiting",
+        re_platform: "kakao",
+        re_patientName: infoResData.name,
+        re_patientRrn: infoResData.birthDate,
+        re_patientCellphone: infoResData.phoneNumber,
+        re_doctorRoomName: infoResData.reservedOfficeName,
+        re_doctorRoomId: drRoom ? drRoom.dr_id : 0,
+        re_appUserId: infoResData.appUserId,
+        re_reservedTreatment: infoResData.reservedTreatment,
+        re_proxyReservationYn: infoResData.proxyReservationYn === "Y" ? true : false,
+        re_requirement: infoResData.requirement,
+        re_chatbotRegDate: infoResData.regDate,
+        hospital: { connect: { hsp_id: hospital.hsp_id } },
+        patient: findPati ? { connect: { pati_id: findPati.pati_id } } : undefined,
+      },
+    });
+
+    const returnData = {
+      reservationNum: chatbotResCreate.re_id.toString(), // 플랫폼 예약 고유 식별 값
+      botId: hospital.hsp_chatbotId, // 병원 채널 챗봇 연결 시 발급받는 챗봇 식별 값
+      appUserId: chatbotResCreate.re_appUserId, // 카카오 챗봇 사용자 식별 값
+      hospitalName: hospital.hsp_name, // 병원 이름
+      name: chatbotResCreate.re_patientName, // 환자 이름
+      phoneNumber: chatbotResCreate.re_patientCellphone, // 환자 전화번호
+      birthDate: chatbotResCreate.re_patientRrn, // 환자 생년월일
+      reservationDate: new Date(chatbotResCreate.re_desireDate).toISOString().split("T")[0], // 진료 희망 날짜
+      reservationTime: chatbotResCreate.re_desireTime, // 진료 희망 시간
+      reservedTreatment: chatbotResCreate.re_reservedTreatment, // 예약 진료 항목
+      reservedOfficeName: chatbotResCreate.re_doctorRoomName, // 예약 진료실
       reservationStatus:
-        chatbotResUser.re_status === "waiting" && chatbotResUser.re_status === "complete"
-          ? 0
-          : chatbotResUser.re_status === "confirm"
-          ? 1
-          : 2,
-      proxyReservationYn: chatbotResUser.re_proxyReservationYn ? "Y" : "N",
-      requirement: chatbotResUser.re_requirement,
-      regDate: new Date(chatbotResUser.re_createdAt).toISOString(),
+        chatbotResCreate.re_status === "waiting" ? "0" : chatbotResCreate.re_status === "confirm" ? "1" : "2", // 예약 상태(0: 접수 / 1: 확정 / 2: 취소)
+      proxyReservationYn: chatbotResCreate.re_proxyReservationYn ? "Y" : "N", // 대리 예약 여부(Y: 대리 예약/ N: 본인 예약)
+      requirement: chatbotResCreate.re_requirement, // 요청사항
+      regDate: chatbotResCreate.re_chatbotRegDate, // 플랫폼 예약 저장 시각
     };
 
     // botId = 63d9ef1dbff00749b0c3cb1a!
     // appUserId = 9873281
 
-    return res.status(200).json(sendData);
+    return res.status(200).json(returnData);
   } catch (e) {
-    console.log(`Api Error - hospitalInfo : 병워 정보 전송 에러. ${e}`);
+    console.log(`Api Error - (post)reservationInfo : 예약정보 등록 및 정보 전송 에러. ${e}`);
     let message = "병원 정보를 조회하는데 실패하였습니다.";
 
     if (e === 1 || e === 3)

@@ -12,11 +12,17 @@ export default {
         const hspInquire = await prisma.oneOnOne.findMany({
           where: {
             AND: [
-              { hsp_id: user.hospital.hsp_id },
               { oneq_isDelete: false },
+              {
+                OR: [
+                  { AND: [{ hsp_id: user.hospital.hsp_id }, { oneq_publicPrivate: false }] },
+                  { oneq_publicPrivate: true },
+                ],
+              },
               { oneq_status: answerStatus === "total" ? undefined : answerStatus === "answered" ? true : false },
             ],
           },
+          select: { oneq_id: true },
           orderBy: { oneq_createdAt: orderBy },
         });
 
@@ -32,8 +38,13 @@ export default {
         const inquire = await prisma.oneOnOne.findMany({
           where: {
             AND: [
-              { hsp_id: user.hospital.hsp_id },
               { oneq_isDelete: false },
+              {
+                OR: [
+                  { AND: [{ hsp_id: user.hospital.hsp_id }, { oneq_publicPrivate: false }] },
+                  { oneq_publicPrivate: true },
+                ],
+              },
               { oneq_status: answerStatus === "total" ? undefined : answerStatus === "answered" ? true : false },
             ],
           },

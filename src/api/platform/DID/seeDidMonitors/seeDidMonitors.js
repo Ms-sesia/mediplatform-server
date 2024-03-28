@@ -19,6 +19,7 @@ export default {
               { did_isDelete: false },
             ],
           },
+          orderBy: { did_createdAt: "desc" },
         });
 
         const createSearchHistory = await searchHistory(searchTerm, user.user_id);

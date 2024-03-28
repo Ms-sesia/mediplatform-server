@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { today9 } from "../../../../libs/todayCal";
 
 const prisma = new PrismaClient();
 
@@ -12,19 +11,19 @@ export default {
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
-        const findAuthcode = await prisma.userPhoneAuthCode.findFirst({
-          where: { upac_cellphone: { contains: user_cellphone } },
-          orderBy: { upac_createdAt: "desc" },
-        });
-
-        // 인증코드가 없을 경우
-        if (!findAuthcode) throw 1;
-
-        // 인증코드와 입력 코드가 다를경우
-        if (findAuthcode.upac_code !== authCode) throw 2;
-
         // 입력한 휴대폰 번호와 로그인한 유저의 휴대폰번호가 다를 경우
         if (user_cellphone !== loginUser.user_cellphone) {
+          const findAuthcode = await prisma.userPhoneAuthCode.findFirst({
+            where: { upac_cellphone: { contains: user_cellphone } },
+            orderBy: { upac_createdAt: "desc" },
+          });
+
+          // 인증코드가 없을 경우
+          if (!findAuthcode) throw 1;
+
+          // 인증코드와 입력 코드가 다를경우
+          if (findAuthcode.upac_code !== authCode) throw 2;
+
           // 입력한 휴대폰 번호 사용 유저
           const findUser = await prisma.user.findFirst({
             where: { AND: [{ hsp_id: loginUser.hsp_id }, { user_cellphone }, { user_isDelete: false }] },
@@ -64,7 +63,6 @@ export default {
               user_editorRank: loginUser.user_rank,
               user_name,
               user_birthday,
-              // user_cellphone,
               user_address,
               user_detailAddress,
             },

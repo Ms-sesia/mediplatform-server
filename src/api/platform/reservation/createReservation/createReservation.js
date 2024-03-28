@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import sendSMS from "../../../../libs/sendSMS";
 import sendEmail from "../../../../libs/sendEmail";
 import webSocket from "../../../../libs/webSocket/webSocket";
+import { getAlimTalkToken, sendAlimTalk } from "../../../../libs/infoKakaoAlim/alimtalk";
+import { toInternationalFormat } from "../../../../libs/checkValidation";
 
 const prisma = new PrismaClient();
 
@@ -21,6 +23,7 @@ export default {
         largeCategory,
         smallCategory,
         doctorRoomName,
+        dr_deptCode,
         alimType,
         alimTime1,
         alimTime2,
@@ -29,6 +32,7 @@ export default {
         alimTemplateId,
       } = args;
       try {
+        console.log("args:", args);
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const hospital = await prisma.hospital.findUnique({ where: { hsp_id: user.hospital.hsp_id } });
 
@@ -39,6 +43,10 @@ export default {
         if (patientId) patientInfo = await prisma.patient.findUnique({ where: { pati_id: patientId } });
 
         const patientNameConv = patientId ? patientInfo.pati_name : patientName.split("-")[0];
+
+        const drRoom = await prisma.doctorRoom.findFirst({
+          where: { AND: [{ hsp_id: hospital.hsp_id }, { dr_deptCode }] },
+        });
 
         const reservation = await prisma.reservation.create({
           data: {
@@ -63,6 +71,7 @@ export default {
             re_LCategory: largeCategory,
             re_SCategory: smallCategory,
             re_doctorRoomName: doctorRoomName ? doctorRoomName : "",
+            re_doctorRoomId: drRoom.dr_id,
             hospital: { connect: { hsp_id: user.hospital.hsp_id } },
             patient: patientId ? { connect: { pati_id: patientInfo.pati_id } } : undefined,
           },
@@ -130,10 +139,13 @@ export default {
         let offsetTime, sendTime;
 
         let message = `${alimTemplate.rat_text
-          .replace("{병원명}", hospital.hsp_name)
-          .replace("{환자명}", patientNameConv)
-          .replace("{예약일}", rsDate.toISOString().split("T")[0])
-          .replace("{예약시간}", time)}`;
+          .replace("#{병원명}", hospital.hsp_name)
+          .replace("#{환자명}", patientNameConv)
+          .replace("#{예약일}", rsDate.toISOString().split("T")[0])
+          .replace("#{시간}", `${time}`)
+          .replace("#{진료의명}", "담당의")
+          .replace("#{문의 전화번호}", hospital.hsp_phone)
+          .replace("#{url}", hospital.hsp_email)}`;
 
         if (alimType === "sms") {
           if (!hospital.hsp_messageTrId) {
@@ -148,8 +160,7 @@ export default {
           if (alimTime1) {
             offsetTime = new Date().getTime() + calTimeMs;
             sendTime = new Date(offsetTime).toISOString();
-            // console.log("발송시간:", sendTime);
-            // console.log("발송 메세지:", message);
+            console.log("문자 발송. 시간 : ", sendTime);
             sendSMS(
               sendTime,
               message,
@@ -160,52 +171,17 @@ export default {
               hospital.hsp_messageSendNum
             );
           }
-          // 1일 전 오전 9시
-          if (alimTime2) {
-            offsetTime =
-              new Date(rsDate.getFullYear(), rsDate.getMonth(), rsDate.getDate() - 1, 9).getTime() + calTimeMs;
-            sendTime = new Date(offsetTime).toISOString();
-            // console.log("1일 전:", sendTime);
-            sendSMS(
-              sendTime,
-              message,
-              patientCellphone,
-              patientNameConv,
-              true,
-              hospital.hsp_messageTrId,
-              hospital.hsp_messageSendNum
-            );
-          }
-          // 2일 전 오전 9시
-          if (alimTime3) {
-            offsetTime =
-              new Date(rsDate.getFullYear(), rsDate.getMonth(), rsDate.getDate() - 2, 9).getTime() + calTimeMs;
-            sendTime = new Date(offsetTime).toISOString();
-            // console.log("2일 전:", sendTime);
-            sendSMS(
-              sendTime,
-              message,
-              patientCellphone,
-              patientNameConv,
-              true,
-              hospital.hsp_messageTrId,
-              hospital.hsp_messageSendNum
-            );
-          }
-          // 당일 오전 9시
-          if (alimTime4) {
-            offsetTime = new Date(rsDate.getFullYear(), rsDate.getMonth(), rsDate.getDate(), 9).getTime() + calTimeMs;
-            sendTime = new Date(offsetTime).toISOString();
-            // console.log("당일 오전:", sendTime);
-            sendSMS(
-              sendTime,
-              message,
-              patientCellphone,
-              patientNameConv,
-              true,
-              hospital.hsp_messageTrId,
-              hospital.hsp_messageSendNum
-            );
+        } else {
+          // 카카오 알림 발송
+          if (alimTime1) {
+            // 연동 기획 추가 필요
+            const templateCode = "0139d6202c40c484a9e56936a9765b";
+
+            // const intFormatCellphone = toInternationalFormat(patientCellphone);
+            const intFormatCellphone = toInternationalFormat(patientCellphone.replaceAll("-", ""));
+            const tokenInfo = await getAlimTalkToken();
+
+            await sendAlimTalk(tokenInfo, intFormatCellphone, templateCode, message);
           }
         }
 
@@ -225,22 +201,12 @@ export default {
                 `;
 
         for (const sendUser of sendUsers) {
-          // try {
-          const email = sendUser.user_email;
-          // if (email === "yglee@platcube.com") {
           await prisma.notiHistory.create({
             data: {
               ng_text: `"환자명 : ${patientNameConv}"님의 새로운 예약이 등록되었습니다.`,
               user: { connect: { user_id: sendUser.user_id } },
             },
           });
-          // await sendEmail(email, sendTitle, sendText);
-          // }
-          // } catch (error) {
-          //   console.error(`예약등록 알림 메일 발송 에러. createReservation ==> ${error}`);
-          //   throw 1;
-          // }
-          // await delay(0.1); // 1ms (0.0001초) 지연
         }
 
         const sendEmails = sendUsers.map((su) => su.user_email);
@@ -254,6 +220,25 @@ export default {
           alimType: "reservation",
         };
 
+        const resDateKst = new Date(rsDate.getFullYear(), rsDate.getMonth(), rsDate.getDate(), 9)
+          .toISOString()
+          .split("T")[0];
+
+        const regReservationInfo = {
+          SendStatus: "regReservation",
+          resData: {
+            desireDate: resDateKst,
+            desireTime: time,
+            resDate: resDateKst,
+            resTime: time,
+            status: status,
+            patientName: patientNameConv,
+            patientCellphone: patientId ? patientInfo.pati_cellphone : patientCellphone,
+            doctorRoomName: doctorRoomName ? doctorRoomName : "",
+            dr_deptCode: dr_deptCode ? dr_deptCode : "",
+          },
+        };
+
         // 병원(channel)에 접속한 클라이언트(socket)에게만 did수정 정보 전달
         const socketIo = await webSocket();
         const pub = socketIo.pub;
@@ -261,6 +246,11 @@ export default {
         const channelName = `h-${hospital.hsp_email}`;
 
         await pub.publish(channelName, JSON.stringify(alimInfo));
+        await pub.publish(channelName, JSON.stringify(regReservationInfo));
+
+        // console.log({
+        //   message: JSON.stringify(regReservationInfo),
+        // });
 
         return true;
       } catch (e) {

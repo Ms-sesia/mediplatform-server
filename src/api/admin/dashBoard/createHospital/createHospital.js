@@ -21,6 +21,7 @@ export default {
 
         // 10자리 랜덤 문자열(임시 비밀번호)
         const tempPw = genRandomCode(8);
+        console.log("tempPw:", tempPw);
 
         const startDate = new Date(useStartDate);
         const endDate = new Date(useEndDate);
@@ -73,14 +74,17 @@ export default {
           },
         });
 
+        const rankName = "대표원장";
+
         const isRank = await prisma.rank.findMany({
-          where: { AND: [{ hsp_id: hospital.hsp_id }, { rank_name: "대표원장" }] },
+          where: { AND: [{ hsp_id: hospital.hsp_id }, { rank_name: rankName }] },
         });
 
+        // 생성되어있는 직책(권한)이 없을 경우
         if (!isRank.length) {
           const rank = await prisma.rank.create({
             data: {
-              rank_name: "대표원장",
+              rank_name: rankName,
               hospital: { connect: { hsp_id: hospital.hsp_id } },
             },
           });
@@ -106,25 +110,19 @@ export default {
             user_name: name,
             user_email: email,
             user_salt: hashedInfo.salt,
-            user_rank: "대표원장",
+            user_rank: rankName,
             user_password: hashedInfo.password,
             hospital: { connect: { hsp_id: hospital.hsp_id } },
-          },
-        });
-
-        await prisma.rank.create({
-          data: {
-            name: "대표원장",
-            hospital: { connect: { hsp_id: hospital.hsp_id } },
-            rankPermission: {
+            userPermission: {
               create: {
-                rp_reservation: true,
-                rp_schedule: true,
-                rp_patient: true,
-                rp_did: true,
-                rp_insurance: true,
-                rp_cs: true,
-                rp_setting: true,
+                up_home: true,
+                up_reservation: true,
+                up_schedule: true,
+                up_patient: true,
+                up_did: true,
+                up_insurance: true,
+                up_cs: true,
+                up_setting: true,
               },
             },
           },
