@@ -457,6 +457,7 @@ model reservation {
   re_SCategory          String     @default("") @db.VarChar(65) // 예약구분 - 소분류 50자
   re_doctorRoomName     String     @default("") @db.VarChar(25) // 진료실 이름
   re_doctorRoomId       Int        @default(0) // 진료실 id
+  re_doctorDeptCode     String     @default("") @db.VarChar(50) // 진료실 코드(부서코드?)
   re_appUserId          String     @default("") @db.VarChar(250) // 예약정보 id - 인포뱅크 요청
   // infobank chatbot관련 정보 - infobank api reservationInfo 에서 확인
   re_reservedTreatment  String     @default("") @db.VarChar(100) // 예약 진료항목

@@ -13,22 +13,37 @@ router.post("/", async (req, res) => {
   const patients = patiData.patients;
 
   let failChatNum = new Array();
-  console.log("route sendPatient - patiData:", patiData);
+  // console.log("route sendPatient - patiData:", patiData);
 
   for (let i = 0; i < patients.length; i++) {
     try {
-      await prisma.patient.create({
-        data: {
-          pati_chartNumber: patients[i].pati_chartNumber,
-          pati_name: patients[i].pati_name,
-          pati_rrn: patients[i].pati_rrn,
-          pati_cellphone: patients[i].pati_cellphone,
-          pati_gender: patients[i].pati_gender === "남자" ? false : true,
-          hospital: { connect: { hsp_id: hospital.hsp_id } },
-        },
+      const findPati = await prisma.patient.findFirst({
+        where: { pati_chartNumber: patients[i].pati_chartNumber },
       });
 
-      console.log("환자정보 생성:", patients[i]);
+      if (findPati) {
+        await prisma.patient.update({
+          where: { pati_id: findPati.pati_id },
+          data: {
+            pati_name: patients[i].pati_name,
+            pati_rrn: patients[i].pati_rrn,
+            pati_cellphone: patients[i].pati_cellphone,
+            pati_gender: patients[i].pati_gender === "남자" ? false : true,
+            hospital: { connect: { hsp_id: hospital.hsp_id } },
+          },
+        });
+      } else {
+        await prisma.patient.create({
+          data: {
+            pati_chartNumber: patients[i].pati_chartNumber,
+            pati_name: patients[i].pati_name,
+            pati_rrn: patients[i].pati_rrn,
+            pati_cellphone: patients[i].pati_cellphone,
+            pati_gender: patients[i].pati_gender === "남자" ? false : true,
+            hospital: { connect: { hsp_id: hospital.hsp_id } },
+          },
+        });
+      }
     } catch (e) {
       console.log(`환자정보 연동 생성 에러. ${e}\n실패 환자 차트번호: ${patients[i].pati_chartNumber}`);
       failChatNum.push(patients[i].pati_chartNumber);

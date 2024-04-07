@@ -98,7 +98,7 @@ router.post("/", async (req, res) => {
     if (!hospital) throw 3;
 
     const findPati = await prisma.patient.findFirst({
-      where: { hsp_id: hospital.hsp_id, pati_name: infoResData.name },
+      where: { hsp_id: hospital.hsp_id, pati_name: infoResData.name, pati_isDelete: false },
       select: { pati_id: true },
     });
 

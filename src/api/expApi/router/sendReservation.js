@@ -20,6 +20,14 @@ router.post("/", async (req, res) => {
 
   const reservations = resData.reservations;
 
+  if (!reservations) {
+    return res.status(404).json({
+      status: 400,
+      message: "예약정보를 확인해주세요.",
+      data: {},
+    });
+  }
+
   let failEmrIds = new Array();
 
   for (let i = 0; i < reservations.length; i++) {
@@ -28,28 +36,55 @@ router.post("/", async (req, res) => {
       const patient = await prisma.patient.findFirst({
         where: { AND: [{ pati_chartNumber: reservations[i].re_chartNumber }, { hsp_id: hospital.hsp_id }] },
       });
-      await prisma.reservation.create({
-        data: {
-          re_emrId: reservations[i].re_emrId,
-          re_desireDate: reservations[i].re_desireDate,
-          re_desireTime: reservations[i].re_desireTime,
-          re_resDate: reservations[i].re_resDate,
-          re_time: reservations[i].re_time,
-          re_status: reservations[i].re_status,
-          re_platform: reservations[i].re_platform,
-          re_patientName: reservations[i].re_patientName,
-          re_patientRrn: reservations[i].re_patientRrn,
-          re_patientCellphone: reservations[i].re_patientCellphone,
-          re_chartNumber: reservations[i].re_chartNumber,
-          re_LCategory: reservations[i].re_LCategory,
-          re_SCategory: reservations[i].re_SCategory,
-          re_doctorRoomName: reservations[i].re_doctorRoomName,
-          patient: { connect: { pati_id: patient.pati_id } },
-          hospital: { connect: { hsp_id: hospital.hsp_id } },
-        },
+
+      const findRes = await prisma.reservation.findFirst({
+        where: { re_emrId: Number(reservations[i].re_emrId), hsp_id: hospital.hsp_id },
       });
 
-      console.log("route 예약 생성:", reservations[i]);
+      if (findRes) {
+        await prisma.reservation.update({
+          where: { re_id: findRes.re_id },
+          data: {
+            re_emrId: reservations[i].re_emrId,
+            re_desireDate: reservations[i].re_desireDate,
+            re_desireTime: reservations[i].re_desireTime,
+            re_resDate: reservations[i].re_resDate,
+            re_time: reservations[i].re_time,
+            re_status: reservations[i].re_status,
+            re_platform: reservations[i].re_platform,
+            re_patientName: reservations[i].re_patientName,
+            re_patientRrn: reservations[i].re_patientRrn,
+            re_patientCellphone: reservations[i].re_patientCellphone,
+            re_chartNumber: reservations[i].re_chartNumber,
+            re_LCategory: reservations[i].re_LCategory,
+            re_SCategory: reservations[i].re_SCategory,
+            re_doctorRoomName: reservations[i].re_doctorRoomName,
+          },
+        });
+      } else {
+        await prisma.reservation.create({
+          data: {
+            re_emrId: reservations[i].re_emrId,
+            re_desireDate: reservations[i].re_desireDate,
+            re_desireTime: reservations[i].re_desireTime,
+            re_resDate: reservations[i].re_resDate,
+            re_time: reservations[i].re_time,
+            re_status: reservations[i].re_status,
+            re_platform: reservations[i].re_platform,
+            re_patientName: reservations[i].re_patientName,
+            re_patientRrn: reservations[i].re_patientRrn,
+            re_patientCellphone: reservations[i].re_patientCellphone,
+            re_chartNumber: reservations[i].re_chartNumber,
+            re_LCategory: reservations[i].re_LCategory,
+            re_SCategory: reservations[i].re_SCategory,
+            re_doctorRoomName: reservations[i].re_doctorRoomName,
+            patient: { connect: { pati_id: patient.pati_id } },
+            hospital: { connect: { hsp_id: hospital.hsp_id } },
+          },
+        });
+      }
+
+      // console.log("route 예약 생성:", reservations[i]);
     } catch (e) {
       console.log(`예약정보 생성 에러. ${e}\n실패 예약정보 환자 차트번호: ${reservations[i].re_chartNumber}`);
       failEmrIds.push(reservations[i].re_emrId);

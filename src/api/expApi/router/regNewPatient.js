@@ -10,7 +10,7 @@ router.post("/", async (req, res) => {
 
   try {
     const newPatiData = req.body;
-    // console.log("route regNewPatient - patiData:", newPatiData);
+    console.log("route regNewPatient - patiData:", newPatiData);
 
     patient = newPatiData.patient;
     if (Object.keys(patient).length === 0) throw 0;
@@ -18,21 +18,64 @@ router.post("/", async (req, res) => {
     const hospital = await prisma.hospital.findUnique({ where: { hsp_email: patient.hsp_email } });
     if (!hospital) throw 1; // 병원이 없음
 
-    const checkPatient = await prisma.patient.findMany({
-      where: { AND: [{ hsp_id: hospital.hsp_id }, { pati_cellphone: { contains: patient.pati_cellphone } }] },
+    const checkPatient = await prisma.patient.findFirst({
+      where: { hsp_id: hospital.hsp_id, pati_chartNumber: patient.pati_chartNumber },
     });
-    if (checkPatient.length) throw 2;
 
-    await prisma.patient.create({
-      data: {
-        pati_chartNumber: patient.pati_chartNumber,
-        pati_name: patient.pati_name,
-        pati_rrn: patient.pati_rrn,
-        pati_cellphone: patient.pati_cellphone,
-        pati_gender: patient.pati_gender === "남자" ? false : true,
-        hospital: { connect: { hsp_id: hospital.hsp_id } },
-      },
-    });
+    // 있으면 업데이트
+    if (checkPatient) {
+      // 삭제
+      if (patient.pati_delete === "Y") {
+        // console.log("patient delete complete.");
+
+        // // 메모 삭제
+        // await prisma.patientMemo.deleteMany({ where: { pati_id: checkPatient.pati_id } });
+
+        // // 예약 기록 삭제
+        // await prisma.reservation.deleteMany({ where: { pati_id: checkPatient.pati_id } });
+
+        // 환자 정보 삭제
+        await prisma.patient.update({
+          where: { pati_id: checkPatient.pati_id },
+          data: {
+            pati_isDelete: true,
+            pati_deleteDate: new Date(),
+          },
+        });
+
+        return res.status(200).json({
+          status: 200,
+          message: "환자정보가 삭제되었습니다.",
+          data: {},
+        });
+      }
+      // console.log("수정");
+      await prisma.patient.update({
+        where: { pati_id: checkPatient.pati_id },
+        data: {
+          pati_isDelete: false,
+          pati_deleteDate: null,
+          pati_chartNumber: patient.pati_chartNumber,
+          pati_name: patient.pati_name,
+          pati_rrn: patient.pati_rrn,
+          pati_cellphone: patient.pati_cellphone,
+          pati_gender: patient.pati_gender === "남자" ? false : true,
+        },
+      });
+    } else {
+      // 없으면 생성
+      // console.log("생성");
+      await prisma.patient.create({
+        data: {
+          pati_chartNumber: patient.pati_chartNumber,
+          pati_name: patient.pati_name,
+          pati_rrn: patient.pati_rrn,
+          pati_cellphone: patient.pati_cellphone,
+          pati_gender: patient.pati_gender === "남자" ? false : true,
+          hospital: { connect: { hsp_id: hospital.hsp_id } },
+        },
+      });
+    }
 
     return res.status(200).json({
       status: 200,

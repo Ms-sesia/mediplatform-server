@@ -227,6 +227,7 @@ export default {
         const regReservationInfo = {
           SendStatus: "regReservation",
           resData: {
+            re_id: reservation.re_id,
             desireDate: resDateKst,
             desireTime: time,
             resDate: resDateKst,
@@ -236,6 +237,10 @@ export default {
             patientCellphone: patientId ? patientInfo.pati_cellphone : patientCellphone,
             doctorRoomName: doctorRoomName ? doctorRoomName : "",
             dr_deptCode: dr_deptCode ? dr_deptCode : "",
+            re_emrId: "",
+            pati_chartNumber: patientId ? patientInfo.pati_chartNumber : "",
+            re_LCategory: reservation.re_LCategory,
+            re_SCategory: reservation.re_SCategory,
           },
         };
 
