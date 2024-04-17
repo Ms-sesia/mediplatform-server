@@ -35,7 +35,15 @@ const PORT = process.env.SERVER_PORT;
   const server = new ApolloServer({
     schema,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    introspection: true, // 배포시 false, 개발 및 테스트시 true
+    introspection: false, // 배포시 false, 개발 및 테스트시 true
+    formatError: (err) => {
+      if (err.extensions) {
+        delete err.extensions;
+        delete err.path;
+        delete err.locations;
+      }
+      return err;
+    },
   });
 
   await server.start();
@@ -58,7 +66,7 @@ const PORT = process.env.SERVER_PORT;
   app.use(express.urlencoded({ extended: false }));
   app.use("/api", apiRoute);
 
-  app.post("/", bodyParser.json(), createAlimTalkLog);
+  // app.post("/", bodyParser.json(), createAlimTalkLog);
   // app.post("/infobank/alimtalk/report", bodyParser.json(), createAlimTalkLog); => 등록 요청
 
   app.use(graphqlUploadExpress()); // graphql 파일업로드
