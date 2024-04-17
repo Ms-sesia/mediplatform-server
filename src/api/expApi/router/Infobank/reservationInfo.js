@@ -33,17 +33,17 @@ router.get("/", async (req, res) => {
         hospitalName: hospital.hsp_name,
         name: resUser.re_patientName,
         phoneNumber: resUser.re_patientCellphone,
-        birthDate: convertDate(resUser.re_patientRrn),
+        birthDate: resUser.re_patientRrn,
         reservationDate: new Date(resUser.re_desireDate).toISOString().split("T")[0],
         reservationTime: resUser.re_desireTime,
         reservedTreatment: resUser.re_reservedTreatment,
         reservedOfficeName: resUser.re_doctorRoomName,
         reservationStatus:
           resUser.re_status === "waiting" && resUser.re_status === "complete"
-            ? 0
+            ? "0"
             : resUser.re_status === "confirm"
-            ? 1
-            : 2,
+            ? "1"
+            : "2",
         proxyReservationYn: resUser.re_proxyReservationYn ? "Y" : "N",
         requirement: resUser.re_requirement,
         visited: resUser.pati_id ? "new" : "old",
@@ -180,14 +180,14 @@ const convertDate = (inputDate) => {
   // 2000년대를 기준으로 분기 처리가 필요한 경우 추가 로직 적용
   const year = inputDate.substring(0, 2);
   const month = inputDate.substring(2, 4);
-  const day = inputDate.substring(4, 6);
+  const date = inputDate.substring(4, 6);
 
   // 1900년대 또는 2000년대를 구분하여 연도를 처리
   const convertedYear =
     parseInt(year) >= 0 && parseInt(year) < 100 ? (parseInt(year) < 70 ? `20${year}` : `19${year}`) : year;
 
   // yyyy-mm-dd 형식으로 반환
-  return `${convertedYear}-${month}-${day}`;
+  return `${convertedYear}-${month}-${date}`;
 };
 
 export default router;

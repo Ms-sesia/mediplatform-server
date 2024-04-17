@@ -7,5 +7,9 @@ type Query {
     로그인한 이메일 정보
     """
     hospitalEmail: String!
+    """
+    모니터에 표시할 did 고유 키값 - url에서 파싱
+    """
+    did_uniqueId: String!
   ): Boolean
 }

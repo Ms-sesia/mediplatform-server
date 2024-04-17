@@ -828,6 +828,16 @@ model didDoctorRoom {
   did_id             Int
 }
 
+// did 환자정보 통신 기록
+model didCommunicationHistory {
+  dch_id          Int      @id @default(autoincrement())
+  dch_createdAt   DateTime @default(now())
+  dch_type        Int      @default(0) // 1: 요청, 2: 응답
+  dch_didUniqueId String   @default("") @db.VarChar(125) // did 유니크 id
+  dch_socketId    String   @default("") @db.VarChar(125) // 연결된 socket id
+  dch_eventName   String   @default("") @db.VarChar(125) // 전송한 소켓 이벤트명
+}
+
 // 보험 청구 요청 기록
 model insuranceHistory {
   ih_id                 Int             @id @default(autoincrement())

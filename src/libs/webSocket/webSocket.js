@@ -2,6 +2,7 @@ import { Server as IoServer } from "socket.io";
 import { PrismaClient } from "@prisma/client";
 import { clients, didClients } from "./clients";
 import getInsureData from "./resSocket/getInsureData";
+import createDidComHist from "./didComHistory/createDidComHist/createDidComHist";
 
 const redis = require("redis");
 
@@ -31,21 +32,19 @@ const webSocket = async (httpServer) => {
 
   socketIo.on("connection", async (socket) => {
     socket.emit("resConnection", resConnection);
-    // console.log(
-    //   "웹 프론트 사용자 연결 완료. 이메일:",
-    //   socket.handshake.query.hospitalEmail,
-    //   "/ 접속 socket Id:",
-    //   socket.id
-    // );
+    console.log("--------------------------------------------------");
+    console.log(
+      "웹 프론트 사용자 연결 완료. 이메일:",
+      socket.handshake.query.hospitalEmail,
+      "/ 접속 socket Id:",
+      socket.id
+    );
 
     // 프론트가 받을 구독 채널이름
     const hospitalChannel = `h-${socket.handshake.query.hospitalEmail}`;
     if (socket.handshake.query.hospitalEmail) {
       clients[hospitalChannel] = clients[hospitalChannel] || {};
       clients[hospitalChannel][socket.id] = socket;
-
-      // 연결되면 환자 정보 요청
-      // socket.on("reqWaitingPati", )
     }
 
     // did모니터용 채널
@@ -73,13 +72,14 @@ const webSocket = async (httpServer) => {
      */
 
     // 상태별 데이터 전송 - 병원(did / 실손)
-    await sub.subscribe(hospitalChannel, (message, channel) => {
+    await sub.subscribe(hospitalChannel, async (message, channel) => {
       if (clients[channel] && clients[channel][socket.id]) {
         switch (JSON.parse(message).SendStatus) {
           case "send":
             clients[channel][socket.id].emit("getPatient", message);
             break;
           case "call":
+            console.log("call channel:", channel, "socket.id:", socket.id);
             clients[channel][socket.id].emit("callPatient", message);
             break;
           case "allSaveDid":
@@ -96,17 +96,21 @@ const webSocket = async (httpServer) => {
              *  "reservation" // 예약대기 등록 알림
              *  "specialSchedule" // 특별일정 등록 알림
              */
-            // console.log("alim, Client:", clients[channel]);
             clients[channel][socket.id].emit("notiAlim", message);
             break;
           case "reqWaitingPatient": // 채널로 환자정보 요청
             clients[channel][socket.id].emit("reqWaitingPatient", message);
-            // socket.emit("reqWaitingPatient", message);
+            console.log("channel:", channel, "soketId:", socket.id, "didUniqueId:", JSON.parse(message).didUniqueId);
+
+            // await createDidComHist({
+            //   dch_type: 1,
+            //   dch_didUniqueId: message.didUniqueId,
+            //   dch_socketId: socket.id,
+            //   dch_eventName: "reqWaitingPatient",
+            // });
             break;
           case "regReservation": // 채널로 등록 환자정보 전달
-            // console.log("message:", message);
             clients[channel][socket.id].emit("regReservation", message);
-            // socket.emit("regReservation", message);
             break;
         }
       }
@@ -178,6 +182,8 @@ const webSocket = async (httpServer) => {
       const getPatient = JSON.parse(data);
 
       if (getPatient) {
+        console.log("getPatient socketId:", socket.id);
+
         const sendChannel = `h-${getPatient.Email}`;
         await pub.publish(sendChannel, JSON.stringify(getPatient));
       }
@@ -187,11 +193,12 @@ const webSocket = async (httpServer) => {
     // did - 호출환자
     socket.on("callWaitingPatient", async (data) => {
       const callPatient = JSON.parse(data);
-      // console.log("getPatient:", callPatient);
 
-      const sendChannel = `h-${callPatient.Email}`;
+      if (callPatient) {
+        const sendChannel = `h-${callPatient.Email}`;
+        await pub.publish(sendChannel, JSON.stringify(callPatient));
+      }
 
-      await pub.publish(sendChannel, JSON.stringify(callPatient));
       socket.emit("resCallWaitingPatient", resCallWaitingPatient);
     });
 
@@ -221,6 +228,8 @@ const webSocket = async (httpServer) => {
         }
       }
     });
+
+    console.log("==================================================");
   });
 
   return {

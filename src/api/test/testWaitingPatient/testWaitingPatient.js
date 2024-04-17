@@ -276,6 +276,7 @@ export default {
         await pub.publish(channelName, JSON.stringify(waitingPatientInfo));
 
         console.log("테스트 대기환자 전송 완료.");
+        console.log("------------------------------------------------");
 
         return true;
       } catch (e) {
@@ -332,6 +333,7 @@ export default {
         await pub.publish(channelName, JSON.stringify(callPatient));
 
         console.log("테스트 환자호출 완료.");
+        console.log("------------------------------------------------");
         return true;
       } catch (e) {
         console.log("관리자 목록 조회 실패. seeDidMonitors ==>\n", e);

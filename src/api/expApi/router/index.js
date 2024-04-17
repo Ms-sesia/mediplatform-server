@@ -14,6 +14,7 @@ import office from "./Infobank/office";
 import treatments from "./Infobank/treatments";
 import reservationInfo from "./Infobank/reservationInfo";
 import botInfo from "./Infobank/botInfo";
+import medicalAppointments from "./Infobank/medicalAppointments";
 
 const router = express.Router();
 
@@ -32,6 +33,7 @@ router.use("/infobank/chatbot/office", office);
 router.use("/infobank/chatbot/treatments", treatments);
 router.use("/infobank/chatbot/reservationInfo", reservationInfo);
 router.use("/infobank/chatbot/botInfo", botInfo);
+router.use("/infobank/chatbot/medicalappointments", medicalAppointments);
 
 export default router;
 

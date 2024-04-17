@@ -33,16 +33,16 @@ const PORT = process.env.TEST_SERVER_PORT;
   const server = new ApolloServer({
     schema,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    introspection: true, // 배포시 false, 개발 및 테스트시 true
+    introspection: false, // 배포시 false, 개발 및 테스트시 true
     // // 배포시 사용
-    // formatError: (err) => {
-    //   if (err.extensions) {
-    //     delete err.extensions;
-    //     delete err.path;
-    //     delete err.locations;
-    //   }
-    //   return err;
-    // },
+    formatError: (err) => {
+      if (err.extensions) {
+        delete err.extensions;
+        delete err.path;
+        delete err.locations;
+      }
+      return err;
+    },
   });
 
   await server.start();

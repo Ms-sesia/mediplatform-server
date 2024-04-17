@@ -41,6 +41,7 @@ export default {
 
         const reqWaitingPatiInfo = {
           SendStatus: "reqWaitingPatient",
+          didUniqueId: did_uniqueId,
           request: true,
         };
 
