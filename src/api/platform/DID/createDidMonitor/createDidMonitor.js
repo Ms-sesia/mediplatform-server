@@ -30,7 +30,8 @@ export default {
         let unique = false;
         while (!unique) {
           const latestDid = await prisma.did.findFirst({ orderBy: { did_id: "desc" } });
-          uuid5 = genDidUnique(latestDid.did_id);
+          uuid5 = genDidUnique(latestDid ? latestDid.did_id : 0);
+
           // uniqueId 중복 체크
           const checkDidUnique = await prisma.did.findUnique({ where: { did_uniqueId: uuid5 } });
 
