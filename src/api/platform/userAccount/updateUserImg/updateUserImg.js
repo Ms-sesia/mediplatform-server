@@ -50,7 +50,7 @@ export default {
 
         return true;
       } catch (e) {
-        console.log("사내공지 댓글 작성 실패. updateUserImg", e);
+        console.log("프로필 이미지 등록 실패. updateUserImg", e);
         if (e === 1) throw new Error("err_01");
         throw new Error("err_00");
       }
