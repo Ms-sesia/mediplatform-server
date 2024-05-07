@@ -20,7 +20,7 @@ export default {
 
         await pub.publish(channel, JSON.stringify(reqWaitingPatiInfo));
 
-        console.log("reqWaitingPatientList!!");
+        // console.log("reqWaitingPatientList!!");
 
         return true;
       } catch (e) {

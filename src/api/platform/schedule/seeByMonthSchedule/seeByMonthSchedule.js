@@ -35,7 +35,9 @@ export default {
         // 진료실
         const drList = await prisma.doctorRoom.findMany({
           where: {
-            AND: [{ hsp_id: user.hospital.hsp_id }, { dr_isDelete: false }, { dr_roomName: { contains: searchTerm } }],
+            hsp_id: user.hospital.hsp_id,
+            dr_isDelete: false,
+            dr_roomName: { contains: searchTerm },
           },
           select: {
             dr_id: true,
@@ -110,17 +112,13 @@ export default {
           const spSchedule = (
             await prisma.specialSchedule.findMany({
               where: {
-                AND: [
-                  { dr_id: drList[i].dr_id },
-                  {
-                    OR: [
-                      { ss_startDate: { gte: startDate, lte: endDate } },
-                      { ss_endDate: { gte: startDate, lte: endDate } },
-                    ],
-                  },
-                  { ss_isDelete: false },
-                  { ss_status: "sign" },
+                dr_id: drList[i].dr_id,
+                OR: [
+                  { ss_startDate: { gte: startDate, lt: endDate } },
+                  { ss_endDate: { gte: startDate, lt: endDate } },
                 ],
+                ss_isDelete: false,
+                ss_status: "sign",
               },
               select: {
                 ss_subDoctorUsed: true,
@@ -135,6 +133,7 @@ export default {
               endDate: sp.ss_endDate,
             };
           });
+
           const fixedDays = [];
           // monthOffday 처리
           spSchedule.forEach((offday) => {

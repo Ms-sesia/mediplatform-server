@@ -1,0 +1,9 @@
+type Mutation {
+  """
+  챗봇 정보 전달 - 
+
+  *error
+  - 따로 메세지 전달
+  """
+  sendChatbotInfo: Boolean
+}

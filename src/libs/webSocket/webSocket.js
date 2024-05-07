@@ -33,12 +33,12 @@ const webSocket = async (httpServer) => {
   socketIo.on("connection", async (socket) => {
     socket.emit("resConnection", resConnection);
     // console.log("--------------------------------------------------");
-    // console.log(
-    //   "웹 프론트 사용자 연결 완료. 이메일:",
-    //   socket.handshake.query.hospitalEmail,
-    //   "/ 접속 socket Id:",
-    //   socket.id
-    // );
+    console.log(
+      "웹 프론트 사용자 연결 완료. 이메일:",
+      socket.handshake.query.hospitalEmail,
+      "/ 접속 socket Id:",
+      socket.id
+    );
 
     // 프론트가 받을 구독 채널이름
     const hospitalChannel = `h-${socket.handshake.query.hospitalEmail}`;
@@ -100,7 +100,7 @@ const webSocket = async (httpServer) => {
             break;
           case "reqWaitingPatient": // 채널로 환자정보 요청
             clients[channel][socket.id].emit("reqWaitingPatient", message);
-            console.log("channel:", channel, "soketId:", socket.id, "didUniqueId:", JSON.parse(message).didUniqueId);
+            // console.log("channel:", channel, "soketId:", socket.id, "didUniqueId:", JSON.parse(message).didUniqueId);
 
             // await createDidComHist({
             //   dch_type: 1,
@@ -182,7 +182,7 @@ const webSocket = async (httpServer) => {
       const getPatient = JSON.parse(data);
 
       if (getPatient) {
-        console.log("getPatient socketId:", socket.id);
+        // console.log("getPatient socketId:", socket.id);
 
         const sendChannel = `h-${getPatient.Email}`;
         await pub.publish(sendChannel, JSON.stringify(getPatient));

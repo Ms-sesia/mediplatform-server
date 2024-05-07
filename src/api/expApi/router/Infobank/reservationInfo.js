@@ -23,23 +23,34 @@ router.get("/", async (req, res) => {
 
     if (!hospital) throw 3;
 
+    const today9 = new Date(new Date().setHours(new Date().getHours() + 9));
     const chatbotResUser = await prisma.reservation.findMany({
-      where: { AND: [{ hsp_id: hospital.hsp_id }, { re_appUserId: appUserId }] },
+      where: {
+        AND: [{ hsp_id: hospital.hsp_id }, { re_appUserId: appUserId }, { re_resDate: { gte: today9 } }],
+      },
       orderBy: [{ re_desireDate: "asc" }, { re_desireTime: "asc" }],
     });
 
     const chatbotResUserList = chatbotResUser.map((resUser) => {
+      console.log(
+        "resUser.re_status:",
+        resUser.re_status === "waiting" || resUser.re_status === "complete"
+          ? "0"
+          : resUser.re_status === "confirm"
+          ? "1"
+          : "2"
+      );
       return {
         hospitalName: hospital.hsp_name,
         name: resUser.re_patientName,
         phoneNumber: resUser.re_patientCellphone,
         birthDate: resUser.re_patientRrn,
-        reservationDate: new Date(resUser.re_desireDate).toISOString().split("T")[0],
+        reservationDate: new Date(resUser.re_resDate).toISOString().split("T")[0],
         reservationTime: resUser.re_desireTime,
         reservedTreatment: resUser.re_reservedTreatment,
         reservedOfficeName: resUser.re_doctorRoomName,
         reservationStatus:
-          resUser.re_status === "waiting" && resUser.re_status === "complete"
+          resUser.re_status === "waiting" || resUser.re_status === "complete"
             ? "0"
             : resUser.re_status === "confirm"
             ? "1"
@@ -123,7 +134,11 @@ router.post("/", async (req, res) => {
         re_date: resDate.getDate(),
         re_time: infoResData.reservationTime,
         re_status:
-          infoResData.reservationStatus === 1 ? "confirm" : infoResData.reservationStatus === 2 ? "cancel" : "waiting",
+          infoResData.reservationStatus === "1"
+            ? "confirm"
+            : infoResData.reservationStatus === "2"
+            ? "cancel"
+            : "waiting",
         re_platform: "kakao",
         re_patientName: infoResData.name,
         re_patientRrn: infoResData.birthDate,

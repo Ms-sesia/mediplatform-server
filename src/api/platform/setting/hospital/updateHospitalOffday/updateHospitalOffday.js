@@ -9,6 +9,7 @@ export default {
       const { user } = request;
       const { updateId, aldyoffdayRepeat, offdayRepeat, offStartDate, offEndDate, offStartTime, offEndTime, memo } =
         args;
+
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
 
@@ -87,7 +88,7 @@ export default {
             }
             break;
           case "week":
-            if (offdayRepeat === "none")
+            if (offdayRepeat === "none") {
               // 주간 고정 휴무 데이터 삭제
               await prisma.weekOffday.update({
                 where: { wo_id: updateId },
@@ -99,19 +100,20 @@ export default {
                   wo_deleteDate: new Date(),
                 },
               });
-            await prisma.hospitalOffday.create({
-              data: {
-                ho_creatorId: loginUser.user_id,
-                ho_creatorName: loginUser.user_name,
-                ho_creatorRank: loginUser.user_rank,
-                ho_offStartDate: start,
-                ho_offEndDate: end,
-                ho_offStartTime: offStartTime,
-                ho_offEndTime: offEndTime,
-                ho_memo: memo,
-                hospital: { connect: { hsp_id: user.hospital.hsp_id } },
-              },
-            });
+              await prisma.hospitalOffday.create({
+                data: {
+                  ho_creatorId: loginUser.user_id,
+                  ho_creatorName: loginUser.user_name,
+                  ho_creatorRank: loginUser.user_rank,
+                  ho_offStartDate: start,
+                  ho_offEndDate: end,
+                  ho_offStartTime: offStartTime,
+                  ho_offEndTime: offEndTime,
+                  ho_memo: memo,
+                  hospital: { connect: { hsp_id: user.hospital.hsp_id } },
+                },
+              });
+            }
 
             if (offdayRepeat === "week") {
               // 주간 고정 수정
@@ -159,7 +161,7 @@ export default {
             }
             break;
           case "month":
-            if (offdayRepeat === "none")
+            if (offdayRepeat === "none") {
               // 월간 고정 휴무 데이터 삭제
               await prisma.monthOffday.update({
                 where: { fo_id: updateId },
@@ -171,20 +173,21 @@ export default {
                   fo_deleteDate: new Date(),
                 },
               });
-            // 임시 휴무 데이터 생성
-            await prisma.hospitalOffday.create({
-              data: {
-                ho_creatorId: loginUser.user_id,
-                ho_creatorName: loginUser.user_name,
-                ho_creatorRank: loginUser.user_rank,
-                ho_offStartDate: start,
-                ho_offEndDate: end,
-                ho_offStartTime: offStartTime,
-                ho_offEndTime: offEndTime,
-                ho_memo: memo,
-                hospital: { connect: { hsp_id: user.hospital.hsp_id } },
-              },
-            });
+              // 임시 휴무 데이터 생성
+              await prisma.hospitalOffday.create({
+                data: {
+                  ho_creatorId: loginUser.user_id,
+                  ho_creatorName: loginUser.user_name,
+                  ho_creatorRank: loginUser.user_rank,
+                  ho_offStartDate: start,
+                  ho_offEndDate: end,
+                  ho_offStartTime: offStartTime,
+                  ho_offEndTime: offEndTime,
+                  ho_memo: memo,
+                  hospital: { connect: { hsp_id: user.hospital.hsp_id } },
+                },
+              });
+            }
 
             if (offdayRepeat === "week") {
               // 월간 고정 휴무 데이터 삭제

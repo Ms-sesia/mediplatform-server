@@ -63,7 +63,7 @@ router.get("/", async (req, res) => {
 
     return res.status(200).json(resCountInfo);
   } catch (e) {
-    console.log(`Api Error - medicalAppointments : 병원별 예약 건수 조회 에러. ${e}`);
+    console.log(`Api Error - medical-Appointments : 병원별 예약 건수 조회 에러. ${e}`);
     let message = "병원 별 예약 건수 조회하는데 실패하였습니다.";
 
     if (e === 1 || e === 3)

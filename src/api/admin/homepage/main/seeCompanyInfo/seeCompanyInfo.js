@@ -10,10 +10,10 @@ export default {
       try {
         // if (user.userType !== "admin") throw 1;
         // const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
-        
+
         const hi = await prisma.homepageIntroduce.findFirst();
 
-        if (!hi)
+        if (!hi.hi_url)
           return {
             hi_id: 0,
             hi_createdAt: "",
@@ -22,7 +22,6 @@ export default {
             hi_adminRank: "",
             hi_adminId: 0,
           };
-
 
         return {
           hi_id: hi.hi_id ? hi.hi_id : 0,

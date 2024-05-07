@@ -17,6 +17,8 @@ export default {
         // take,
         //  cursor
       } = args;
+
+      console.log("seeHospitalOffday args:", args);
       try {
         const createSearchHistory = await searchHistory(searchTerm, user.user_id);
         if (!createSearchHistory.status) throw createSearchHistory.error;
@@ -28,6 +30,7 @@ export default {
         let fixedDays = new Array();
         let tempHospitalOffday = new Array();
 
+        // 전체, 고정
         if (offType !== "temp") {
           aldyMonthFixed = await prisma.monthOffday.findMany({
             where: {
@@ -42,6 +45,7 @@ export default {
           fixedDays = generateFixedDaysForMonth(month, year, aldyMonthFixed, aldyWeekFixed);
         }
 
+        // 전체, 임시
         if (offType !== "fix") {
           tempHospitalOffday = await prisma.hospitalOffday.findMany({
             where: {
@@ -105,10 +109,12 @@ const generateFixedDaysForMonth = (month, year, monthOffdays, weekOffdays) => {
 
   // monthOffday 처리
   monthOffdays.forEach((offday) => {
-    // for (let day = startDay; day <= endDay; day++) {
-    const startDate = new Date(offday.fo_startDate);
-    const endDate = new Date(offday.fo_endDate);
-    // const date = new Date(year, month - 1, day);
+    const monthStartDate = new Date(offday.fo_startDate);
+    const monthEndDate = new Date(offday.fo_endDate);
+
+    const startDate = new Date(year, month - 1, monthStartDate.getDate());
+    const endDate = new Date(year, month - 1, monthEndDate.getDate());
+
     fixedDays.push({
       ho_id: offday.fo_id,
       offType: "fix", //휴무구분 (임시, 고정)
@@ -116,8 +122,6 @@ const generateFixedDaysForMonth = (month, year, monthOffdays, weekOffdays) => {
       startDay: weekdays[startDate.getDay()],
       endDate: endDate.toISOString(),
       endDay: weekdays[endDate.getDay()],
-      // date: new Date(year, month - 1, day),
-      // day: weekdays[date.getDay()],
       reType: "month", // 반복 구분
       startTime: offday.fo_startTime,
       endTime: offday.fo_endTime,
@@ -125,7 +129,6 @@ const generateFixedDaysForMonth = (month, year, monthOffdays, weekOffdays) => {
       createdAt: new Date(offday.fo_createdAt).toISOString(),
       creatorName: offday.fo_creatorName,
     });
-    // }
   });
 
   // weekOffday 처리

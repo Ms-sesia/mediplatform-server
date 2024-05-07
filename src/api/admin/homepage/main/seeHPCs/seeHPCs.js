@@ -8,7 +8,7 @@ export default {
       try {
         const hcs = await prisma.homepageCS.findFirst();
 
-        if (!hcs)
+        if (!hcs.hcs_url)
           return {
             hcs_id: 0,
             hcs_createdAt: "",

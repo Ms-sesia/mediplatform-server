@@ -18,7 +18,10 @@ export default {
         if (!hm.length) return [];
 
         const hmList = hm.map((hmInfo) => {
-          hmInfo.hm_createdAt = new Date(hmInfo.hm_createdAt).toISOString();
+          hmInfo.hm_createdAt = hmInfo.hm_url ? new Date(hmInfo.hm_createdAt).toISOString() : "";
+          hmInfo.hm_adminName = hmInfo.hm_url ? hmInfo.hm_adminName : "";
+          hmInfo.hm_adminRank = hmInfo.hm_url ? hmInfo.hm_adminRank : "";
+          hmInfo.hm_adminId = hmInfo.hm_url ? hmInfo.hm_adminId : 0;
           return hmInfo;
         });
 

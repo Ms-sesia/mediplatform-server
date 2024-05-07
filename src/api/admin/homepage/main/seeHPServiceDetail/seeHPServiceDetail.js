@@ -8,7 +8,7 @@ export default {
       try {
         const hsd = await prisma.homepageServiceDetail.findFirst();
 
-        if (!hsd)
+        if (!hsd.hsd_url)
           return {
             hsd_id: 0,
             hsd_createdAt: "",

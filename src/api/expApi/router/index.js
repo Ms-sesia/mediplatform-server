@@ -33,9 +33,6 @@ router.use("/infobank/chatbot/office", office);
 router.use("/infobank/chatbot/treatments", treatments);
 router.use("/infobank/chatbot/reservationInfo", reservationInfo);
 router.use("/infobank/chatbot/botInfo", botInfo);
-router.use("/infobank/chatbot/medicalappointments", medicalAppointments);
+router.use("/infobank/chatbot/medical-appointments", medicalAppointments);
 
 export default router;
-
-// botId = 63d9ef1dbff00749b0c3cb1a!
-// appUserId = 9873281

@@ -63,6 +63,7 @@ export default {
 
         const did = await prisma.did.findUnique({ where: { did_id } });
 
+        console.log("did_deleteAttachedId:", did_deleteAttachedId);
         // 삭제할 id가 있으면 삭제
         if (did_deleteAttachedId.length) {
           for (let i = 0; i < did_deleteAttachedId.length; i++) {

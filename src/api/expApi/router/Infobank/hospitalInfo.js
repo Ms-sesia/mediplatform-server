@@ -38,7 +38,7 @@ router.get("/", async (req, res) => {
       hospitalName: hospital.hsp_name,
       careFacilityNumber: hospital.hsp_hospitalNumber,
       parkingInfo: "",
-      phoneNumber: hospital.hsp_phone,
+      phoneNumber: hospital.hsp_phone ? formatPhoneNumber(hospital.hsp_phone) : "",
       address: hospital.hsp_address + hospital.hsp_detailAddress,
       Info: "",
     });
@@ -56,3 +56,25 @@ router.get("/", async (req, res) => {
 });
 
 export default router;
+
+const formatPhoneNumber = (phoneNumber) => {
+  if (phoneNumber.startsWith("02")) {
+    // 서울 지역번호
+    if (phoneNumber.length === 9) {
+      return phoneNumber.replace(/(\d{2})(\d{3})(\d{4})/, "$1-$2-$3");
+    } else if (phoneNumber.length === 10) {
+      return phoneNumber.replace(/(\d{2})(\d{4})(\d{4})/, "$1-$2-$3");
+    }
+  } else if (phoneNumber.startsWith("010")) {
+    // 휴대전화 번호
+    return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+  } else {
+    // 그 외 지역번호
+    if (phoneNumber.length === 10) {
+      return phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+    } else if (phoneNumber.length === 11) {
+      return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+    }
+  }
+  return phoneNumber; // 변환할 필요가 없거나 알 수 없는 형식
+};
