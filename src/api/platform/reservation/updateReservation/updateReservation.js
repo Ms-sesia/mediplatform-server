@@ -39,6 +39,8 @@ export default {
         //   where: { re_id },
         // });
 
+        const checkRes = await prisma.reservation.findUnique({ where: { re_id }, include: { resAlim: true } });
+
         const reservation = await prisma.reservation.update({
           where: { re_id },
           data: {
@@ -55,20 +57,34 @@ export default {
             re_doctorRoomName: doctorRoomName,
             re_doctorRoomId: drRoom.dr_id,
             re_oneLineMem: oneLineMemo,
-            resAlim: {
-              update: {
-                data: {
-                  ra_type: alimType,
-                  ra_time1: alimTime1,
-                  ra_time2: alimTime2,
-                  ra_time3: alimTime3,
-                  ra_time4: alimTime4,
-                  ra_templateId: alimTemplateId,
-                },
-              },
-            },
+            // resAlim: {
+            //   update: {
+            //     data: {
+            //       ra_type: alimType ? alimType : checkRes.resAlim?.ra_type,
+            //       ra_time1: alimTime1 ? alimTime1 : checkRes.resAlim?.ra_time1,
+            //       ra_time2: alimTime2 ? alimTime2 : checkRes.resAlim?.ra_time2,
+            //       ra_time3: alimTime3 ? alimTime3 : checkRes.resAlim?.ra_time3,
+            //       ra_time4: alimTime4 ? alimTime4 : checkRes.resAlim?.ra_time4,
+            //       ra_templateId: alimTemplateId,
+            //     },
+            //   },
+            // },
           },
         });
+
+        if (checkRes.re_platform !== "kakao") {
+          await prisma.resAlim.update({
+            where: { re_id },
+            data: {
+              ra_type: alimType,
+              ra_time1: alimTime1,
+              ra_time2: alimTime2,
+              ra_time3: alimTime3,
+              ra_time4: alimTime4,
+              ra_templateId: alimTemplateId,
+            },
+          });
+        }
 
         console.log("user:", user);
         const hospital = await prisma.hospital.findUnique({

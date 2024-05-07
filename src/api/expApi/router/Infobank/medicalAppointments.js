@@ -26,6 +26,15 @@ router.get("/", async (req, res) => {
     const startTime = new Date(new Date(queryData.startTime).setHours(new Date(queryData.startTime).getHours() + 9));
     const endTime = new Date(new Date(queryData.endTime).setHours(new Date(queryData.endTime).getHours() + 9));
 
+    const startHourMin = queryData.startTime.split(" ")[1];
+    const endHourMin = queryData.endTime.split(" ")[1];
+
+    // console.log("startHourMin:", startHourMin);
+    // console.log("endHourMin:", endHourMin);
+    // console.log(
+    //   `medical-Appointments searchDate info => startTime: ${startTime.toISOString()} | endTime: ${endTime.toISOString()}`
+    // );
+
     const findResCount = await prisma.reservation.groupBy({
       by: ["re_status"],
       where: {
@@ -47,6 +56,10 @@ router.get("/", async (req, res) => {
       switch (frc.re_status) {
         case "waiting":
           resCountInfo.requestCount = frc._count.re_id;
+          totalCount += frc._count.re_id;
+          break;
+        case "complete": // 완료 상태를 approvalCount 상테에 추가
+          resCountInfo.approvalCount = frc._count.re_id;
           totalCount += frc._count.re_id;
           break;
         case "confirm":

@@ -32,6 +32,8 @@ router.get("/", async (req, res) => {
 
     if (!drRoom) throw 4;
 
+    const min = new Date().getMinutes().toString();
+
     const reqDate = new Date(req.query.date);
     const reqDate9 = new Date(reqDate.getFullYear(), reqDate.getMonth(), reqDate.getDate(), 9); // KST(UTC+9) 계산
     const day = weekdays_eng[reqDate9.getDay()]; // 요일 계산
@@ -40,10 +42,22 @@ router.get("/", async (req, res) => {
     // 예약 가능한 시간대 계산
     const availableMin = await getDrRoomMin(hospital.hsp_id, drRoom.dr_id, schDate, day, req.query.time);
 
+
+    const convAvMins = availableMin.map((avm) => {
+      if (avm.minute < min) {
+        return {
+          minute: avm.minute,
+          availableTf: "F",
+        };
+      }
+      return avm;
+    });
+
     // return res.status(200).json({
     //   data: availableMin,
     // });
-    return res.status(200).json(availableMin);
+    // return res.status(200).json(availableMin);
+    return res.status(200).json(convAvMins);
   } catch (e) {
     console.log(`Api Error - reservationMinute : 진료예약 가능한 분 전송 에러. ${e}`);
     let errMsg = "진료예약 가능한 분을 조회하는데 실패하였습니다.";

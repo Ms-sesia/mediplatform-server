@@ -23,7 +23,11 @@ router.get("/", async (req, res) => {
 
     if (!hospital) throw 3;
 
+    // const today = new Date();
     const today9 = new Date(new Date().setHours(new Date().getHours() + 9));
+
+    // 시간에 따라 조회도 필요
+
     const chatbotResUser = await prisma.reservation.findMany({
       where: {
         AND: [{ hsp_id: hospital.hsp_id }, { re_appUserId: appUserId }, { re_resDate: { gte: today9 } }],
@@ -32,14 +36,6 @@ router.get("/", async (req, res) => {
     });
 
     const chatbotResUserList = chatbotResUser.map((resUser) => {
-      console.log(
-        "resUser.re_status:",
-        resUser.re_status === "waiting" || resUser.re_status === "complete"
-          ? "0"
-          : resUser.re_status === "confirm"
-          ? "1"
-          : "2"
-      );
       return {
         hospitalName: hospital.hsp_name,
         name: resUser.re_patientName,
@@ -113,7 +109,11 @@ router.post("/", async (req, res) => {
       select: { pati_id: true },
     });
 
-    const resDate = new Date(infoResData.reservationDate);
+    const resInputDate = `${infoResData.reservationDate} ${infoResData.reservationTime}`;
+
+    const resDate = new Date(new Date(resInputDate).setHours(new Date(resInputDate).getHours() + 9));
+
+    console.log("resDate:", resDate);
 
     const drRoom = await prisma.doctorRoom.findFirst({
       where: {

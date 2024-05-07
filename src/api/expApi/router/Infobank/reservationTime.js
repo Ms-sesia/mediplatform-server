@@ -31,18 +31,30 @@ router.get("/", async (req, res) => {
 
     if (!drRoom) throw 4;
 
-    const reqDate = new Date(req.query.date);
-    const reqDate9 = new Date(reqDate.getFullYear(), reqDate.getMonth(), reqDate.getDate(), 9); // KST(UTC+9) 계산
+    // const reqDate = new Date(req.query.date);
+    // const reqDate9 = new Date(reqDate.getFullYear(), reqDate.getMonth(), reqDate.getDate(), 9); // KST(UTC+9) 계산
+
+    const hour = new Date().getHours().toString();
+
+    const reqDate9 = new Date(new Date(req.query.date).setHours(new Date(req.query.date).getHours()));
     const day = weekdays_eng[reqDate9.getDay()]; // 요일 계산
     const schDate = new Date(reqDate9.toISOString().split("T")[0]);
 
     // 예약 가능한 시간대 계산
     const availableTimes = await getDrRoomHour(hospital.hsp_id, drRoom.dr_id, schDate, day);
 
-    // return res.status(200).json({
-    //   data: availableTimes,
-    // });
-    return res.status(200).json(availableTimes);
+    const convAvTimes = availableTimes.map((avt) => {
+      if (avt.time < hour) {
+        return {
+          time: avt.time,
+          availableTf: "F",
+        };
+      }
+      return avt;
+    });
+
+    // return res.status(200).json(availableTimes);
+    return res.status(200).json(convAvTimes);
   } catch (e) {
     console.log(`Api Error - reservationTime : 진료예약 가능한 시간 전송 에러. ${e}`);
     let errMsg = "진료예약 가능한 시간을 조회하는데 실패하였습니다.";

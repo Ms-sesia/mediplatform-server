@@ -40,6 +40,8 @@ export default {
           },
         });
 
+        console.log("reservation:", reservation);
+
         if (!reservation)
           return {
             reservationInfo: {},
@@ -116,11 +118,11 @@ export default {
               approvalDate,
               largeCategory: reservation.re_LCategory,
               smallCategory: reservation.re_SCategory,
-              alimType: alimSet.ra_type ? alimSet.ra_type : "none",
-              alimTime1: alimSet.ra_time1 ? alimSet.ra_time1 : false,
-              alimTime2: alimSet.ra_time2 ? alimSet.ra_time2 : false,
-              alimTime3: alimSet.ra_time3 ? alimSet.ra_time3 : false,
-              alimTime4: alimSet.ra_time4 ? alimSet.ra_time4 : false,
+              alimType: alimSet?.ra_type ? alimSet.ra_type : "none",
+              alimTime1: alimSet?.ra_time1 ? alimSet.ra_time1 : false,
+              alimTime2: alimSet?.ra_time2 ? alimSet.ra_time2 : false,
+              alimTime3: alimSet?.ra_time3 ? alimSet.ra_time3 : false,
+              alimTime4: alimSet?.ra_time4 ? alimSet.ra_time4 : false,
               template: template ? template.rat_text : "",
             }
           : {};
