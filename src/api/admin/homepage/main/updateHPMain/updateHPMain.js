@@ -10,6 +10,7 @@ export default {
       isAuthenticated(request);
       const { user } = request;
       const { hm_id, mainImg } = args;
+      console.log("updateHPMain args:", args);
       try {
         if (user.userType !== "admin") throw 1;
 

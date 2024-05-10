@@ -149,43 +149,23 @@ export const getIsDrRoomOffDay = async (hsp_id, dr_id, schDate, DayofWeek) => {
   return isOffDay;
 };
 
-// 진료실 스케쥴 시간 계산
 export const getDrRoomHour = async (hsp_id, dr_id, schDate, DayofWeek) => {
   const drRoomTime = await drRoomSche(hsp_id, dr_id, schDate, DayofWeek);
-  let availableTimes = new Array();
+  // if (!drRoomTime) throw new Error("Invalid drRoomTime data");
 
-  // 운영 시간이 존재하지 않는 경우
+  let availableTimes = [];
+
   const startHour = drRoomTime.startHour === 0 && drRoomTime.endHour === 0 ? 9 : drRoomTime.startHour;
   const endHour = drRoomTime.startHour === 0 && drRoomTime.endHour === 0 ? 18 : drRoomTime.endHour;
 
-  // 의사의 근무 시간대 계산
   for (let hour = startHour; hour < endHour; hour++) {
-    // 운영 종료 1시간전 보다 이후면 노출안함
-
-    // if (endHour - 1 < hour) continue;
+    // 운영 종료 1시간 전보다 이후면 노출 안함
+    // if (endHour - 1 <= hour) continue;
 
     const hourStr = hour < 10 ? `0${hour}` : `${hour}`;
 
-    // 점심 시간 및 특별 스케줄 시간 제외
+    // 점심시간 제외
     if (drRoomTime.lunchBreak && hour >= drRoomTime.lbStartHour && hour < drRoomTime.lbEndHour) {
-      // 점심시간 시작시간은 예약 불가
-      if (hour === drRoomTime.lbStartHour) {
-        availableTimes.push({
-          time: hourStr,
-          availableTf: "F",
-        });
-        continue;
-      }
-
-      // 종료 시간 진료 예약 가능
-      if (hour === drRoomTime.lbEndHour) {
-        availableTimes.push({
-          time: hourStr,
-          availableTf: "T",
-        });
-        continue;
-      }
-      // 점심시간 시작시간(=), 종료시간 사이
       availableTimes.push({
         time: hourStr,
         availableTf: "F",
@@ -193,6 +173,7 @@ export const getDrRoomHour = async (hsp_id, dr_id, schDate, DayofWeek) => {
       continue;
     }
 
+    // 특별 스케쥴 시간 제외F
     if (drRoomTime.isOffDay && hour >= drRoomTime.offStartHour && hour < drRoomTime.offEndHour) {
       availableTimes.push({
         time: hourStr,
@@ -201,78 +182,123 @@ export const getDrRoomHour = async (hsp_id, dr_id, schDate, DayofWeek) => {
       continue;
     }
 
-    const availableTf = drRoomTime.startHour === 0 && drRoomTime.endHour === 0 ? "F" : "T";
-
     availableTimes.push({
       time: hourStr,
-      availableTf,
+      availableTf: "T",
     });
   }
 
   return availableTimes;
 };
 
-// 해당 시간에 예약가능한 분
+// // 진료실 스케쥴 시간 계산
+// export const getDrRoomHour = async (hsp_id, dr_id, schDate, DayofWeek) => {
+//   const drRoomTime = await drRoomSche(hsp_id, dr_id, schDate, DayofWeek);
+//   let availableTimes = new Array();
+
+//   // 운영 시간이 존재하지 않는 경우
+//   const startHour = drRoomTime.startHour === 0 && drRoomTime.endHour === 0 ? 9 : drRoomTime.startHour;
+//   const endHour = drRoomTime.startHour === 0 && drRoomTime.endHour === 0 ? 18 : drRoomTime.endHour;
+
+//   // 의사의 근무 시간대 계산
+//   for (let hour = startHour; hour < endHour; hour++) {
+//     // 운영 종료 1시간전 보다 이후면 노출안함
+
+//     // if (endHour - 1 < hour) continue;
+
+//     const hourStr = hour < 10 ? `0${hour}` : `${hour}`;
+
+//     // 점심 시간 및 특별 스케줄 시간 제외
+//     if (drRoomTime.lunchBreak && hour >= drRoomTime.lbStartHour && hour < drRoomTime.lbEndHour) {
+//       // 점심시간 시작시간은 예약 불가
+//       if (hour === drRoomTime.lbStartHour) {
+//         availableTimes.push({
+//           time: hourStr,
+//           availableTf: "F",
+//         });
+//         continue;
+//       }
+
+//       // 종료 시간 진료 예약 가능
+//       if (hour === drRoomTime.lbEndHour) {
+//         availableTimes.push({
+//           time: hourStr,
+//           availableTf: "T",
+//         });
+//         continue;
+//       }
+//       // 점심시간 시작시간(=), 종료시간 사이
+//       availableTimes.push({
+//         time: hourStr,
+//         availableTf: "F",
+//       });
+//       continue;
+//     }
+
+//     if (drRoomTime.isOffDay && hour >= drRoomTime.offStartHour && hour < drRoomTime.offEndHour) {
+//       availableTimes.push({
+//         time: hourStr,
+//         availableTf: "F",
+//       });
+//       continue;
+//     }
+
+//     const availableTf = drRoomTime.startHour === 0 && drRoomTime.endHour === 0 ? "F" : "T";
+
+//     availableTimes.push({
+//       time: hourStr,
+//       availableTf,
+//     });
+//   }
+
+//   return availableTimes;
+// };
+
 export const getDrRoomMin = async (hsp_id, dr_id, schDate, DayofWeek, selectHour) => {
   const hour = Number(selectHour);
   const drRoomTime = await drRoomSche(hsp_id, dr_id, schDate, DayofWeek);
   let availableMinutes = [];
 
-  // 선택된 시간이 정규 근무 시간 및 점심 시간 범위 내에 있는지 확인
-  const isWithinWorkHours =
-    hour === drRoomTime.startHour ||
-    hour === drRoomTime.endHour ||
-    (hour > drRoomTime.startHour && hour < drRoomTime.endHour);
+  // 선택된 시간이 정규 근무 시간 범위 내에 있는지 확인
+  const isWithinWorkHours = hour >= drRoomTime.startHour && hour <= drRoomTime.endHour;
 
   // 시간이 점심시간 안에 있는지 확인
-  const isLunchTime = drRoomTime.lunchBreak && hour >= drRoomTime.lbStartHour && hour < drRoomTime.lbEndHour;
+  const isLunchTime =
+    drRoomTime.lunchBreak &&
+    ((hour === drRoomTime.lbStartHour && drRoomTime.lbStartMin <= 59) ||
+      (hour === drRoomTime.lbEndHour && drRoomTime.lbEndMin >= 0) ||
+      (drRoomTime.lbStartHour < hour && hour <= drRoomTime.lbEndHour));
 
   // 특별 스케줄(오프 시간) 확인
-  const isOffTime =
-    drRoomTime.isOffDay &&
-    (hour === drRoomTime.offStartHour ||
-      hour === drRoomTime.offEndHour ||
-      (hour > drRoomTime.offStartHour && hour < drRoomTime.offEndHour));
+  const isOffTime = drRoomTime.isOffDay && hour >= drRoomTime.offStartHour && hour <= drRoomTime.offEndHour;
 
   for (let min = 0; min < 60; min += 5) {
-    // 정규 근무 시간 및 점심 시간 범위 내의 분 확인
-    if (
-      isWithinWorkHours && // 정규 근무시간 범위
-      !isLunchTime && // 점심시간 범위
-      !(isOffTime && min >= drRoomTime.offStartMin && min < drRoomTime.offEndMin) // 특별 스케쥴 오프 확인
-    ) {
-      if (
-        (hour === drRoomTime.startHour && min < drRoomTime.startMin) ||
-        (hour === drRoomTime.endHour && min >= drRoomTime.endMin)
-      ) {
-        // 시작 분 또는 종료 분을 넘어서는 시간 제외
-        availableMinutes.push({
-          minute: min,
-          availableTf: "F",
-        });
-        continue;
-      }
-      if (drRoomTime.lunchBreak && hour === drRoomTime.lbStartHour && min >= drRoomTime.lbStartMin) {
-        // 점심 시작 분을 포함하는 시간 F표기
-        availableMinutes.push({
-          minute: min,
-          availableTf: "F",
-        });
-        continue;
-      }
-      if (drRoomTime.lunchBreak && hour === drRoomTime.lbEndHour && min < drRoomTime.lbEndMin) {
-        // 점심 종료 분 전까지의 시간 F표기
-        availableMinutes.push({
-          minute: min,
-          availableTf: "F",
-        });
-        continue;
-      }
+    if (isWithinWorkHours && !isLunchTime && !isOffTime) {
+      // 정규 근무시간 내, 점심시간 및 특별 스케줄이 아닐 경우 예약 가능
       availableMinutes.push({
         minute: min,
         availableTf: "T",
       });
+    } else if (isLunchTime) {
+      // 점심시간 분 사이
+      if (
+        (drRoomTime.lbStartHour === hour && drRoomTime.lbStartMin <= min) ||
+        (drRoomTime.lbEndHour === hour && min <= drRoomTime.lbEndMin)
+      ) {
+        // 점심시간 동안 예약 불가
+        availableMinutes.push({
+          minute: min,
+          availableTf: "F",
+        });
+      } else {
+        // 점심시간 동안 예약 불가
+        availableMinutes.push({
+          minute: min,
+          availableTf: "T",
+        });
+      }
     } else {
+      // 나머지 시간은 예약 불가
       availableMinutes.push({
         minute: min,
         availableTf: "F",

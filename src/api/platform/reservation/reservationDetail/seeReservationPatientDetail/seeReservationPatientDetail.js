@@ -40,8 +40,6 @@ export default {
           },
         });
 
-        console.log("reservation:", reservation);
-
         if (!reservation)
           return {
             reservationInfo: {},

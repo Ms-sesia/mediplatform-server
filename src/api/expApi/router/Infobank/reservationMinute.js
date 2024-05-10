@@ -8,9 +8,6 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  // https://medipftest.platcube.info/api/infobank/chatbot/reservationDate?botId=13d9ef1dbff00749b0c3cb1a&officeCode=5
-  // admin@platcube.com chatbot id : 13d9ef1dbff00749b0c3cb1a
-
   try {
     if (!req.query.botId) throw 1;
     if (!req.query.officeCode) throw 2;
@@ -32,8 +29,10 @@ router.get("/", async (req, res) => {
 
     if (!drRoom) throw 4;
 
+    const hour = new Date().getHours().toString();
     const min = new Date().getMinutes().toString();
 
+    const currentDateTime = new Date();
     const reqDate = new Date(req.query.date);
     const reqDate9 = new Date(reqDate.getFullYear(), reqDate.getMonth(), reqDate.getDate(), 9); // KST(UTC+9) 계산
     const day = weekdays_eng[reqDate9.getDay()]; // 요일 계산
@@ -42,22 +41,54 @@ router.get("/", async (req, res) => {
     // 예약 가능한 시간대 계산
     const availableMin = await getDrRoomMin(hospital.hsp_id, drRoom.dr_id, schDate, day, req.query.time);
 
-
     const convAvMins = availableMin.map((avm) => {
-      if (avm.minute < min) {
-        return {
-          minute: avm.minute,
-          availableTf: "F",
-        };
+      if (avm.availableTf === "F") return avm; // 예약 불가능
+
+      // 요청 날짜가 오늘과 같을 때만 현재 시간을 고려
+      if (reqDate.toDateString() === currentDateTime.toDateString()) {
+        // 요청 시간이 현재 시간보다 작을 경우
+        if (req.query.time < currentDateTime.getHours()) {
+          return { minute: avm.minute, availableTf: "F" };
+        } else if (req.query.time === currentDateTime.getHours().toString()) {
+          // 현재 분보다 이전일 때 불가
+          if (avm.minute < currentDateTime.getMinutes()) {
+            return { minute: avm.minute, availableTf: "F" };
+          }
+        }
       }
-      return avm;
+
+      return { minute: avm.minute, availableTf: "T" }; // 나머지 경우 예약 가능
     });
 
-    // return res.status(200).json({
-    //   data: availableMin,
+    // const convAvMins = availableMin.map((avm) => {
+    //   if (avm.availableTf === "F") return avm; // 예약 불가능
+    //   // 요청 시간이 현재 시간보다 작을 경우
+    //   if (req.query.time < hour) {
+    //     return {
+    //       minute: avm.minute,
+    //       availableTf: "F",
+    //     };
+    //     // 요청 시간이 현재 시간과 같을 경우
+    //   } else if (req.query.time === hour) {
+    //     // 현재 분보다 이전일 때 불가
+    //     if (avm.minute < min) {
+    //       return {
+    //         minute: avm.minute,
+    //         availableTf: "F",
+    //       };
+    //     }
+    //     return {
+    //       minute: avm.minute,
+    //       availableTf: "T",
+    //     };
+    //     // 요청 시간이 현재 시간보다 클 경우
+    //   } else {
+    //     return avm;
+    //   }
     // });
-    // return res.status(200).json(availableMin);
+
     return res.status(200).json(convAvMins);
+    // return res.status(200).json(availableMin);
   } catch (e) {
     console.log(`Api Error - reservationMinute : 진료예약 가능한 분 전송 에러. ${e}`);
     let errMsg = "진료예약 가능한 분을 조회하는데 실패하였습니다.";

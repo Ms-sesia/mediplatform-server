@@ -15,8 +15,7 @@ export default {
 
         const storagePath = path.join(__dirname, "../../../../../../", "files");
         const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
-        let hpServiceMain;
-        if (hsm_id > 0) hpServiceMain = await prisma.homepageServiceMain.findUnique({ where: { hsm_id } });
+        const hpServiceMain = await prisma.homepageServiceMain.findFirst();
 
         if (mainImg) {
           const { createReadStream, filename, encoding, mimetype } = await mainImg;
@@ -41,7 +40,7 @@ export default {
           if (hpServiceMain) {
             // 있으면 수정
             await prisma.homepageServiceMain.update({
-              where: { hsm_id },
+              where: { hsm_id: hpServiceMain.hsm_id },
               data: {
                 hsm_url: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
                 hsm_adminName: loginAdmin.admin_name,

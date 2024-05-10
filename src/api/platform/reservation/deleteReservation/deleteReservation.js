@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { today9 } from "../../../../libs/todayCal";
+import ibResUpdate from "../../../../libs/infobankRes/IBResUpdate";
 
 const prisma = new PrismaClient();
 
@@ -11,8 +11,11 @@ export default {
       const { re_id } = args;
       try {
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
+        const hospital = await prisma.hospital.findUnique({
+          where: { hsp_id: user.hospital.hsp_id },
+        });
 
-        await prisma.reservation.update({
+        const reservation = await prisma.reservation.update({
           where: { re_id },
           data: {
             re_editorId: loginUser.user_id,
@@ -23,6 +26,12 @@ export default {
             re_deleteDate: new Date(),
           },
         });
+
+        if (reservation.re_platform === "kakao") {
+          const ibResUpdateResult = await ibResUpdate(re_id, reservation, hospital);
+
+          if (!ibResUpdateResult) throw "err_01";
+        }
 
         return true;
       } catch (e) {

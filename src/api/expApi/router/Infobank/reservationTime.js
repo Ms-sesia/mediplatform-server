@@ -31,10 +31,10 @@ router.get("/", async (req, res) => {
 
     if (!drRoom) throw 4;
 
-    // const reqDate = new Date(req.query.date);
-    // const reqDate9 = new Date(reqDate.getFullYear(), reqDate.getMonth(), reqDate.getDate(), 9); // KST(UTC+9) 계산
-
     const hour = new Date().getHours().toString();
+
+    const currentDate = new Date();
+    const reqDate = new Date(req.query.date);
 
     const reqDate9 = new Date(new Date(req.query.date).setHours(new Date(req.query.date).getHours()));
     const day = weekdays_eng[reqDate9.getDay()]; // 요일 계산
@@ -43,18 +43,28 @@ router.get("/", async (req, res) => {
     // 예약 가능한 시간대 계산
     const availableTimes = await getDrRoomHour(hospital.hsp_id, drRoom.dr_id, schDate, day);
 
-    const convAvTimes = availableTimes.map((avt) => {
-      if (avt.time < hour) {
-        return {
-          time: avt.time,
-          availableTf: "F",
-        };
-      }
-      return avt;
-    });
+    // Only compare times for the current date
+    if (currentDate.toDateString() === reqDate.toDateString()) {
+      const currentHour = currentDate.getHours(); // Get current hour for comparison
+      availableTimes.forEach((avt) => {
+        if (parseInt(avt.time) < currentHour) {
+          avt.availableTf = "F"; // Mark time slots earlier than the current hour as unavailable
+        }
+      });
+    }
 
-    // return res.status(200).json(availableTimes);
-    return res.status(200).json(convAvTimes);
+    // const convAvTimes = availableTimes.map((avt) => {
+    //   if (avt.time < hour) {
+    //     return {
+    //       time: avt.time,
+    //       availableTf: "F",
+    //     };
+    //   }
+    //   return avt;
+    // });
+
+    // return res.status(200).json(convAvTimes);
+    return res.status(200).json(availableTimes);
   } catch (e) {
     console.log(`Api Error - reservationTime : 진료예약 가능한 시간 전송 에러. ${e}`);
     let errMsg = "진료예약 가능한 시간을 조회하는데 실패하였습니다.";

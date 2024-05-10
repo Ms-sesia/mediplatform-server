@@ -1,0 +1,6 @@
+type Mutation {
+  """
+  인포뱅크 챗봇 어드민페이지 이동
+  """
+  linkedChatbotAdminPage: String
+}

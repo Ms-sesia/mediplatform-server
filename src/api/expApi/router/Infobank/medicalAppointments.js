@@ -23,22 +23,13 @@ router.get("/", async (req, res) => {
 
     const queryData = req.query;
 
-    const startTime = new Date(new Date(queryData.startTime).setHours(new Date(queryData.startTime).getHours() + 9));
-    const endTime = new Date(new Date(queryData.endTime).setHours(new Date(queryData.endTime).getHours() + 9));
-
-    const startHourMin = queryData.startTime.split(" ")[1];
-    const endHourMin = queryData.endTime.split(" ")[1];
-
-    // console.log("startHourMin:", startHourMin);
-    // console.log("endHourMin:", endHourMin);
-    // console.log(
-    //   `medical-Appointments searchDate info => startTime: ${startTime.toISOString()} | endTime: ${endTime.toISOString()}`
-    // );
+    const startTime = new Date(queryData.startTime);
+    const endTime = new Date(queryData.endTime);
 
     const findResCount = await prisma.reservation.groupBy({
       by: ["re_status"],
       where: {
-        re_resDate: { gte: startTime, lte: endTime },
+        re_createdAt: { gte: startTime, lte: endTime },
         hsp_id: hospital.hsp_id,
         re_platform: "kakao",
       },
@@ -51,7 +42,9 @@ router.get("/", async (req, res) => {
       cancelCount: 0,
       totalCount: 0,
     };
+
     let totalCount = 0;
+
     for (const frc of findResCount) {
       switch (frc.re_status) {
         case "waiting":

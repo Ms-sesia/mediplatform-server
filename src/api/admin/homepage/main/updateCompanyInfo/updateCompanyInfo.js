@@ -10,13 +10,15 @@ export default {
       isAuthenticated(request);
       const { user } = request;
       const { hi_id, hiImg } = args;
+      console.log("updateCompanyInfo args:", args);
       try {
         if (user.userType !== "admin") throw 1;
 
         const storagePath = path.join(__dirname, "../../../../../../", "files");
         const loginAdmin = await prisma.admin.findUnique({ where: { admin_id: user.admin_id } });
-        let hpIntro;
-        if (hi_id > 0) hpIntro = await prisma.homepageIntroduce.findUnique({ where: { hi_id } });
+        // let hpIntro;
+        // if (hi_id > 0)
+        const hpIntro = await prisma.homepageIntroduce.findFirst();
 
         if (hiImg) {
           const { createReadStream, filename, encoding, mimetype } = await hiImg;
@@ -41,7 +43,7 @@ export default {
           if (hpIntro) {
             // 있으면 수정
             await prisma.homepageIntroduce.update({
-              where: { hi_id },
+              where: { hi_id: hpIntro.hi_id },
               data: {
                 hi_url: `${process.env.LOCALSTORAGEADDR}${fileRename}`,
                 hi_adminName: loginAdmin.admin_name,

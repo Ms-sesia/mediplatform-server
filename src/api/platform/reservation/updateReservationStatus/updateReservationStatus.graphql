@@ -4,6 +4,7 @@ type Mutation {
   
   * error
   - err_00 : 예약 상태 변경에 실패하였습니다.
+  - err_01 : 인포뱅크 챗봇 예약 상태 변경에 실패하였습니다.
   """
   updateReservationStatus(
     """
