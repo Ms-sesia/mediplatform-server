@@ -26,14 +26,13 @@ router.get("/", async (req, res) => {
     const startTime = new Date(queryData.startTime);
     const endTime = new Date(queryData.endTime);
 
-    const findResCount = await prisma.reservation.groupBy({
-      by: ["re_status"],
+    const findResCount = await prisma.reservation.findMany({
       where: {
         re_createdAt: { gte: startTime, lte: endTime },
         hsp_id: hospital.hsp_id,
         re_platform: "kakao",
       },
-      _count: { re_id: true, re_resDate: true },
+      select: { re_id: true, re_status: true },
     });
 
     let resCountInfo = {
@@ -44,26 +43,24 @@ router.get("/", async (req, res) => {
     };
 
     let totalCount = 0;
-
+    console.log("findResCount.length:", findResCount.length);
     for (const frc of findResCount) {
+      console.log("frc id:", frc.re_id);
       switch (frc.re_status) {
         case "waiting":
-          resCountInfo.requestCount = frc._count.re_id;
-          totalCount += frc._count.re_id;
+          resCountInfo.requestCount++;
           break;
         case "complete": // 완료 상태를 approvalCount 상테에 추가
-          resCountInfo.approvalCount = frc._count.re_id;
-          totalCount += frc._count.re_id;
+          resCountInfo.approvalCount++;
           break;
         case "confirm":
-          resCountInfo.approvalCount = frc._count.re_id;
-          totalCount += frc._count.re_id;
+          resCountInfo.approvalCount++;
           break;
         case "cancel":
-          resCountInfo.cancelCount = frc._count.re_id;
-          totalCount += frc._count.re_id;
+          resCountInfo.cancelCount++;
           break;
       }
+      totalCount++;
     }
     resCountInfo.totalCount = totalCount;
 

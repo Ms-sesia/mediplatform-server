@@ -42,7 +42,7 @@ router.get("/", async (req, res) => {
 
       const drResAvail = {
         date: today9.toISOString().split("T")[0],
-        availableTf: drIsOff ? "F" : hspIsOff ? "F" : "T", // 병원이 휴무가 아니지만 진료실이 휴무면 불가
+        availableTf: !hspIsOff ? "F" : drIsOff ? "T" : "F", // 병원이 휴무가 아니지만 진료실이 휴무면 불가
       };
 
       schedule.push(drResAvail);

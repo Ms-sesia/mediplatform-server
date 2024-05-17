@@ -14,9 +14,11 @@ router.post("/", async (req, res) => {
 
     const hospital = await prisma.hospital.findFirst({
       where: {
-        AND: [{ hsp_chatbotId: botId }, { hsp_hospitalNumber: { equals: hospitalNumber } }, { hsp_isDelete: false }],
+        hsp_hospitalNumber: { equals: hospitalNumber },
+        hsp_isDelete: false,
       },
       select: {
+        hsp_id: true,
         hsp_chatbotId: true,
         hsp_hospitalNumber: true,
         hsp_name: true,
@@ -24,11 +26,16 @@ router.post("/", async (req, res) => {
       },
     });
 
+    const updateHsp = await prisma.hospital.update({
+      where: { hsp_id: hospital.hsp_id },
+      data: { hsp_chatbotId: botId },
+    });
+
     const sendData = {
-      botId: hospital.hsp_chatbotId,
-      careFacilityNumber: hospital.hsp_hospitalNumber,
-      hospitalName: hospital.hsp_name,
-      phoneNumber: hospital.hsp_phone,
+      botId: updateHsp.hsp_chatbotId,
+      careFacilityNumber: updateHsp.hsp_hospitalNumber,
+      hospitalName: updateHsp.hsp_name,
+      phoneNumber: updateHsp.hsp_phone,
     };
 
     // // reservationInfo?botId=63d9ef1dbff00749b0c3cb1a!&appUserId=9873281

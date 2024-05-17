@@ -232,20 +232,20 @@ export const offDayGenerate = (hspOffDay, monthOffdays, weekOffdays) => {
       offEndMin: hspOffDay.ho_offEndTime ? parseInt(hspOffDay.ho_offEndTime.split(":")[1]) : 0,
     };
 
-  if (monthOffdays)
-    offDays = {
-      offStartHour: monthOffdays.fo_startTime ? parseInt(monthOffdays.fo_startTime.split(":")[0]) : 0,
-      offStartMin: monthOffdays.fo_startTime ? parseInt(monthOffdays.fo_startTime.split(":")[1]) : 0,
-      offEndHour: monthOffdays.fo_endTime ? parseInt(monthOffdays.fo_endTime.split(":")[0]) : 0,
-      offEndMin: monthOffdays.fo_endTime ? parseInt(monthOffdays.fo_endTime.split(":")[1]) : 0,
-    };
-
   if (weekOffdays)
     offDays = {
       offStartHour: weekOffdays.wo_startTime ? parseInt(weekOffdays.wo_startTime.split(":")[0]) : 0,
       offStartMin: weekOffdays.wo_startTime ? parseInt(weekOffdays.wo_startTime.split(":")[1]) : 0,
       offEndHour: weekOffdays.wo_endTime ? parseInt(weekOffdays.wo_endTime.split(":")[0]) : 0,
       offEndMin: weekOffdays.wo_endTime ? parseInt(weekOffdays.wo_endTime.split(":")[1]) : 0,
+    };
+
+  if (monthOffdays)
+    offDays = {
+      offStartHour: monthOffdays.fo_startTime ? parseInt(monthOffdays.fo_startTime.split(":")[0]) : 0,
+      offStartMin: monthOffdays.fo_startTime ? parseInt(monthOffdays.fo_startTime.split(":")[1]) : 0,
+      offEndHour: monthOffdays.fo_endTime ? parseInt(monthOffdays.fo_endTime.split(":")[0]) : 0,
+      offEndMin: monthOffdays.fo_endTime ? parseInt(monthOffdays.fo_endTime.split(":")[1]) : 0,
     };
 
   return offDays;
