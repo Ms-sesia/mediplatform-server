@@ -13,6 +13,8 @@ export default {
         // const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const hospital = await prisma.hospital.findUnique({ where: { hsp_id: user.hospital.hsp_id } });
 
+        if (!hospital.hsp_chatbotId) throw 1;
+
         // 인포뱅크 토큰
         const getToken = (await getInfobankToken()).accessToken;
 
@@ -24,6 +26,7 @@ export default {
         return url;
       } catch (e) {
         console.log("인포뱅크 챗봇 관리자페이지 링크 연결 실패. linkedChatbotAdminPage:", e);
+        if (e === 1) throw new Error("인포뱅크 챗봇 정보를 먼저 입력해주세요.");
         throw new Error("인포뱅크 챗봇 관리자페이지 링크 연결 실패.");
       }
     },
