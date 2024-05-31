@@ -6,13 +6,13 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  let reservation;
+  // let reservation;
   let patient;
   try {
-    const newResData = req.body;
-    // console.log("route regNewReservation - newResData:", newResData);
+    const reservation = req.body;
+    console.log("route regNewReservation - newResData:", reservation);
 
-    reservation = newResData.reservation;
+    // reservation = newResData.reservation;
     if (Object.keys(reservation).length === 0) throw 0;
     const hospitalEmail = reservation.hsp_email;
 
@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
         await prisma.reservation.findUnique({ where: { re_id: Number(reservation.re_id) } })
       : // emr에서 생성한 예약 확인
         await prisma.reservation.findFirst({
-          where: { AND: [{ hsp_id: hospital.hsp_id }, { re_emrId: reservation.re_emrId }] },
+          where: { AND: [{ hsp_id: hospital.hsp_id }, { re_emrId: Number(reservation.re_emrId) }] },
         });
 
     const resDate = new Date(reservation.re_resDate);
@@ -37,12 +37,11 @@ router.post("/", async (req, res) => {
     });
 
     if (checkRes) {
-      // console.log("수정");
       // 이미 생성한 예약이 있으면 업데이트
       await prisma.reservation.update({
         where: { re_id: checkRes.re_id },
         data: {
-          re_emrId: reservation.re_emrId,
+          re_emrId: Number(reservation.re_emrId),
           re_desireDate: reservation.re_desireDate,
           re_desireTime: reservation.re_desireTime,
           re_resDate: reservation.re_resDate,
@@ -64,11 +63,10 @@ router.post("/", async (req, res) => {
         },
       });
     } else {
-      // console.log("생성");
       // 데이터가 없는 경우 생성
       const newRes = await prisma.reservation.create({
         data: {
-          re_emrId: reservation.re_emrId,
+          re_emrId: Number(reservation.re_emrId),
           re_desireDate: reservation.re_desireDate,
           re_desireTime: reservation.re_desireTime,
           re_resDate: reservation.re_resDate,

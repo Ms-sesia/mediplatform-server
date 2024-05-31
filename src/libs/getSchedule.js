@@ -121,7 +121,10 @@ export const getIsDrRoomOffDay = async (hsp_id, dr_id, schDate, DayofWeek) => {
   const currentHour = today.getHours(); // 현재 시간
 
   // 오늘 이전이거나, 오늘인데 현재 시간이 운영 종료 시간을 지난 경우 예약 불가능
-  if (schDate < today9 || (schDate.toDateString() === today9.toDateString() && drSchedule.drs_endHour <= currentHour)) {
+  if (
+    schDate < today9 ||
+    (schDate.toDateString() === today9.toDateString() && drSchedule?.drs_endHour <= currentHour)
+  ) {
     off = false;
   }
 
@@ -170,10 +173,6 @@ export const getDrRoomHour = async (hsp_id, dr_id, schDate, DayofWeek) => {
       else if (hour === drRoomTime.offStartHour) {
         if (drRoomTime.offStartMin === 0) isAvailable = false; // 휴무 시작 분이 0 이상이면 예약 불가
       }
-      // // 휴무 종료 시간과 같은 경우
-      // else if (hour === drRoomTime.offEndHour) {
-      //   if (drRoomTime.offEndMin < 0) isAvailable = false; // 시작, 종료 둘 다 0이면 예약 불가
-      // }
     }
 
     availableTimes.push({

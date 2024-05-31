@@ -8,6 +8,7 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const resData = req.body;
 
+  console.log("resData:", resData);
   const hospital = await prisma.hospital.findUnique({ where: { hsp_email: resData.hsp_email } });
 
   if (!hospital) {

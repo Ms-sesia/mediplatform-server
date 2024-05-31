@@ -12,8 +12,9 @@ router.get("/", async (req, res) => {
     const botId = req.query.botId;
 
     const hospital = await prisma.hospital.findFirst({
-      where: { AND: [{ hsp_chatbotId: botId }, { hsp_isDelete: false }] },
+      where: { hsp_chatbotId: botId, hsp_isDelete: false },
       select: {
+        hsp_id: true,
         hsp_name: true,
         hsp_hospitalNumber: true,
         hsp_phone: true,
@@ -29,7 +30,9 @@ router.get("/", async (req, res) => {
     for (let i = 0; i < 7; i++) {
       const hspSche = await prisma.defaultSchedule.findFirst({
         where: {
-          AND: [{ hsp_id: hospital.hsp_id }, { ds_isDelete: false }, { ds_day: weekdays[i] }],
+          hsp_id: hospital.hsp_id,
+          ds_isDelete: false,
+          ds_day: weekdays[i],
         },
       });
 
@@ -68,9 +71,6 @@ router.get("/", async (req, res) => {
       });
     }
 
-    // return res.status(200).json({
-    //   data: hspOperTime,
-    // });
     return res.status(200).json(hspOperTime);
   } catch (e) {
     console.log(`Api Error - operationTime : 병원 운영시간 전송 에러. ${e}`);

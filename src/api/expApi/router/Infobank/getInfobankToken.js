@@ -2,8 +2,13 @@ import axios from "axios";
 
 const getInfobankToken = async () => {
   try {
-    // const getTokenUrl = "https://chatbot.infobank.net:7443/chatbot/cors/aaa-service/api/token";
-    const getTokenUrl = "https://devmsg.supersms.co/chatbot/cors/aaa-service/api/token"; // 개발용 새로 전달받은 api
+    const getTokenUrl =
+      process.env.NODE_ENV === "production"
+        ? "https://chatbot.infobank.net:7443/chatbot/cors/aaa-service/api/token"
+        : "https://devmsg.supersms.co/chatbot/cors/aaa-service/api/token"; // 개발용 새로 전달받은 api
+
+    // console.log("process.env.NODE_ENV :", process.env.NODE_ENV);
+    // console.log("getTokenUrl:", getTokenUrl);
 
     const result = await axios.post(getTokenUrl, {
       accountId: process.env.CHATBOT_ID,

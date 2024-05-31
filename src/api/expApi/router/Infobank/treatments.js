@@ -31,16 +31,6 @@ router.get("/", async (req, res) => {
       return { treatment: dr.dr_medicalSub };
     });
 
-    // return res.status(200).json({
-    //   data: {
-    //     hospitalName: hospital.hsp_name,
-    //     careFacilityNumber: hospital.hsp_hospitalNumber,
-    //     parkingInfo: "",
-    //     phoneNumber: hospital.hsp_phone,
-    //     address: hospital.hsp_address + hospital.hsp_detailAddress,
-    //     Info: "",
-    //   },
-    // });
     return res.status(200).json(medicalSubList);
   } catch (e) {
     console.log(`Api Error - hospitalInfo : 병워 정보 전송 에러. ${e}`);

@@ -27,6 +27,20 @@ export default {
           },
         });
 
+        if (reservation.re_platform !== "kakao") {
+          await prisma.resAlim.update({
+            where: { re_id },
+            data: {
+              ra_type: alimType,
+              ra_time1: false,
+              ra_time2: false,
+              ra_time3: false,
+              ra_time4: false,
+              ra_templateId: 0,
+            },
+          });
+        }
+
         if (reservation.re_platform === "kakao") {
           const ibResUpdateResult = await ibResUpdate(re_id, reservation, hospital);
 

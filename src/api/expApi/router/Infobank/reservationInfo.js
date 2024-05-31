@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 const router = express.Router();
 
-// 동일 요청 get처리
+// 동일 요청 get처리. 예약 조회
 router.get("/", async (req, res) => {
   try {
     if (!req.query.botId) throw 1;
@@ -70,7 +70,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 동일 요청 post처리
+// 동일 요청 post처리. 예약 등록
 router.post("/", async (req, res) => {
   try {
     if (!req.body.botId) throw 1;
@@ -109,6 +109,7 @@ router.post("/", async (req, res) => {
     });
 
     const resInputDate = `${infoResData.reservationDate} ${infoResData.reservationTime}`;
+    const splitResInputDate = infoResData.reservationDate?.split("-");
 
     const resDate = new Date(new Date(resInputDate).setHours(new Date(resInputDate).getHours() + 9));
 
@@ -126,9 +127,9 @@ router.post("/", async (req, res) => {
         re_desireDate: resDate,
         re_desireTime: infoResData.reservationTime,
         re_resDate: resDate,
-        re_year: resDate.getFullYear(),
-        re_month: resDate.getMonth() + 1,
-        re_date: resDate.getDate(),
+        re_year: Number(splitResInputDate[0]),
+        re_month: Number(splitResInputDate[1]),
+        re_date: Number(splitResInputDate[2]),
         re_time: infoResData.reservationTime,
         re_status:
           infoResData.reservationStatus === "1"
@@ -187,19 +188,5 @@ router.post("/", async (req, res) => {
     return res.status(404).json({ message });
   }
 });
-
-const convertDate = (inputDate) => {
-  // 2000년대를 기준으로 분기 처리가 필요한 경우 추가 로직 적용
-  const year = inputDate.substring(0, 2);
-  const month = inputDate.substring(2, 4);
-  const date = inputDate.substring(4, 6);
-
-  // 1900년대 또는 2000년대를 구분하여 연도를 처리
-  const convertedYear =
-    parseInt(year) >= 0 && parseInt(year) < 100 ? (parseInt(year) < 70 ? `20${year}` : `19${year}`) : year;
-
-  // yyyy-mm-dd 형식으로 반환
-  return `${convertedYear}-${month}-${date}`;
-};
 
 export default router;

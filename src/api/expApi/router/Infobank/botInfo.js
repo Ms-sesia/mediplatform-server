@@ -38,8 +38,7 @@ router.post("/", async (req, res) => {
       phoneNumber: updateHsp.hsp_phone,
     };
 
-    // // reservationInfo?botId=63d9ef1dbff00749b0c3cb1a!&appUserId=9873281
-    // // botId=63d9ef1dbff00749b0c3cb1a!&officeCode=5
+    console.log("ib botInfo data:", req.body);
 
     return res.status(200).json(sendData);
   } catch (e) {

@@ -33,23 +33,23 @@ const patients = {
 
 // 예약 정보 - 첫 연동
 const reservations = {
-  lastResNum: "전송한 마지막 예약 번호(숫자) 1000개씩 예상",
-  hsp_email: "병원 이메일",
-  reservation: {
-    re_emrId: "emr의 예약 id",
-    re_desireDate: "예약 희망일",
-    re_desireTime: "예약 희망시간. Ex) 10:30",
-    re_resDate: "예약 일자",
-    re_time: "예약 시간. Ex) 09:30",
-    re_status: "예약 상태 ",
-    re_platform: "예약 매체",
-    re_patientName: "예약자(환자) 이름",
-    re_patientRrn: "예약자(환자) 주민번호. Ex) 871012-1",
-    re_patientCellphone: "예약자(환자) 휴대폰번호",
-    re_chartNumber: "환자 차트번호(키값)",
-    re_LCategory: "예약구분 – 대분류",
-    re_SCategory: "예약구분 – 소분류",
-    re_doctorRoomName: "진료실 이름",
+  "lastResNum": "전송한 마지막 예약 번호(숫자) 1000개씩 예상",
+  "hsp_email": "병원 이메일",
+  "reservation": {
+    "re_emrId": "emr의 예약 id",
+    "re_desireDate": "예약 희망일",
+    "re_desireTime": "예약 희망시간. Ex) 10:30",
+    "re_resDate": "예약 일자",
+    "re_time": "예약 시간. Ex) 09:30",
+    "re_status": "예약 상태 ",
+    "re_platform": "예약 매체",
+    "re_patientName": "예약자(환자) 이름",
+    "re_patientRrn": "예약자(환자) 주민번호. Ex) 871012-1",
+    "re_patientCellphone": "예약자(환자) 휴대폰번호",
+    "re_chartNumber": "환자 차트번호(키값)",
+    "re_LCategory": "예약구분 – 대분류",
+    "re_SCategory": "예약구분 – 소분류",
+    "re_doctorRoomName": "진료실 이름",
   },
 };
 

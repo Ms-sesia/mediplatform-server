@@ -17,8 +17,6 @@ export default {
         // take,
         //  cursor
       } = args;
-
-      console.log("seeHospitalOffday args:", args);
       try {
         const createSearchHistory = await searchHistory(searchTerm, user.user_id);
         if (!createSearchHistory.status) throw createSearchHistory.error;

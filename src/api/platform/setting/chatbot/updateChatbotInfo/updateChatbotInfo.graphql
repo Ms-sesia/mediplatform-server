@@ -1,9 +1,0 @@
-type Mutation {
-  """
-  챗봇 정보 수정정보 전달 - 병원정보 수정할 때 전달
-
-  *error
-  - 따로 메세지 전달
-  """
-  updateChatbotInfo: Boolean
-}

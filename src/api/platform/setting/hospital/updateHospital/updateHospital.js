@@ -97,73 +97,84 @@ export default {
         const getToken = (await getInfobankToken()).accessToken;
         let url = "";
 
-        // 생성
-        if (chatbotSend === 1) {
-          console.log("인포뱅크 챗봇 정보 전달(카카오채널 id, url. 생성!!");
-          url =
-            process.env.NODE_ENV === "production"
-              ? "https://chatbot.infobank.net:7443/chatbot/api/bot-info/bots"
-              : "https://devmsg.supersms.co/chatbot/api/bot-info/bots";
+        try {
+          // 생성
+          if (chatbotSend === 1) {
+            console.log("인포뱅크 챗봇 정보 전달(카카오채널 id, url. 생성!!");
+            url =
+              process.env.NODE_ENV === "production"
+                ? "https://chatbot.infobank.net:7443/chatbot/api/bot-info/bots"
+                : "https://devmsg.supersms.co/chatbot/api/bot-info/bots";
 
-          /**
-           * channelUrl : 병원에 등록된 카카오 채널 url
-           * name: 병원에 등록된 카카오 채널 id
-           * careFacilityNumber : 요양기관번호
-           * managerEmail : 병원 대표 이메일
-           * partnerKey : MDSFT
-           */
-          const chatbotInfo = {
-            channelUrl: hospital.hsp_kakaoChannelUrl,
-            name: hospital.hsp_kakaoChannelId,
-            careFacilityNumber: hospital.hsp_hospitalNumber,
-            managerEmail: hospital.hsp_email,
-            partnerKey: process.env.MS_IB_PARTNERKEY,
-          };
+            /**
+             * channelUrl : 병원에 등록된 카카오 채널 url
+             * name: 병원에 등록된 카카오 채널 id
+             * careFacilityNumber : 요양기관번호
+             * managerEmail : 병원 대표 이메일
+             * partnerKey : MDSFT
+             */
+            const chatbotInfo = {
+              channelUrl: hsp_kakaoChannelUrl,
+              name: hsp_kakaoChannelId,
+              careFacilityNumber: hospital.hsp_hospitalNumber,
+              managerEmail: hospital.hsp_email,
+              partnerKey: process.env.MS_IB_PARTNERKEY,
+            };
 
-          await axios.post(url, chatbotInfo, {
-            headers: {
-              "Content-Type": "application/json;charset=UTF-8",
-              Accept: "application/json",
-              Authorization: `Bearer ${getToken}`,
-            },
-          });
-        }
+            console.log("create body:", chatbotInfo);
 
-        // 수정
-        if (chatbotSend === 2) {
-          console.log("인포뱅크 챗봇 정보 전달(카카오채널 id, url. 수정!!");
-          url =
-            process.env.NODE_ENV === "production"
-              ? "https://chatbot.infobank.net:7443/chatbot/api/bot-info/bots/update"
-              : "https://devmsg.supersms.co/chatbot/api/bot-info/bots/update";
+            await axios.post(url, chatbotInfo, {
+              headers: {
+                "Content-Type": "application/json;charset=UTF-8",
+                Accept: "application/json",
+                Authorization: `Bearer ${getToken}`,
+              },
+            });
+          }
 
-          /**
-           * channelUrl : 병원에 등록된 카카오 채널 url
-           * name: 병원에 등록된 카카오 채널 id
-           * careFacilityNumber : 요양기관번호
-           * managerEmail : 병원 대표 이메일
-           * partnerKey : MDSFT
-           */
-          const chatbotInfo = {
-            name: hsp_kakaoChannelId,
-            channelUrl: hsp_kakaoChannelUrl,
-            careFacilityNumber: hospital.hsp_hospitalNumber,
-            managerEmail: hospital.hsp_email,
-            partnerKey: process.env.MS_IB_PARTNERKEY,
-          };
+          // 수정
+          if (chatbotSend === 2) {
+            console.log("인포뱅크 챗봇 정보 전달(카카오채널 id, url. 수정!!");
+            url =
+              process.env.NODE_ENV === "production"
+                ? "https://chatbot.infobank.net:7443/chatbot/api/bot-info/bots/update"
+                : "https://devmsg.supersms.co/chatbot/api/bot-info/bots/update";
 
-          const updateResult = await axios.put(url, chatbotInfo, {
-            headers: {
-              "Content-Type": "application/json;charset=UTF-8",
-              Accept: "application/json",
-              Authorization: `Bearer ${getToken}`,
-            },
-          });
+            /**
+             * channelUrl : 병원에 등록된 카카오 채널 url
+             * name: 병원에 등록된 카카오 채널 id
+             * careFacilityNumber : 요양기관번호
+             * managerEmail : 병원 대표 이메일
+             * partnerKey : MDSFT
+             */
+            const chatbotInfo = {
+              channelUrl: hsp_kakaoChannelUrl,
+              name: hsp_kakaoChannelId,
+              careFacilityNumber: hospital.hsp_hospitalNumber,
+              managerEmail: hospital.hsp_email,
+              partnerKey: process.env.MS_IB_PARTNERKEY,
+            };
+
+            console.log("update body:", chatbotInfo);
+
+            await axios.put(url, chatbotInfo, {
+              headers: {
+                "Content-Type": "application/json;charset=UTF-8",
+                Accept: "application/json",
+                Authorization: `Bearer ${getToken}`,
+              },
+            });
+          }
+        } catch (e) {
+          if (e?.response?.data?.errMsg) {
+            console.log("병원 정보 수정 실패(챗봇 정보 전달 실패). updateHospital:", e?.response?.data?.errMsg);
+            // throw new Error(e?.response?.data?.errMsg);
+          }
         }
 
         return true;
       } catch (e) {
-        console.log("병원 정보 수정 실패. updateHospital", e);
+        console.log("병원 정보 수정 실패. updateHospital:", e);
         throw new Error("err_00");
       }
     },

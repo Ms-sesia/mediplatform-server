@@ -37,7 +37,7 @@ const PORT = process.env.SERVER_PORT;
   const server = new ApolloServer({
     schema,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    introspection: true, // 배포시 false, 개발 및 테스트시 true
+    introspection: false, // 배포시 false, 개발 및 테스트시 true
     // formatError: (err) => {
     //   if (err.extensions) {
     //     delete err.extensions;
@@ -52,10 +52,10 @@ const PORT = process.env.SERVER_PORT;
 
   app.use(authenticateJwt); // 유저 토큰 인증 - 프로젝트 진행시 사용
 
-  // // 이미지 혹은 파일들 경로 접속 허용
-  // app.use(express.static(path.join(__dirname, "../", "images")));
-  // app.use(express.static(path.join(__dirname, "../", "files")));
-  // app.use(express.static(path.join(__dirname, "../", "didMedia")));
+  // 이미지 혹은 파일들 경로 접속 허용
+  app.use(express.static(path.join(__dirname, "../", "images")));
+  app.use(express.static(path.join(__dirname, "../", "files")));
+  app.use(express.static(path.join(__dirname, "../", "didMedia")));
 
   tobeSchedule();
   await hspExpiredSchedule();
@@ -69,7 +69,6 @@ const PORT = process.env.SERVER_PORT;
   app.use("/api", apiRoute);
   app.use("/images", imgRoute);
 
-  // app.post("/", bodyParser.json(), createAlimTalkLog);
   // app.post("/infobank/alimtalk/report", bodyParser.json(), createAlimTalkLog); => 등록 요청
 
   app.use(graphqlUploadExpress()); // graphql 파일업로드

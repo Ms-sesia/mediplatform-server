@@ -32,7 +32,6 @@ export default {
         alimTemplateId,
       } = args;
       try {
-        console.log("args:", args);
         const loginUser = await prisma.user.findUnique({ where: { user_id: user.user_id } });
         const hospital = await prisma.hospital.findUnique({ where: { hsp_id: user.hospital.hsp_id } });
 
@@ -243,6 +242,8 @@ export default {
             re_SCategory: reservation.re_SCategory,
           },
         };
+
+        console.log("createReservation regReservation args:", regReservationInfo);
 
         // 병원(channel)에 접속한 클라이언트(socket)에게만 did수정 정보 전달
         const socketIo = await webSocket();

@@ -43,9 +43,7 @@ router.get("/", async (req, res) => {
     };
 
     let totalCount = 0;
-    console.log("findResCount.length:", findResCount.length);
     for (const frc of findResCount) {
-      console.log("frc id:", frc.re_id);
       switch (frc.re_status) {
         case "waiting":
           resCountInfo.requestCount++;
